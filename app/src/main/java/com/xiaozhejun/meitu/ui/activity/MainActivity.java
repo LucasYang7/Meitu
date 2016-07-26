@@ -1,5 +1,7 @@
 package com.xiaozhejun.meitu.ui.activity;
 
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -11,6 +13,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.xiaozhejun.meitu.R;
+import com.xiaozhejun.meitu.ui.fragment.doubanmeinv.DoubanMeinvTabFragment;
+import com.xiaozhejun.meitu.ui.fragment.gankmeizi.GankMeiziFragment;
+import com.xiaozhejun.meitu.ui.fragment.huabanmeinv.HuabanMeinvFragment;
+import com.xiaozhejun.meitu.ui.fragment.meizitu.MeizituTabFragment;
 import com.xiaozhejun.meitu.ui.widget.ShowToast;
 
 public class MainActivity extends AppCompatActivity
@@ -23,17 +29,6 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        /*
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-        */
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -43,6 +38,11 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setItemIconTintList(null);  //这句话的作用是使navigationView中的icon显示原有的颜色
         navigationView.setNavigationItemSelectedListener(this);
+
+        // 使用妹子图网站作为初始化页面
+        MeizituTabFragment meizituTabFragment = new MeizituTabFragment();
+        replaceFragment(meizituTabFragment);
+
     }
 
     @Override
@@ -87,18 +87,26 @@ public class MainActivity extends AppCompatActivity
         switch (id){
             case R.id.nav_meizitu:
                 ShowToast.showShortToast(MainActivity.this,"妹子图");
+                MeizituTabFragment meizituTabFragment = new MeizituTabFragment();
+                replaceFragment(meizituTabFragment);
                 break;
 
             case R.id.nav_douban_meinv:
                 ShowToast.showShortToast(MainActivity.this,"豆瓣美女");
+                DoubanMeinvTabFragment doubanMeinvFragment = new DoubanMeinvTabFragment();
+                replaceFragment(doubanMeinvFragment);
                 break;
 
             case R.id.nav_huaban_meinv:
                 ShowToast.showShortToast(MainActivity.this,"花瓣美女");
+                HuabanMeinvFragment huabanMeinvFragment = new HuabanMeinvFragment();
+                replaceFragment(huabanMeinvFragment);
                 break;
 
             case R.id.nav_gank_meizi:
                 ShowToast.showShortToast(MainActivity.this,"Gank妹子");
+                GankMeiziFragment gankMeiziFragment = new GankMeiziFragment();
+                replaceFragment(gankMeiziFragment);
                 break;
 
             case R.id.nav_favorite:
@@ -121,5 +129,14 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    /**
+     * 替换MainActivity中的Fragment
+     * */
+    public void replaceFragment(Fragment fragment){
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.mainContentInMainActivity,fragment);
+        fragmentTransaction.commit();
     }
 }

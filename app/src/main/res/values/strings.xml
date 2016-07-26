@@ -5,4 +5,16 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_meizitutab_fragment">这是妹子图的主页</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_huabanmeizi_fragment">这是花瓣美女主页</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_gankmeizi_fragment">这是Gank妹子主页</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_doubanmeinv_fragment">这是豆瓣美女主页</string>
 </resources>
