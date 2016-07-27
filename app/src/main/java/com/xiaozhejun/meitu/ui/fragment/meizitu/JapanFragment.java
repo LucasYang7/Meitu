@@ -1,4 +1,4 @@
-package com.xiaozhejun.meitu.ui.fragment.gankmeizi;
+package com.xiaozhejun.meitu.ui.fragment.meizitu;
 
 
 import android.os.Bundle;
@@ -12,10 +12,10 @@ import com.xiaozhejun.meitu.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class GankMeiziFragment extends Fragment {
+public class JapanFragment extends Fragment {
 
 
-    public GankMeiziFragment() {
+    public JapanFragment() {
         // Required empty public constructor
     }
 
@@ -24,7 +24,7 @@ public class GankMeiziFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_gank_meizi, container, false);
+        return inflater.inflate(R.layout.fragment_japan, container, false);
     }
 
 }

@@ -1,9 +1,10 @@
 package com.xiaozhejun.meitu.ui.activity;
 
-import android.app.Fragment;
-import android.app.FragmentTransaction;
+
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -135,7 +136,8 @@ public class MainActivity extends AppCompatActivity
      * 替换MainActivity中的Fragment
      * */
     public void replaceFragment(Fragment fragment){
-        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        FragmentTransaction fragmentTransaction =
+                getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.mainContentInMainActivity,fragment);
         fragmentTransaction.commit();
     }

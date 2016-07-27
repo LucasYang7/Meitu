@@ -8,6 +8,13 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_meizitutab_fragment">这是妹子图的主页</string>
+    <string name="hello_homepage_fragment">这是妹子图网站的首页</string>
+    <string name="hello_xinggan_fragment">这是妹子图网站的性感妹子网页</string>
+    <string name="hello_japan_fragment">这是妹子图网站的日本妹子网页</string>
+    <string name="hello_taiwan_fragment">这是妹子图网站的台湾妹子网页</string>
+    <string name="hello_mm_fragment">这是妹子图网站的清纯妹子网页</string>
+    <string name="hello_share_fragment">这是妹子图网站的妹子自拍网页</string>
+    <string name="hello_all_fragment">这是妹子图网站的每日更新网页</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_huabanmeizi_fragment">这是花瓣美女主页</string>
@@ -17,4 +24,5 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_doubanmeinv_fragment">这是豆瓣美女主页</string>
+
 </resources>
