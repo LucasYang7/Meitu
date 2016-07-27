@@ -8,11 +8,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.xiaozhejun.meitu.R;
+import com.xiaozhejun.meitu.ui.fragment.BaseFragment;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class TaiwanFragment extends Fragment {
+public class TaiwanFragment extends BaseFragment {
 
 
     public TaiwanFragment() {
