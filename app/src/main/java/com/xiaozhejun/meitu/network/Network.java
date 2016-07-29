@@ -1,5 +1,7 @@
 package com.xiaozhejun.meitu.network;
 
+import com.xiaozhejun.meitu.network.api.MeizituService;
+
 import okhttp3.OkHttpClient;
 import retrofit2.CallAdapter;
 import retrofit2.Converter;

@@ -1,4 +1,4 @@
-package com.xiaozhejun.meitu.network;
+package com.xiaozhejun.meitu.network.api;
 
 import okhttp3.Response;
 import okhttp3.ResponseBody;

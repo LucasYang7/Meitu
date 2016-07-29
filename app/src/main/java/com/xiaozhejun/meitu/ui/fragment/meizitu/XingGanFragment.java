@@ -1,14 +1,20 @@
 package com.xiaozhejun.meitu.ui.fragment.meizitu;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.xiaozhejun.meitu.R;
+import com.xiaozhejun.meitu.adapter.MeizituRecyclerViewAdapter;
 import com.xiaozhejun.meitu.model.MeizituGallery;
 import com.xiaozhejun.meitu.network.Network;
 import com.xiaozhejun.meitu.ui.fragment.BaseFragment;
@@ -34,10 +40,17 @@ import rx.schedulers.Schedulers;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class XingGanFragment extends BaseFragment {
+public class XingGanFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener{
+
+    private static final String TAG = "XingGanFragment";
+    private SwipeRefreshLayout xingganSwipeRefreshLayout;
+    private RecyclerView xingganRecyclerView;
+    private MeizituRecyclerViewAdapter meizituRecyclerViewAdapter;
+    static List<MeizituGallery> meizituGalleryList = new ArrayList<MeizituGallery>();
 
     //test 测试能否显式html文件
-    TextView textView;
+    //TextView textView;
+
     Observer<List<MeizituGallery>> observer = new Observer<List<MeizituGallery>>() {
         @Override
         public void onCompleted() {
@@ -46,22 +59,26 @@ public class XingGanFragment extends BaseFragment {
 
         @Override
         public void onError(Throwable e) {
-
+            xingganSwipeRefreshLayout.setRefreshing(false);
+            Log.e(TAG,"onError()!");
+            Log.e(TAG, e.toString());
         }
 
         @Override
         public void onNext(List<MeizituGallery> meizituGalleryList) {
-            String str = "";
-            for(MeizituGallery meizituGallery:meizituGalleryList){
-                String s = meizituGallery.getObjectInformation();
-                str += s;
-            }
-            textView.setText(str);
+            xingganSwipeRefreshLayout.setRefreshing(false);
+            XingGanFragment.meizituGalleryList = meizituGalleryList;  //更新XingGanFragment的妹子图数据
+            meizituRecyclerViewAdapter.notifyDataSetChanged();
         }
     };
 
-    public void loadHtmlContent(){
-        Network.getMeizituService()
+    /**
+     * 从网站上下载性感妹子的图片信息
+     * */
+    public void RefreshXingganMeiziData(){
+        xingganSwipeRefreshLayout.setRefreshing(true);
+        unsubscribe();
+        subscription = Network.getMeizituService()
                 .getPictureType("xinggan")
                 .map(new Func1<ResponseBody, List<MeizituGallery>>() {
 
@@ -116,16 +133,32 @@ public class XingGanFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Context context = container.getContext();
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_xing_gan, container, false);
-        textView = (TextView)view.findViewById(R.id.textViewHelloInXingGan);
-        textView.setOnClickListener(new View.OnClickListener() {
+        // 设置RecyclerView
+        xingganRecyclerView = (RecyclerView)view.findViewById(R.id.xingganRecyclerView);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
+        meizituRecyclerViewAdapter = new MeizituRecyclerViewAdapter(context);
+        meizituRecyclerViewAdapter.setMeizituGalleryList(meizituGalleryList);
+        xingganRecyclerView.setHasFixedSize(true);
+        xingganRecyclerView.setLayoutManager(linearLayoutManager);  //设置RecyclerView的布局
+        xingganRecyclerView.setAdapter(meizituRecyclerViewAdapter); //设置RecyclerView的适配器
+        // 设置SwipeRefreshLayout
+        xingganSwipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.xingganSwipeRefreshLayout);
+        xingganSwipeRefreshLayout.setOnRefreshListener(this);
+        xingganSwipeRefreshLayout.setColorSchemeResources(R.color.colorSwipeRefresh);
+        xingganSwipeRefreshLayout.post(new Runnable() { // 设置SwipeRefreshLayout自动刷新
             @Override
-            public void onClick(View view) {
-                loadHtmlContent();
+            public void run() {
+                RefreshXingganMeiziData();
             }
         });
         return view;
     }
 
+    @Override
+    public void onRefresh() {
+        RefreshXingganMeiziData();
+    }
 }
