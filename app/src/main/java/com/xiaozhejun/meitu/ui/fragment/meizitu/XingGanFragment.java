@@ -11,27 +11,24 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.xiaozhejun.meitu.R;
 import com.xiaozhejun.meitu.adapter.MeizituRecyclerViewAdapter;
 import com.xiaozhejun.meitu.model.MeizituGallery;
 import com.xiaozhejun.meitu.network.Network;
 import com.xiaozhejun.meitu.ui.fragment.BaseFragment;
+import com.xiaozhejun.meitu.ui.widget.ShowToast;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.w3c.dom.Text;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.ResponseBody;
-import rx.Observable;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
@@ -46,6 +43,7 @@ public class XingGanFragment extends BaseFragment implements SwipeRefreshLayout.
     private SwipeRefreshLayout xingganSwipeRefreshLayout;
     private RecyclerView xingganRecyclerView;
     private MeizituRecyclerViewAdapter meizituRecyclerViewAdapter;
+    private Context mContext;
     static List<MeizituGallery> meizituGalleryList = new ArrayList<MeizituGallery>();
 
     //test 测试能否显式html文件
@@ -60,6 +58,7 @@ public class XingGanFragment extends BaseFragment implements SwipeRefreshLayout.
         @Override
         public void onError(Throwable e) {
             xingganSwipeRefreshLayout.setRefreshing(false);
+            ShowToast.showLongToast(mContext,"onError()!" + e.toString());
             Log.e(TAG,"onError()!");
             Log.e(TAG, e.toString());
         }
@@ -68,6 +67,7 @@ public class XingGanFragment extends BaseFragment implements SwipeRefreshLayout.
         public void onNext(List<MeizituGallery> meizituGalleryList) {
             xingganSwipeRefreshLayout.setRefreshing(false);
             XingGanFragment.meizituGalleryList = meizituGalleryList;  //更新XingGanFragment的妹子图数据
+            meizituRecyclerViewAdapter.setMeizituGalleryList(meizituGalleryList);
             meizituRecyclerViewAdapter.notifyDataSetChanged();
         }
     };
@@ -133,13 +133,13 @@ public class XingGanFragment extends BaseFragment implements SwipeRefreshLayout.
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Context context = container.getContext();
+        mContext = container.getContext();
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_xing_gan, container, false);
         // 设置RecyclerView
         xingganRecyclerView = (RecyclerView)view.findViewById(R.id.xingganRecyclerView);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
-        meizituRecyclerViewAdapter = new MeizituRecyclerViewAdapter(context);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
+        meizituRecyclerViewAdapter = new MeizituRecyclerViewAdapter(mContext);
         meizituRecyclerViewAdapter.setMeizituGalleryList(meizituGalleryList);
         xingganRecyclerView.setHasFixedSize(true);
         xingganRecyclerView.setLayoutManager(linearLayoutManager);  //设置RecyclerView的布局

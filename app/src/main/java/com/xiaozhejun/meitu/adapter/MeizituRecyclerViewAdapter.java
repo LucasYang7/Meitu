@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import com.xiaozhejun.meitu.R;
 import com.xiaozhejun.meitu.model.MeizituGallery;
 
@@ -42,7 +43,11 @@ public class MeizituRecyclerViewAdapter extends RecyclerView.Adapter<MeizituRecy
         String title = meizituGallery.getTitle();
         String pictureUrl = meizituGallery.getPictureUrl();
         holder.textViewInViewholder.setText(title);
-
+        Picasso.with(context)
+                .load(pictureUrl)
+                .placeholder(R.drawable.meizitu)
+                .error(R.drawable.meizitu)
+                .into(holder.imageViewInViewholder);
     }
 
     @Override
