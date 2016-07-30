@@ -3,6 +3,7 @@ package com.xiaozhejun.meitu.network;
 import com.xiaozhejun.meitu.network.api.MeizituService;
 
 import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.CallAdapter;
 import retrofit2.Converter;
 import retrofit2.Retrofit;
@@ -26,8 +27,16 @@ public class Network {
      * */
     public static MeizituService getMeizituService(){
         if(meizituService == null){
+            // 配置HttpLoggingInterceptor来查看Http的Log
+            HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
+            httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BASIC);
+            // 构建带有HttpLoggingInterceptor的OkHttpClient
+            OkHttpClient okHttpClientWithInterceptor = new OkHttpClient.Builder()
+                    .addInterceptor(httpLoggingInterceptor)
+                    .build();
             Retrofit retrofit = new Retrofit.Builder()
-                    .client(okHttpClient)
+                    //.client(okHttpClient)
+                    .client(okHttpClientWithInterceptor)
                     .baseUrl("http://www.mzitu.com/")
                     .addCallAdapterFactory(rxJavaCallAdapterFactory)  //告诉Retrofit使用RxJava来处理Http请求
                     .build();
