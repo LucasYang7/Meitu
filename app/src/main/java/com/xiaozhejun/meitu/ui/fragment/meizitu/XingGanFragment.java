@@ -142,8 +142,7 @@ public class XingGanFragment extends BaseFragment implements SwipeRefreshLayout.
      * 执行下拉SwipeRefreshLayout进行刷新操作时，要清空原有的数据
      * */
     public void resetMeiziData(){
-        //mMeizituGalleryList.clear();  // 这里清空妹子图的数据，如果执行下拉SwipeRefreshLayout进行刷新时，因为此时没有数据，所以会报java.lang.IndexOutOfBoundsException
-        page = 1;
+        page = 1;                     // 重新加载首页的妹子图信息
         canAddMeizitu = false;        // 在加载完首页的数据前，不能再加载新的妹子数据
     }
 
