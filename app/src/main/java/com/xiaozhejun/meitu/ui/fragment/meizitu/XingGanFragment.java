@@ -44,9 +44,10 @@ public class XingGanFragment extends BaseFragment implements SwipeRefreshLayout.
     private RecyclerView xingganRecyclerView;
     private MeizituRecyclerViewAdapter meizituRecyclerViewAdapter;
     private Context mContext;
-    List<MeizituGallery> mMeizituGalleryList = new ArrayList<MeizituGallery>();   //  保存图片相册的信息，如果是下拉刷新，则清空meizituGalleryList。
-    int page;   //记录当前最后访问的妹子相册信息所在的页数，下拉刷新时要重置为2
-
+    List<MeizituGallery> mMeizituGalleryList = new ArrayList<MeizituGallery>();    // 保存图片相册的信息，如果是下拉刷新，则清空meizituGalleryList。
+    List<MeizituGallery> mNewMeizituGalleryList = new ArrayList<MeizituGallery>(); // 保存每次新增加的妹子图片的信息
+    int page;   //记录当前最后访问的妹子相册信息所在的页数，下拉刷新时要重置为1
+    boolean canAddMeizitu;   // 判断是否能加载新的妹子图相册
     public XingGanFragment() {
         // Required empty public constructor
     }
@@ -56,23 +57,29 @@ public class XingGanFragment extends BaseFragment implements SwipeRefreshLayout.
     Observer<List<MeizituGallery>> observer = new Observer<List<MeizituGallery>>() {
         @Override
         public void onCompleted() {
-
+            if(page == 1){
+                mMeizituGalleryList.clear();      // 刷新妹子图的首页时，要清空原来的数据
+            }
+            mMeizituGalleryList.addAll(mNewMeizituGalleryList);  //更新XingGanFragment的妹子图数据
+            meizituRecyclerViewAdapter.setMeizituGalleryList(mMeizituGalleryList);
+            meizituRecyclerViewAdapter.notifyDataSetChanged();
+            ShowToast.showLongToast(mContext,"load page " + page + " onCompleted()!");
+            page++;   // 增大妹子图相册所在的网页页数
+            canAddMeizitu = true;
         }
 
         @Override
         public void onError(Throwable e) {
             xingganSwipeRefreshLayout.setRefreshing(false);
-            ShowToast.showLongToast(mContext,"onError()!" + e.toString());
-            Log.e(TAG,"onError()!");
-            Log.e(TAG, e.toString());
+            canAddMeizitu = true;
+            ShowToast.showLongToast(mContext,"load page " + page + " onError()! " + e.toString());
+            Log.e(TAG,"onError()!" + e.toString());
         }
 
         @Override
         public void onNext(List<MeizituGallery> meizituGalleryList) {
             xingganSwipeRefreshLayout.setRefreshing(false);
-            XingGanFragment.this.mMeizituGalleryList.addAll(meizituGalleryList);  //更新XingGanFragment的妹子图数据
-            meizituRecyclerViewAdapter.setMeizituGalleryList(XingGanFragment.this.mMeizituGalleryList);
-            meizituRecyclerViewAdapter.notifyDataSetChanged();
+            mNewMeizituGalleryList = meizituGalleryList;
         }
     };
 
@@ -81,7 +88,7 @@ public class XingGanFragment extends BaseFragment implements SwipeRefreshLayout.
      * */
     public void RefreshXingganMeiziData(){
         xingganSwipeRefreshLayout.setRefreshing(true);
-        clearMeiziData();       // 清空妹子相册信息
+        resetMeiziData();       // 清空妹子相册信息
         unsubscribe();
         subscription = Network.getMeizituService()
                 .getPictureType("xinggan")
@@ -109,6 +116,7 @@ public class XingGanFragment extends BaseFragment implements SwipeRefreshLayout.
      * */
     public void AddXingganMeiziData(int page){
         //unsubscribe();
+        canAddMeizitu = false;                   // 在加载完第page页的妹子数据前，不能加载新的数据
         subscription = Network.getMeizituService()
                 .getPictureTypeInPage("xinggan",page)
                 .map(new Func1<ResponseBody, List<MeizituGallery>>() {
@@ -133,9 +141,10 @@ public class XingGanFragment extends BaseFragment implements SwipeRefreshLayout.
     /**
      * 执行下拉SwipeRefreshLayout进行刷新操作时，要清空原有的数据
      * */
-    public void clearMeiziData(){
-        mMeizituGalleryList.clear();
-        page = 2;
+    public void resetMeiziData(){
+        //mMeizituGalleryList.clear();  // 这里清空妹子图的数据，如果执行下拉SwipeRefreshLayout进行刷新时，因为此时没有数据，所以会报java.lang.IndexOutOfBoundsException
+        page = 1;
+        canAddMeizitu = false;        // 在加载完首页的数据前，不能再加载新的妹子数据
     }
 
     /**
@@ -236,9 +245,11 @@ public class XingGanFragment extends BaseFragment implements SwipeRefreshLayout.
             // RecyclerView已经滑到底部且RecyclerView处于静止状态
             if(isLastItemDisplaying(recyclerView) == true && newState == RecyclerView.SCROLL_STATE_IDLE){
                 //Toast.makeText(mContext,"已经滑到底部了，没有图片了。。。",Toast.LENGTH_SHORT).show();
-                ShowToast.showLongToast(mContext,"已经滑到底部了" + "page " + page);
-                AddXingganMeiziData(page);
-                page++;// 更新page页
+                ShowToast.showShortToast(mContext,"已经滑到底部了" + "page " + page);
+                if(canAddMeizitu == true){
+                    ShowToast.showShortToast(mContext,"正在加载第" + page + "页的妹子数据");
+                    AddXingganMeiziData(page);
+                }
             }
         }
     }
