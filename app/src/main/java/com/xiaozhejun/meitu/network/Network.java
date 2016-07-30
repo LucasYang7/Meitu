@@ -17,8 +17,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class Network {
     private static OkHttpClient okHttpClient = new OkHttpClient();  // okHttp客户端
-    private static Converter.Factory gsonConverterFactory = GsonConverterFactory.create(); // gson库
-    private static CallAdapter.Factory rxJavaCallAdapterFactory = RxJavaCallAdapterFactory.create(); // RxJava库
+    private static Converter.Factory gsonConverterFactory = GsonConverterFactory.create(); // gson转换器
+    private static CallAdapter.Factory rxJavaCallAdapterFactory = RxJavaCallAdapterFactory.create(); // RxJava适配器
 
     private static MeizituService meizituService;  //用于请求妹子图网站的Http所对应的Retrofit Service
 
@@ -29,7 +29,7 @@ public class Network {
         if(meizituService == null){
             // 配置HttpLoggingInterceptor来查看Http的Log
             HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
-            httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BASIC);
+            httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.HEADERS);
             // 构建带有HttpLoggingInterceptor的OkHttpClient
             OkHttpClient okHttpClientWithInterceptor = new OkHttpClient.Builder()
                     .addInterceptor(httpLoggingInterceptor)

@@ -115,7 +115,7 @@ public class XingGanFragment extends BaseFragment implements SwipeRefreshLayout.
      * 向下滑动时，从网上加载第page页的妹子信息
      * */
     public void AddXingganMeiziData(int page){
-        //unsubscribe();
+        unsubscribe();   // 在新的Http请求前，取消上一次Http操作中所涉及的obserable与observer之间的订阅关系
         canAddMeizitu = false;                   // 在加载完第page页的妹子数据前，不能加载新的数据
         subscription = Network.getMeizituService()
                 .getPictureTypeInPage("xinggan",page)
