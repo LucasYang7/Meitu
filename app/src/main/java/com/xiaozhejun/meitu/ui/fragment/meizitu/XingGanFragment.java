@@ -61,7 +61,7 @@ public class XingGanFragment extends BaseFragment implements SwipeRefreshLayout.
                 mMeizituGalleryList.clear();      // 刷新妹子图的首页时，要清空原来的数据
             }
             mMeizituGalleryList.addAll(mNewMeizituGalleryList);  //更新XingGanFragment的妹子图数据
-            meizituRecyclerViewAdapter.setMeizituGalleryList(mMeizituGalleryList);
+            meizituRecyclerViewAdapter.initMeizituGalleryList(mMeizituGalleryList);
             meizituRecyclerViewAdapter.notifyDataSetChanged();
             ShowToast.showLongToast(mContext,"load page " + page + " onCompleted()!");
             page++;   // 增大妹子图相册所在的网页页数
@@ -184,7 +184,7 @@ public class XingGanFragment extends BaseFragment implements SwipeRefreshLayout.
         StaggeredGridLayoutManager staggeredGridLayoutManager =
                 new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
         meizituRecyclerViewAdapter = new MeizituRecyclerViewAdapter(mContext);
-        meizituRecyclerViewAdapter.setMeizituGalleryList(mMeizituGalleryList);
+        meizituRecyclerViewAdapter.initMeizituGalleryList(mMeizituGalleryList);
         xingganRecyclerView.setHasFixedSize(true);
         xingganRecyclerView.setLayoutManager(staggeredGridLayoutManager);  //设置RecyclerView的布局
         xingganRecyclerView.setAdapter(meizituRecyclerViewAdapter); //设置RecyclerView的适配器

@@ -19,15 +19,32 @@ import java.util.List;
  */
 public class MeizituRecyclerViewAdapter extends RecyclerView.Adapter<MeizituRecyclerViewAdapter.MeizituViewHolder> {
 
-    private List<MeizituGallery> meizituGalleryList;
-    private Context context;
+    private List<MeizituGallery> mMeizituGalleryList;
+    private Context mContext;
 
     public MeizituRecyclerViewAdapter(Context context){
-        this.context = context;
+        mContext = context;
     }
 
-    public void setMeizituGalleryList(List<MeizituGallery> meizituGalleryList){
-        this.meizituGalleryList = meizituGalleryList;
+    /**
+     * 初始化妹子图相册的数据
+     * */
+    public void initMeizituGalleryList(List<MeizituGallery> meizituGalleryList){
+        mMeizituGalleryList = meizituGalleryList;
+    }
+
+    /**
+     * 更新妹子图相册的数据
+     * @param meizituGalleryList 从妹子图网站上下载的数据
+     * @param page 表示请求是妹子图网站的第page页数据
+     * */
+    public void updateMeizituGalleryList(List<MeizituGallery> meizituGalleryList,int page){
+        if(page == 1){
+            initMeizituGalleryList(meizituGalleryList);
+        }else{
+            mMeizituGalleryList.addAll(meizituGalleryList);
+        }
+        notifyDataSetChanged();          // 通知注册了该Adapter的RecyclerView更新视图
     }
 
     @Override
@@ -39,11 +56,11 @@ public class MeizituRecyclerViewAdapter extends RecyclerView.Adapter<MeizituRecy
 
     @Override
     public void onBindViewHolder(MeizituViewHolder holder, int position) {
-        MeizituGallery meizituGallery = meizituGalleryList.get(position);
+        MeizituGallery meizituGallery = mMeizituGalleryList.get(position);
         String title = meizituGallery.getTitle();
         String pictureUrl = meizituGallery.getPictureUrl();
         holder.textViewInViewholder.setText(title);
-        Picasso.with(context)
+        Picasso.with(mContext)
                 .load(pictureUrl)
                 .placeholder(R.drawable.meizitu)
                 .error(R.drawable.meizitu)
@@ -52,7 +69,7 @@ public class MeizituRecyclerViewAdapter extends RecyclerView.Adapter<MeizituRecy
 
     @Override
     public int getItemCount() {
-        return meizituGalleryList.size();
+        return mMeizituGalleryList == null ? 0: mMeizituGalleryList.size();
     }
 
     /**
