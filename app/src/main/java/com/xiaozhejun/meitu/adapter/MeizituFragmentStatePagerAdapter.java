@@ -3,6 +3,7 @@ package com.xiaozhejun.meitu.adapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.util.Log;
 
 import com.xiaozhejun.meitu.ui.fragment.meizitu.AllFragment;
 import com.xiaozhejun.meitu.ui.fragment.meizitu.HomePageFragment;
@@ -20,7 +21,7 @@ import com.xiaozhejun.meitu.util.Constants;
  */
 public class MeizituFragmentStatePagerAdapter extends FragmentStatePagerAdapter {
 
-    MeizituGalleryListFragment[] meizituGalleryListFragments = new MeizituGalleryListFragment[5];
+    MeizituGalleryListFragment[] meizituGalleryListFragments = new MeizituGalleryListFragment[Constants.MEIZITU_COUNT];
 
     public MeizituFragmentStatePagerAdapter(FragmentManager fm) {
         super(fm);
@@ -28,6 +29,7 @@ public class MeizituFragmentStatePagerAdapter extends FragmentStatePagerAdapter 
 
     @Override
     public Fragment getItem(int position) {
+        Log.e("postion","getItem " + position);
         switch(position){
             case 0:
             case 1:
@@ -42,9 +44,6 @@ public class MeizituFragmentStatePagerAdapter extends FragmentStatePagerAdapter 
 
             case 5:
                 return new ShareFragment();
-
-            case 6:
-                return new AllFragment();
 
             default:
                 position = 0;
