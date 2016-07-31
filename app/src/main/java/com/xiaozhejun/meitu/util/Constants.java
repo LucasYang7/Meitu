@@ -10,6 +10,11 @@ public interface Constants {
     String[] MEIZITU_TITLES = {"首页","性感妹子","日本妹子","台湾妹子","清纯妹子","妹子自拍","每日更新"};
 
     /**
+     * 妹子图网站对应的妹子分类
+     * */
+    String[] MEIZITU_TYPE = {"","xinggan","japan","taiwan","mm","share","all"};
+
+    /**
      * 妹子图网站的图片分类数目，每一个分类对应一个Fragment
      * */
     int MEIZITU_COUNT = 7;

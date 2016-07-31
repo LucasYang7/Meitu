@@ -8,6 +8,7 @@ import com.xiaozhejun.meitu.ui.fragment.meizitu.AllFragment;
 import com.xiaozhejun.meitu.ui.fragment.meizitu.HomePageFragment;
 import com.xiaozhejun.meitu.ui.fragment.meizitu.JapanFragment;
 import com.xiaozhejun.meitu.ui.fragment.meizitu.MMFragment;
+import com.xiaozhejun.meitu.ui.fragment.meizitu.MeizituGalleryListFragment;
 import com.xiaozhejun.meitu.ui.fragment.meizitu.ShareFragment;
 import com.xiaozhejun.meitu.ui.fragment.meizitu.TaiwanFragment;
 import com.xiaozhejun.meitu.ui.fragment.meizitu.XingGanFragment;
@@ -18,6 +19,9 @@ import com.xiaozhejun.meitu.util.Constants;
  * Created by yangzhe on 16-7-27.
  */
 public class MeizituFragmentStatePagerAdapter extends FragmentStatePagerAdapter {
+
+    MeizituGalleryListFragment[] meizituGalleryListFragments = new MeizituGalleryListFragment[5];
+
     public MeizituFragmentStatePagerAdapter(FragmentManager fm) {
         super(fm);
     }
@@ -26,19 +30,15 @@ public class MeizituFragmentStatePagerAdapter extends FragmentStatePagerAdapter 
     public Fragment getItem(int position) {
         switch(position){
             case 0:
-                return new HomePageFragment();
-
             case 1:
-                return new XingGanFragment();
-
             case 2:
-                return new JapanFragment();
-
             case 3:
-                return new TaiwanFragment();
-
             case 4:
-                return new MMFragment();
+                if(meizituGalleryListFragments[position] == null){
+                    meizituGalleryListFragments[position] = new MeizituGalleryListFragment();
+                    meizituGalleryListFragments[position].setType(Constants.MEIZITU_TYPE[position]);
+                }
+                return meizituGalleryListFragments[position];
 
             case 5:
                 return new ShareFragment();
@@ -47,7 +47,12 @@ public class MeizituFragmentStatePagerAdapter extends FragmentStatePagerAdapter 
                 return new AllFragment();
 
             default:
-                return new HomePageFragment();
+                position = 0;
+                if(meizituGalleryListFragments[position] == null){
+                    meizituGalleryListFragments[position] = new MeizituGalleryListFragment();
+                    meizituGalleryListFragments[position].setType(Constants.MEIZITU_TYPE[position]);
+                }
+                return meizituGalleryListFragments[position];
 
         }
     }
