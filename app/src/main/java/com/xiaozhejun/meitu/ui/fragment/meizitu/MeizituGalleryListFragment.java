@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -120,6 +121,11 @@ public class MeizituGalleryListFragment extends BaseFragment implements SwipeRef
         @Override
         public void onNext(List<MeizituGallery> meizituGalleryList) {
             meizituRecyclerViewAdapter.updateMeizituGalleryList(meizituGalleryList,mPage);
+            // test meizituGalleryList start
+            for(MeizituGallery meizituGallery:meizituGalleryList){
+                Log.e("MeizituGallery",meizituGallery.getObjectInformation());
+            }
+            // test meizituGalleryList end
         }
     };
 
@@ -194,6 +200,7 @@ public class MeizituGalleryListFragment extends BaseFragment implements SwipeRef
             Element viewElement = galleryElement.select("span.view").first();
             // 将html中的元素转换为相册对应的属性值
             meizituGallery.setGalleryUrl(aElement.attr("href"));
+            meizituGallery.setGroupId(aElement.attr("href"));
             meizituGallery.setTitle(imgElement.attr("alt"));
             meizituGallery.setPictureUrl(imgElement.attr("data-original"));
             meizituGallery.setTime(timeElement.text());
