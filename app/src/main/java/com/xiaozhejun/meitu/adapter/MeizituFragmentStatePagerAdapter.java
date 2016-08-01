@@ -5,14 +5,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.Log;
 
-import com.xiaozhejun.meitu.ui.fragment.meizitu.AllFragment;
-import com.xiaozhejun.meitu.ui.fragment.meizitu.HomePageFragment;
-import com.xiaozhejun.meitu.ui.fragment.meizitu.JapanFragment;
-import com.xiaozhejun.meitu.ui.fragment.meizitu.MMFragment;
 import com.xiaozhejun.meitu.ui.fragment.meizitu.MeizituGalleryListFragment;
 import com.xiaozhejun.meitu.ui.fragment.meizitu.ShareFragment;
-import com.xiaozhejun.meitu.ui.fragment.meizitu.TaiwanFragment;
-import com.xiaozhejun.meitu.ui.fragment.meizitu.XingGanFragment;
 import com.xiaozhejun.meitu.util.Constants;
 
 /**
@@ -28,31 +22,16 @@ public class MeizituFragmentStatePagerAdapter extends FragmentStatePagerAdapter 
     }
 
     @Override
-    public Fragment getItem(int position) {
-        Log.e("postion","getItem " + position);
-        switch(position){
-            case 0:
-            case 1:
-            case 2:
-            case 3:
-            case 4:
-                if(meizituGalleryListFragments[position] == null){
-                    meizituGalleryListFragments[position] = new MeizituGalleryListFragment();
-                    meizituGalleryListFragments[position].setType(Constants.MEIZITU_TYPE[position]);
-                }
-                return meizituGalleryListFragments[position];
-
-            case 5:
-                return new ShareFragment();
-
-            default:
-                position = 0;
-                if(meizituGalleryListFragments[position] == null){
-                    meizituGalleryListFragments[position] = new MeizituGalleryListFragment();
-                    meizituGalleryListFragments[position].setType(Constants.MEIZITU_TYPE[position]);
-                }
-                return meizituGalleryListFragments[position];
-
+    public Fragment getItem(int position) {            // 这里的position并不准确!!!
+        Log.e("position","getItem " + position);
+        if(position < Constants.MEIZITU_COUNT - 1){    // 对应妹子图网站的各个相册页面
+            if(meizituGalleryListFragments[position] == null){
+                meizituGalleryListFragments[position] = new MeizituGalleryListFragment();
+                meizituGalleryListFragments[position].setType(Constants.MEIZITU_TYPE[position]);
+            }
+            return meizituGalleryListFragments[position];
+        }else{    // 妹子自拍页面单独处理
+            return new ShareFragment();
         }
     }
 

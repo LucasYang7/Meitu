@@ -57,6 +57,14 @@ public class MeizituGalleryListFragment extends BaseFragment implements SwipeRef
         mType = type;
     }
 
+    /**
+     * 执行下拉SwipeRefreshLayout进行刷新操作时，要清空原有的数据
+     * */
+    public void resetMeiziData(){
+        mPage = 1;                     // 重新加载首页的妹子图信息
+        mCanAddNewMeizitu = false;     // 在加载完首页的数据前，不能再加载新的妹子数据
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -96,7 +104,7 @@ public class MeizituGalleryListFragment extends BaseFragment implements SwipeRef
     Observer<List<MeizituGallery>> observer = new Observer<List<MeizituGallery>>() {
         @Override
         public void onCompleted() {
-            ShowToast.showLongToast(mContext,"load page " + mPage + " onCompleted()!");
+            ShowToast.showLongToast(mContext,mType + " load page " + mPage + " onCompleted()!");
             meizituSwipeRefreshLayout.setRefreshing(false);
             mCanAddNewMeizitu = true;
             mPage++;
@@ -106,7 +114,7 @@ public class MeizituGalleryListFragment extends BaseFragment implements SwipeRef
         public void onError(Throwable e) {
             meizituSwipeRefreshLayout.setRefreshing(false);
             mCanAddNewMeizitu = true;
-            ShowToast.showLongToast(mContext,"load page " + mPage + " onError()! " + e.toString());
+            ShowToast.showLongToast(mContext,mType + " load page " + mPage + " onError()! " + e.toString());
         }
 
         @Override
@@ -168,14 +176,6 @@ public class MeizituGalleryListFragment extends BaseFragment implements SwipeRef
                 .subscribeOn(Schedulers.io())              //指定产生事件的线程
                 .observeOn(AndroidSchedulers.mainThread()) //指定消费事件的线程
                 .subscribe(observer);
-    }
-
-    /**
-     * 执行下拉SwipeRefreshLayout进行刷新操作时，要清空原有的数据
-     * */
-    public void resetMeiziData(){
-        mPage = 1;                     // 重新加载首页的妹子图信息
-        mCanAddNewMeizitu = false;     // 在加载完首页的数据前，不能再加载新的妹子数据
     }
 
     /**
