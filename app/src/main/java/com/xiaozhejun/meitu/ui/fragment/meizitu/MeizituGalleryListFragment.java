@@ -16,13 +16,9 @@ import com.xiaozhejun.meitu.R;
 import com.xiaozhejun.meitu.adapter.MeizituRecyclerViewAdapter;
 import com.xiaozhejun.meitu.model.MeizituGallery;
 import com.xiaozhejun.meitu.network.Network;
+import com.xiaozhejun.meitu.network.parser.HtmlParser;
 import com.xiaozhejun.meitu.ui.fragment.BaseFragment;
 import com.xiaozhejun.meitu.ui.widget.ShowToast;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -145,7 +141,7 @@ public class MeizituGalleryListFragment extends BaseFragment implements SwipeRef
                         ArrayList<MeizituGallery> meizituGalleryList = null;
                         try {
                             String responseBodyContent = responseBody.string();
-                            meizituGalleryList = parseHtmlContent(responseBodyContent);
+                            meizituGalleryList = HtmlParser.parseMeizituGalleryListHtmlContent(responseBodyContent);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -172,7 +168,7 @@ public class MeizituGalleryListFragment extends BaseFragment implements SwipeRef
                         ArrayList<MeizituGallery> meizituGalleryList = null;
                         try {
                             String responseBodyContent = responseBody.string();
-                            meizituGalleryList = parseHtmlContent(responseBodyContent);
+                            meizituGalleryList = HtmlParser.parseMeizituGalleryListHtmlContent(responseBodyContent);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -184,33 +180,6 @@ public class MeizituGalleryListFragment extends BaseFragment implements SwipeRef
                 .subscribe(observer);
     }
 
-    /**
-     * 使用jsoup解析html文档获取妹子图相册的详细信息
-     * */
-    public ArrayList<MeizituGallery> parseHtmlContent(String htmlContent){
-        ArrayList<MeizituGallery> meizituGalleryList = new ArrayList<MeizituGallery>();
-        Document document = Jsoup.parse(htmlContent);
-        Elements galleryElements = document.select("ul#pins > li");
-        for(Element galleryElement:galleryElements){
-            // 获取html中各个相册属性所对应的元素
-            MeizituGallery meizituGallery = new MeizituGallery();
-            Element aElement = galleryElement.select("a").first();
-            Element imgElement = galleryElement.select("img").first();
-            Element timeElement = galleryElement.select("span.time").first();
-            Element viewElement = galleryElement.select("span.view").first();
-            // 将html中的元素转换为相册对应的属性值
-            meizituGallery.setGalleryUrl(aElement.attr("href"));
-            meizituGallery.setGroupId(aElement.attr("href"));
-            meizituGallery.setTitle(imgElement.attr("alt"));
-            meizituGallery.setPictureUrl(imgElement.attr("data-original"));
-            meizituGallery.setTime(timeElement.text());
-            meizituGallery.setViewTimes(viewElement.text());
-            // 将相册信息添加到相册列表中
-            meizituGalleryList.add(meizituGallery);
-        }
-        return meizituGalleryList;
-    }
-    
     /**
      * 为RecyclerView设置是否到底部的事件监听
      * 通过staggeredGridLayoutManager.findLastCompletelyVisibleItemPositions
