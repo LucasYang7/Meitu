@@ -18,6 +18,7 @@ import com.xiaozhejun.meitu.model.MeizituGallery;
 import com.xiaozhejun.meitu.network.Network;
 import com.xiaozhejun.meitu.network.parser.HtmlParser;
 import com.xiaozhejun.meitu.ui.fragment.BaseFragment;
+import com.xiaozhejun.meitu.ui.widget.MeituRecyclerView;
 import com.xiaozhejun.meitu.ui.widget.ShowToast;
 import com.xiaozhejun.meitu.util.Logcat;
 
@@ -78,7 +79,7 @@ public class MeizituGalleryListFragment extends BaseFragment implements SwipeRef
         meizituRecyclerView.setHasFixedSize(true);
         meizituRecyclerView.setLayoutManager(staggeredGridLayoutManager);  //设置RecyclerView的布局
         meizituRecyclerView.setAdapter(meizituRecyclerViewAdapter); //设置RecyclerView的适配器
-        meizituRecyclerView.addOnScrollListener(new OnVerticalScrollListener() {
+        meizituRecyclerView.addOnScrollListener(new MeituRecyclerView.OnVerticalScrollListener() {
             @Override
             public void onBottom() {
                 ShowToast.showShortToast(mContext,mType + " 已经滑到底部了" + "page " + mPage);
@@ -189,48 +190,5 @@ public class MeizituGalleryListFragment extends BaseFragment implements SwipeRef
                 .subscribeOn(Schedulers.io())              //指定产生事件的线程
                 .observeOn(AndroidSchedulers.mainThread()) //指定消费事件的线程
                 .subscribe(observer);
-    }
-
-    /**
-     * 为RecyclerView设置是否到底部的事件监听
-     * 通过staggeredGridLayoutManager.findLastCompletelyVisibleItemPositions
-     * 来找出最后一个完成出现的item
-     * */
-    abstract class OnVerticalScrollListener extends RecyclerView.OnScrollListener{
-
-        /**
-         * 判断当前显示的item是否为RecyclerView中的最后一个item
-         * */
-        private boolean isLastItemDisplaying(RecyclerView recyclerView){
-            if(recyclerView.getAdapter().getItemCount() != 0){
-                StaggeredGridLayoutManager staggeredGridLayoutManager = (StaggeredGridLayoutManager)
-                        recyclerView.getLayoutManager();
-                int [] lastCompletelyVisiblePostions = staggeredGridLayoutManager.findLastCompletelyVisibleItemPositions(null);
-                int lastCompletelyVisibleItemPosition = 0;   //找到当前页面最后完整显示的item的位置 　
-                for(int i = 0;i < lastCompletelyVisiblePostions.length;i++){
-                    if(lastCompletelyVisiblePostions[i] > lastCompletelyVisibleItemPosition){
-                        lastCompletelyVisibleItemPosition = lastCompletelyVisiblePostions[i];
-                    }
-                }
-                if (lastCompletelyVisibleItemPosition != RecyclerView.NO_POSITION &&
-                        lastCompletelyVisibleItemPosition == recyclerView.getAdapter().getItemCount() - 1)
-                    return true;
-            }
-            return false;
-        }
-
-        @Override
-        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-            super.onScrollStateChanged(recyclerView, newState);
-            // RecyclerView已经滑到底部且RecyclerView处于静止状态
-            if(isLastItemDisplaying(recyclerView) == true && newState == RecyclerView.SCROLL_STATE_IDLE){
-                onBottom();
-            }
-        }
-
-        /**
-         * 当前滑到RecyclerView的底部时，调用该方法，但是方法的具体内容交给客户定义
-         * */
-        public abstract void onBottom();
     }
 }
