@@ -18,6 +18,7 @@ import com.xiaozhejun.meitu.model.MeizituGallery;
 import com.xiaozhejun.meitu.network.Network;
 import com.xiaozhejun.meitu.ui.fragment.BaseFragment;
 import com.xiaozhejun.meitu.ui.widget.ShowToast;
+import com.xiaozhejun.meitu.util.Logcat;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -73,7 +74,8 @@ public class XingGanFragment extends BaseFragment implements SwipeRefreshLayout.
             xingganSwipeRefreshLayout.setRefreshing(false);
             canAddMeizitu = true;
             ShowToast.showLongToast(mContext,"load page " + page + " onError()! " + e.toString());
-            Log.e(TAG,"onError()!" + e.toString());
+            //Log.e(TAG,"onError()!" + e.toString());
+            Logcat.ShowLog(TAG,"onError()!" + e.toString());
         }
 
         @Override

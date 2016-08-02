@@ -19,6 +19,7 @@ import com.xiaozhejun.meitu.network.Network;
 import com.xiaozhejun.meitu.network.parser.HtmlParser;
 import com.xiaozhejun.meitu.ui.fragment.BaseFragment;
 import com.xiaozhejun.meitu.ui.widget.ShowToast;
+import com.xiaozhejun.meitu.util.Logcat;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -119,7 +120,8 @@ public class MeizituGalleryListFragment extends BaseFragment implements SwipeRef
             meizituRecyclerViewAdapter.updateMeizituGalleryList(meizituGalleryList,mPage);
             // test meizituGalleryList start
             for(MeizituGallery meizituGallery:meizituGalleryList){
-                Log.e("MeizituGallery",meizituGallery.getObjectInformation());
+                //Log.e("MeizituGallery",meizituGallery.getObjectInformation());
+                Logcat.ShowLog("MeizituGallery",meizituGallery.getObjectInformation());
             }
             // test meizituGalleryList end
         }
@@ -213,9 +215,9 @@ public class MeizituGalleryListFragment extends BaseFragment implements SwipeRef
             super.onScrollStateChanged(recyclerView, newState);
             // RecyclerView已经滑到底部且RecyclerView处于静止状态
             if(isLastItemDisplaying(recyclerView) == true && newState == RecyclerView.SCROLL_STATE_IDLE){
-                ShowToast.showShortToast(mContext,"已经滑到底部了" + "page " + mPage);
+                ShowToast.showShortToast(mContext,mType + " 已经滑到底部了" + "page " + mPage);
                 if(mCanAddNewMeizitu == true){
-                    ShowToast.showShortToast(mContext,"正在加载第" + mPage + "页的妹子数据");
+                    ShowToast.showShortToast(mContext,mType + " 正在加载第" + mPage + "页的妹子数据");
                     AddNewMeizituGalleryData(mPage);
                 }
             }

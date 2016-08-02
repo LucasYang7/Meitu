@@ -8,6 +8,7 @@ import android.util.Log;
 import com.xiaozhejun.meitu.ui.fragment.meizitu.MeizituGalleryListFragment;
 import com.xiaozhejun.meitu.ui.fragment.meizitu.ShareFragment;
 import com.xiaozhejun.meitu.util.Constants;
+import com.xiaozhejun.meitu.util.Logcat;
 
 /**
  * 这是妹子图MeizituTabFragment对应的FragmentStatePagerAdapter
@@ -23,7 +24,8 @@ public class MeizituFragmentStatePagerAdapter extends FragmentStatePagerAdapter 
 
     @Override
     public Fragment getItem(int position) {            // 这里的position并不准确!!!
-        Log.e("position","getItem " + position);
+        //Log.e("position","getItem " + position);
+        Logcat.ShowLog("position","getItem " + position);
         if(position < Constants.MEIZITU_COUNT - 1){    // 对应妹子图网站的各个相册页面
             if(meizituGalleryListFragments[position] == null){
                 meizituGalleryListFragments[position] = new MeizituGalleryListFragment();

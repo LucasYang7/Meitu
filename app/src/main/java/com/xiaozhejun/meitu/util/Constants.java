@@ -4,6 +4,17 @@ package com.xiaozhejun.meitu.util;
  * Created by yangzhe on 16-7-26.
  */
 public interface Constants {
+
+    /**
+     * 用于控制是否显示Toast
+     * */
+    boolean SHOW_TOAST = true;
+
+    /**
+     * 用于控制是否显示自己定义的Log
+     * */
+    boolean SHOW_LOG = true;
+
     /**
      * 妹子图网站对应的妹子分类标题
      * */
