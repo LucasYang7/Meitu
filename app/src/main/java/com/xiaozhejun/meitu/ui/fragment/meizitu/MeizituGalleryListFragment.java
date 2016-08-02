@@ -78,7 +78,16 @@ public class MeizituGalleryListFragment extends BaseFragment implements SwipeRef
         meizituRecyclerView.setHasFixedSize(true);
         meizituRecyclerView.setLayoutManager(staggeredGridLayoutManager);  //设置RecyclerView的布局
         meizituRecyclerView.setAdapter(meizituRecyclerViewAdapter); //设置RecyclerView的适配器
-        meizituRecyclerView.addOnScrollListener(new OnVerticalScrollListener()); // 为RecyclerView添加滑动事件监听
+        meizituRecyclerView.addOnScrollListener(new OnVerticalScrollListener() {
+            @Override
+            public void onBottom() {
+                ShowToast.showShortToast(mContext,mType + " 已经滑到底部了" + "page " + mPage);
+                if(mCanAddNewMeizitu == true){
+                    ShowToast.showShortToast(mContext,mType + " 正在加载第" + mPage + "页的妹子数据");
+                    AddNewMeizituGalleryData(mPage);
+                }
+            }
+        }); // 为RecyclerView添加滑动事件监听
         // 设置SwipeRefreshLayout
         meizituSwipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.meizituGalleryListSwipeRefreshLayout);
         meizituSwipeRefreshLayout.setOnRefreshListener(this);
@@ -187,7 +196,7 @@ public class MeizituGalleryListFragment extends BaseFragment implements SwipeRef
      * 通过staggeredGridLayoutManager.findLastCompletelyVisibleItemPositions
      * 来找出最后一个完成出现的item
      * */
-    class OnVerticalScrollListener extends RecyclerView.OnScrollListener{
+    abstract class OnVerticalScrollListener extends RecyclerView.OnScrollListener{
 
         /**
          * 判断当前显示的item是否为RecyclerView中的最后一个item
@@ -215,12 +224,13 @@ public class MeizituGalleryListFragment extends BaseFragment implements SwipeRef
             super.onScrollStateChanged(recyclerView, newState);
             // RecyclerView已经滑到底部且RecyclerView处于静止状态
             if(isLastItemDisplaying(recyclerView) == true && newState == RecyclerView.SCROLL_STATE_IDLE){
-                ShowToast.showShortToast(mContext,mType + " 已经滑到底部了" + "page " + mPage);
-                if(mCanAddNewMeizitu == true){
-                    ShowToast.showShortToast(mContext,mType + " 正在加载第" + mPage + "页的妹子数据");
-                    AddNewMeizituGalleryData(mPage);
-                }
+                onBottom();
             }
         }
+
+        /**
+         * 当前滑到RecyclerView的底部时，调用该方法，但是方法的具体内容交给客户定义
+         * */
+        public abstract void onBottom();
     }
 }
