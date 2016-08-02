@@ -1,8 +1,10 @@
 package com.xiaozhejun.meitu.ui.widget;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.AttributeSet;
 
 /**
  * 自定义RecyclerView
@@ -11,8 +13,10 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
  * Created by yangzhe on 16-8-3.
  */
 public class MeituRecyclerView extends RecyclerView {
-    public MeituRecyclerView(Context context) {
-        super(context);
+
+    // 注意必须使用带有AttributeSet的构造放，否则MeituRecyclerView无法被XML文件解析，并提示错误:Error inflating class
+    public MeituRecyclerView(Context context, @Nullable AttributeSet attrs) {
+        super(context, attrs);
     }
 
     /**

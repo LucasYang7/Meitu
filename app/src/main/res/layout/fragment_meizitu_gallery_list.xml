@@ -12,13 +12,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/meizituGalleryListSwipeRefreshLayout">
-        <android.support.v7.widget.RecyclerView
+
+        <com.xiaozhejun.meitu.ui.widget.MeituRecyclerView
             android:id="@+id/meizituGalleryListRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars="vertical">
 
-        </android.support.v7.widget.RecyclerView>
+        </com.xiaozhejun.meitu.ui.widget.MeituRecyclerView>
+
 
     </android.support.v4.widget.SwipeRefreshLayout>
 

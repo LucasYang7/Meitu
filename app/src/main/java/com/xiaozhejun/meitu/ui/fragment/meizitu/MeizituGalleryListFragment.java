@@ -38,7 +38,7 @@ import rx.schedulers.Schedulers;
 public class MeizituGalleryListFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener{
 
     private SwipeRefreshLayout meizituSwipeRefreshLayout;
-    private RecyclerView meizituRecyclerView;
+    private MeituRecyclerView meizituRecyclerView;
     private MeizituRecyclerViewAdapter meizituRecyclerViewAdapter;
     private boolean mCanAddNewMeizitu;    // 判断能否请求新的网页，加载更多妹子的图片
     private int mPage;      //表示妹子图片相册链接后面的分页
@@ -71,7 +71,7 @@ public class MeizituGalleryListFragment extends BaseFragment implements SwipeRef
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_meizitu_gallery_list, container, false);
         // 设置RecyclerView
-        meizituRecyclerView = (RecyclerView)view.findViewById(R.id.meizituGalleryListRecyclerView);
+        meizituRecyclerView = (MeituRecyclerView) view.findViewById(R.id.meizituGalleryListRecyclerView);
         StaggeredGridLayoutManager staggeredGridLayoutManager =
                 new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
         meizituRecyclerViewAdapter = new MeizituRecyclerViewAdapter(mContext);      //
