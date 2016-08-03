@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.AttributeSet;
+import android.view.View;
 
 /**
  * 自定义RecyclerView
@@ -62,6 +63,13 @@ public class MeituRecyclerView extends RecyclerView {
             }
         }
 
+    }
+
+    /**
+     * 为RecyclerView添加OnItemClickListener
+     * */
+    public static interface OnItemClickListener<Model>{
+        void onItemClick(View view, Model model);
     }
 
 }

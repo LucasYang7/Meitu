@@ -60,9 +60,9 @@ public class MeizituRecyclerViewAdapter extends RecyclerView.Adapter<MeizituRecy
         String title = meizituGallery.getTitle();
         String pictureUrl = meizituGallery.getPictureUrl();
         holder.textViewInViewholder.setText(title);
-        Picasso.with(mContext)
+        Picasso.with(holder.imageViewInViewholder.getContext())
                 .load(pictureUrl)
-                .placeholder(R.drawable.meizitu)
+                .placeholder(R.drawable.place_holder)
                 .error(R.drawable.meizitu)
                 .into(holder.imageViewInViewholder);
     }
