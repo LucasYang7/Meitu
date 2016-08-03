@@ -6,6 +6,11 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.xiaozhejun.meitu.R;
 
 /**
  * 自定义RecyclerView
@@ -15,9 +20,41 @@ import android.view.View;
  */
 public class MeituRecyclerView extends RecyclerView {
 
+    private MeituRecyclerView.OnItemClickListener mOnItemClickListener;
+
     // 注意必须使用带有AttributeSet的构造放，否则MeituRecyclerView无法被XML文件解析，并提示错误:Error inflating class
     public MeituRecyclerView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+    }
+
+    /**
+     * 为RecyclerView设置OnItemClickListener
+     * */
+    public void setOnItemClickListener(MeituRecyclerView.OnItemClickListener onItemClickListener){
+        this.mOnItemClickListener = onItemClickListener;
+    }
+
+    /**
+     * 妹子图RecyclerView里面的ViewHolder
+     * */
+    public static class MeizituViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        public TextView textViewInViewholder;
+        public ImageView imageViewInViewholder;
+        public MeituRecyclerView meituRecyclerView;   //MeizituViewHolder所附属的MeituRecyclerView
+
+        public MeizituViewHolder(View itemView, MeituRecyclerView parentMeituRecyclerView) {
+            super(itemView);
+            meituRecyclerView = parentMeituRecyclerView;
+            textViewInViewholder = (TextView) itemView.findViewById(R.id.textInMeizituViewHolder);
+            imageViewInViewholder = (ImageView) itemView.findViewById(R.id.imageInMeizituViewHolder);
+            itemView.setOnClickListener(this);      // 别忘了设置OnClickListener!!!
+        }
+
+        @Override
+        public void onClick(View v) {
+            int position = getAdapterPosition();    // 获取当前ViewHolder在Adapater中的位置
+            meituRecyclerView.mOnItemClickListener.onItemClick(v,position);
+        }
     }
 
     /**
@@ -69,7 +106,7 @@ public class MeituRecyclerView extends RecyclerView {
      * 为RecyclerView添加OnItemClickListener
      * 当用户点击了某个ViewHolder时，触发相应的onItemClick的方法
      * */
-    public static interface OnItemClickListener{
+    public interface OnItemClickListener{
         void onItemClick(View view,int postion);
     }
 

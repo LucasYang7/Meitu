@@ -74,16 +74,8 @@ public class MeizituGalleryListFragment extends BaseFragment implements SwipeRef
         meizituRecyclerView = (MeituRecyclerView) view.findViewById(R.id.meizituGalleryListRecyclerView);
         StaggeredGridLayoutManager staggeredGridLayoutManager =
                 new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
-        meizituRecyclerViewAdapter = new MeizituRecyclerViewAdapter(mContext);      //
+        meizituRecyclerViewAdapter = new MeizituRecyclerViewAdapter(meizituRecyclerView); //绑定meizituRecyclerViewAdapter和meizituRecyclerView
         meizituRecyclerViewAdapter.initMeizituGalleryList(null);
-        meizituRecyclerViewAdapter.setOnItemClickListener(new MeituRecyclerView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(View view, int postion) {
-                ShowToast.showLongToast(mContext,meizituRecyclerViewAdapter.getMeizituGallery(postion)
-                        .getObjectInformation());
-            }
-        });
         meizituRecyclerView.setHasFixedSize(true);
         meizituRecyclerView.setLayoutManager(staggeredGridLayoutManager);  //设置RecyclerView的布局
         meizituRecyclerView.setAdapter(meizituRecyclerViewAdapter); //设置RecyclerView的适配器
@@ -97,6 +89,14 @@ public class MeizituGalleryListFragment extends BaseFragment implements SwipeRef
                 }
             }
         }); // 为RecyclerView添加滑动事件监听
+        meizituRecyclerView.setOnItemClickListener(new MeituRecyclerView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(View view, int postion) {
+                ShowToast.showLongToast(mContext,meizituRecyclerViewAdapter.getMeizituGallery(postion)
+                        .getObjectInformation());
+            }
+        });
         // 设置SwipeRefreshLayout
         meizituSwipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.meizituGalleryListSwipeRefreshLayout);
         meizituSwipeRefreshLayout.setOnRefreshListener(this);

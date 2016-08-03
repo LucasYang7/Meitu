@@ -20,14 +20,13 @@ import java.util.List;
 /**
  * Created by yangzhe on 16-7-29.
  */
-public class MeizituRecyclerViewAdapter extends RecyclerView.Adapter<MeizituRecyclerViewAdapter.MeizituViewHolder> {
+public class MeizituRecyclerViewAdapter extends RecyclerView.Adapter<MeituRecyclerView.MeizituViewHolder> {
 
     private List<MeizituGallery> mMeizituGalleryList;
-    private MeituRecyclerView.OnItemClickListener mOnItemClickListener;
-    private Context mContext;
+    private MeituRecyclerView meituRecyclerView;   //与该MeizituRecyclerViewAdapter绑定的MeituRecyclerView
 
-    public MeizituRecyclerViewAdapter(Context context){
-        mContext = context;
+    public MeizituRecyclerViewAdapter(MeituRecyclerView recyclerView){
+        meituRecyclerView = recyclerView;
     }
 
     /**
@@ -59,22 +58,15 @@ public class MeizituRecyclerViewAdapter extends RecyclerView.Adapter<MeizituRecy
         return mMeizituGalleryList.get(position);
     }
 
-    /**
-     * 为RecyclerView设置OnItemClickListener
-     * */
-    public void setOnItemClickListener(MeituRecyclerView.OnItemClickListener onItemClickListener){
-        this.mOnItemClickListener = onItemClickListener;
-    }
-
     @Override
-    public MeizituViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MeituRecyclerView.MeizituViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.meizitu_viewholder,
                 parent,false);
-        return new MeizituViewHolder(itemView);
+        return new MeituRecyclerView.MeizituViewHolder(itemView,meituRecyclerView);
     }
 
     @Override
-    public void onBindViewHolder(MeizituViewHolder holder, int position) {
+    public void onBindViewHolder(MeituRecyclerView.MeizituViewHolder holder, int position) {
         MeizituGallery meizituGallery = mMeizituGalleryList.get(position);
         String title = meizituGallery.getTitle();
         String pictureUrl = meizituGallery.getPictureUrl();
@@ -89,26 +81,6 @@ public class MeizituRecyclerViewAdapter extends RecyclerView.Adapter<MeizituRecy
     @Override
     public int getItemCount() {
         return mMeizituGalleryList == null ? 0: mMeizituGalleryList.size();
-    }
-
-    /**
-     * 妹子图RecyclerView里面的ViewHolder
-     * */
-    public class MeizituViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public TextView textViewInViewholder;
-        public ImageView imageViewInViewholder;
-        public MeizituViewHolder(View itemView) {
-            super(itemView);
-            textViewInViewholder = (TextView) itemView.findViewById(R.id.textInMeizituViewHolder);
-            imageViewInViewholder = (ImageView) itemView.findViewById(R.id.imageInMeizituViewHolder);
-            itemView.setOnClickListener(this);      // 别忘了设置OnClickListener!!!
-        }
-
-        @Override
-        public void onClick(View v) {
-            int position = getAdapterPosition();    // 获取当前ViewHolder在Adapater中的位置
-            mOnItemClickListener.onItemClick(v,position);
-        }
     }
 
 }

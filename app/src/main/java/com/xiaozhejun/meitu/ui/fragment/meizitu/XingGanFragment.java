@@ -185,7 +185,7 @@ public class XingGanFragment extends BaseFragment implements SwipeRefreshLayout.
         xingganRecyclerView = (RecyclerView)view.findViewById(R.id.xingganRecyclerView);
         StaggeredGridLayoutManager staggeredGridLayoutManager =
                 new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
-        meizituRecyclerViewAdapter = new MeizituRecyclerViewAdapter(mContext);
+        //meizituRecyclerViewAdapter = new MeizituRecyclerViewAdapter(mContext);
         meizituRecyclerViewAdapter.initMeizituGalleryList(mMeizituGalleryList);
         xingganRecyclerView.setHasFixedSize(true);
         xingganRecyclerView.setLayoutManager(staggeredGridLayoutManager);  //设置RecyclerView的布局
