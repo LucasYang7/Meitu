@@ -67,9 +67,10 @@ public class MeituRecyclerView extends RecyclerView {
 
     /**
      * 为RecyclerView添加OnItemClickListener
+     * 当用户点击了某个ViewHolder时，触发相应的onItemClick的方法
      * */
-    public static interface OnItemClickListener<Model>{
-        void onItemClick(View view, Model model);
+    public static interface OnItemClickListener{
+        void onItemClick(View view,int postion);
     }
 
 }

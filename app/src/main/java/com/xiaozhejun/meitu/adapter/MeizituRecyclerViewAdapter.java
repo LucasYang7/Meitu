@@ -11,6 +11,9 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.xiaozhejun.meitu.R;
 import com.xiaozhejun.meitu.model.MeizituGallery;
+import com.xiaozhejun.meitu.ui.widget.MeituRecyclerView;
+import com.xiaozhejun.meitu.ui.widget.ShowToast;
+import com.xiaozhejun.meitu.util.Logcat;
 
 import java.util.List;
 
@@ -20,6 +23,7 @@ import java.util.List;
 public class MeizituRecyclerViewAdapter extends RecyclerView.Adapter<MeizituRecyclerViewAdapter.MeizituViewHolder> {
 
     private List<MeizituGallery> mMeizituGalleryList;
+    private MeituRecyclerView.OnItemClickListener mOnItemClickListener;
     private Context mContext;
 
     public MeizituRecyclerViewAdapter(Context context){
@@ -45,6 +49,21 @@ public class MeizituRecyclerViewAdapter extends RecyclerView.Adapter<MeizituRecy
             mMeizituGalleryList.addAll(meizituGalleryList);
         }
         notifyDataSetChanged();          // 通知注册了该Adapter的RecyclerView更新视图
+    }
+
+    /**
+     * 获取相应位置的妹子图的相册数据
+     * @param position 某个ViewHolder在Adapter中的位置
+     * */
+    public MeizituGallery getMeizituGallery(int position){
+        return mMeizituGalleryList.get(position);
+    }
+
+    /**
+     * 为RecyclerView设置OnItemClickListener
+     * */
+    public void setOnItemClickListener(MeituRecyclerView.OnItemClickListener onItemClickListener){
+        this.mOnItemClickListener = onItemClickListener;
     }
 
     @Override
@@ -75,13 +94,20 @@ public class MeizituRecyclerViewAdapter extends RecyclerView.Adapter<MeizituRecy
     /**
      * 妹子图RecyclerView里面的ViewHolder
      * */
-    public static class MeizituViewHolder extends RecyclerView.ViewHolder {
+    public class MeizituViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView textViewInViewholder;
         public ImageView imageViewInViewholder;
         public MeizituViewHolder(View itemView) {
             super(itemView);
             textViewInViewholder = (TextView) itemView.findViewById(R.id.textInMeizituViewHolder);
             imageViewInViewholder = (ImageView) itemView.findViewById(R.id.imageInMeizituViewHolder);
+            itemView.setOnClickListener(this);      // 别忘了设置OnClickListener!!!
+        }
+
+        @Override
+        public void onClick(View v) {
+            int position = getAdapterPosition();    // 获取当前ViewHolder在Adapater中的位置
+            mOnItemClickListener.onItemClick(v,position);
         }
     }
 

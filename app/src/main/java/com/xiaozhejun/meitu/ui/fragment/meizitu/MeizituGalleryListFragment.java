@@ -76,6 +76,14 @@ public class MeizituGalleryListFragment extends BaseFragment implements SwipeRef
                 new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
         meizituRecyclerViewAdapter = new MeizituRecyclerViewAdapter(mContext);      //
         meizituRecyclerViewAdapter.initMeizituGalleryList(null);
+        meizituRecyclerViewAdapter.setOnItemClickListener(new MeituRecyclerView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(View view, int postion) {
+                ShowToast.showLongToast(mContext,meizituRecyclerViewAdapter.getMeizituGallery(postion)
+                        .getObjectInformation());
+            }
+        });
         meizituRecyclerView.setHasFixedSize(true);
         meizituRecyclerView.setLayoutManager(staggeredGridLayoutManager);  //设置RecyclerView的布局
         meizituRecyclerView.setAdapter(meizituRecyclerViewAdapter); //设置RecyclerView的适配器
