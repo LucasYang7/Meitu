@@ -2,6 +2,7 @@ package com.xiaozhejun.meitu.ui.fragment.meizitu;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -17,6 +18,7 @@ import com.xiaozhejun.meitu.adapter.MeizituRecyclerViewAdapter;
 import com.xiaozhejun.meitu.model.MeizituGallery;
 import com.xiaozhejun.meitu.network.Network;
 import com.xiaozhejun.meitu.network.parser.HtmlParser;
+import com.xiaozhejun.meitu.ui.activity.ShowMeizituGalleryActivity;
 import com.xiaozhejun.meitu.ui.fragment.BaseFragment;
 import com.xiaozhejun.meitu.ui.widget.MeituRecyclerView;
 import com.xiaozhejun.meitu.ui.widget.ShowToast;
@@ -93,8 +95,15 @@ public class MeizituGalleryListFragment extends BaseFragment implements SwipeRef
 
             @Override
             public void onItemClick(View view, int postion) {
-                ShowToast.showLongToast(mContext,meizituRecyclerViewAdapter.getMeizituGallery(postion)
-                        .getObjectInformation());
+                MeizituGallery meizituGallery = meizituRecyclerViewAdapter.getMeizituGallery(postion);
+                ShowToast.showLongToast(mContext, meizituGallery.getObjectInformation());
+                // 跳转到展示相册图片的Activity
+                Bundle bundle = new Bundle();
+                bundle.putString("groupId",meizituGallery.getGroupId());
+                bundle.putString("title",meizituGallery.getTitle());
+                Intent intent = new Intent(getActivity(), ShowMeizituGalleryActivity.class);
+                intent.putExtras(bundle);
+                startActivity(intent);
             }
         });
         // 设置SwipeRefreshLayout
