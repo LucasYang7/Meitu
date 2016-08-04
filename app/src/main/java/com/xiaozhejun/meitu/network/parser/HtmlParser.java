@@ -46,22 +46,32 @@ public class HtmlParser {
     }
 
     /**
-     * 解析相册首页网页的内容，得到妹子图相册的网页数目
+     * 解析相册首页的网页内容，得到妹子图相册的网页页数信息
      * */
     public static ArrayList<Integer> parseFirstMeizituGalleryHtmlContent(String htmlContent){
-        ArrayList<Integer> meizituGalleryPages = new ArrayList<Integer>();
+        // 解析妹子图相册首页内容，得到该相册所占有的网页总数
         Document document = Jsoup.parse(htmlContent);
-        Element element = document.select("span").get(10);    // 这里逻辑不正确，要改!!!
-        String totalPageString = element.text();
-        Pattern pattern = Pattern.compile("\\d+");
-        Matcher matcher = pattern.matcher(totalPageString);
-        while(matcher.find()){
-            totalPageString = matcher.group();
+        String totalPageString = "1";
+        int totalPages = 1;
+        Logcat.showLog("totalPages","(1) totalPages = " + totalPages);
+        Pattern pattern = Pattern.compile("\\d+");    //匹配整数的正则表达式
+        Element pageNaviDiv = document.select("div.pagenavi").first();
+        Elements spanElements = pageNaviDiv.select("span");
+        for(Element spanElement:spanElements){
+            Matcher matcher = pattern.matcher(spanElement.text());
+            while(matcher.find()){
+                totalPageString = matcher.group();
+                int temp = Integer.parseInt(totalPageString);
+                if(temp > totalPages){
+                    totalPages = temp;
+                }
+            }
         }
-        Logcat.showLog("totalPages",totalPageString);
-        int totalPages = Integer.parseInt(totalPageString);
+        Logcat.showLog("totalPages","(2) totalPages = " + totalPages);
+        // 使用ArrayList存储各个网页所对应的页数信息，便于执行后面的flatMap操作
+        ArrayList<Integer> meizituGalleryPages = new ArrayList<Integer>();
         for(int i = 0; i< totalPages;i++){
-            meizituGalleryPages.add(i+1);    //当page == 1时，会自动跳转到相册的首页，因此无需处理这种情况
+            meizituGalleryPages.add(i+1);  //当page == 1时，会自动跳转到相册的首页，因此无需处理这种情况
         }
         return meizituGalleryPages;
     }
