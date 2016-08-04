@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -75,7 +74,7 @@ public class XingGanFragment extends BaseFragment implements SwipeRefreshLayout.
             canAddMeizitu = true;
             ShowToast.showLongToast(mContext,"load page " + page + " onError()! " + e.toString());
             //Log.e(TAG,"onError()!" + e.toString());
-            Logcat.ShowLog(TAG,"onError()!" + e.toString());
+            Logcat.showLog(TAG,"onError()!" + e.toString());
         }
 
         @Override

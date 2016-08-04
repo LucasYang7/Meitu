@@ -6,9 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -148,7 +146,7 @@ public class MeizituGalleryListFragment extends BaseFragment implements SwipeRef
             // test meizituGalleryList start
             for(MeizituGallery meizituGallery:meizituGalleryList){
                 //Log.e("MeizituGallery",meizituGallery.getObjectInformation());
-                Logcat.ShowLog("MeizituGallery",meizituGallery.getObjectInformation());
+                Logcat.showLog("MeizituGallery",meizituGallery.getObjectInformation());
             }
             // test meizituGalleryList end
         }
