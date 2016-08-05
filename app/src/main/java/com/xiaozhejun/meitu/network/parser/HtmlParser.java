@@ -86,8 +86,8 @@ public class HtmlParser {
         Elements pictureInfoElements = MainImageDiv.select("img");
         for(Element pictureInfoElement:pictureInfoElements){
             MeituPicture meituPicture = new MeituPicture();
-            meituPicture.setTitle(pictureInfoElement.attr("src"));
-            meituPicture.setPictureUrl(pictureInfoElement.attr("alt"));
+            meituPicture.setTitle(pictureInfoElement.attr("alt"));
+            meituPicture.setPictureUrl(pictureInfoElement.attr("src"));
             meizituPictureList.add(meituPicture);
         }
         return meizituPictureList;

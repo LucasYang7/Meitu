@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_search) {
-            ShowToast.showShortToast(MainActivity.this,"点了toolbar上的搜索菜单");
+            ShowToast.showShortToast(MainActivity.this,"搜索功能还未实现 ╮(╯▽╰)╭");
             return true;
         }
 

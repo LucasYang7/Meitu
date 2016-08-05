@@ -35,7 +35,7 @@ public class MeituRecyclerView extends RecyclerView {
     }
 
     /**
-     * 妹子图RecyclerView里面的ViewHolder
+     * 妹子图相册列表中的RecyclerView里面的ViewHolder
      * */
     public static class MeizituViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView textViewInViewholder;
@@ -47,6 +47,29 @@ public class MeituRecyclerView extends RecyclerView {
             meituRecyclerView = parentMeituRecyclerView;
             textViewInViewholder = (TextView) itemView.findViewById(R.id.textInMeizituViewHolder);
             imageViewInViewholder = (ImageView) itemView.findViewById(R.id.imageInMeizituViewHolder);
+            itemView.setOnClickListener(this);      // 别忘了设置OnClickListener!!!
+        }
+
+        @Override
+        public void onClick(View v) {
+            int position = getAdapterPosition();    // 获取当前ViewHolder在Adapater中的位置
+            meituRecyclerView.mOnItemClickListener.onItemClick(v,position);
+        }
+    }
+
+    /**
+     * 显示相册的RecyclerView中的ViewHolder
+     * */
+    public static class PictureViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+        public TextView textViewInViewholder;
+        public ImageView imageViewInViewholder;
+        public MeituRecyclerView meituRecyclerView;   //PictureViewHolder所附属的MeituRecyclerView
+
+        public PictureViewHolder(View itemView, MeituRecyclerView parentMeituRecyclerView) {
+            super(itemView);
+            meituRecyclerView = parentMeituRecyclerView;
+            textViewInViewholder = (TextView) itemView.findViewById(R.id.textInPictureViewHolder);
+            imageViewInViewholder = (ImageView) itemView.findViewById(R.id.imageInPictureViewHolder);
             itemView.setOnClickListener(this);      // 别忘了设置OnClickListener!!!
         }
 

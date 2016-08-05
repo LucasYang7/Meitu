@@ -10,9 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-
         <ImageView
-            android:id="@+id/imageInMeizituViewHolder"
+            android:id="@+id/imageInPictureViewHolder"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="fitXY"
@@ -20,15 +19,12 @@
             android:src="@drawable/meizitu"/>
 
         <TextView
-            android:id="@+id/textInMeizituViewHolder"
+            android:id="@+id/textInPictureViewHolder"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/colorPrimary"
-            android:textSize="14sp"
+            android:textSize="12sp"
             android:text="title"
             android:layout_gravity="center_horizontal"/>
-
     </LinearLayout>
-
-
 </android.support.v7.widget.CardView>

@@ -2,14 +2,17 @@ package com.xiaozhejun.meitu.ui.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.ProgressBar;
 
 import com.xiaozhejun.meitu.R;
+import com.xiaozhejun.meitu.adapter.PictureRecyclerViewAdapter;
 import com.xiaozhejun.meitu.model.MeituPicture;
 import com.xiaozhejun.meitu.network.Network;
 import com.xiaozhejun.meitu.network.parser.HtmlParser;
+import com.xiaozhejun.meitu.ui.widget.MeituRecyclerView;
 import com.xiaozhejun.meitu.ui.widget.ShowToast;
 import com.xiaozhejun.meitu.util.Logcat;
 
@@ -26,15 +29,16 @@ import rx.schedulers.Schedulers;
 
 public class ShowMeizituGalleryActivity extends AppCompatActivity {
 
-    private final String TAG = "ShowMeizituGalleryActivity";
+    private ProgressBar mProgressBar;
+    private MeituRecyclerView mPictureRecyclerView;
+    private PictureRecyclerViewAdapter mPictureRecyclerViewAdapter;
     protected Subscription mSubscription;   // 用于解除Obserable与Observer之间的订阅关系，防止内存泄露
     private ArrayList<Integer> meituPageList = new ArrayList<Integer>();  //妹子图相册对应的网页页数
     private String groupId;
     private String title;
-
     // 测试用。。。
+    private final String TAG = "ShowMeizituGalleryActivity";
     private ArrayList<MeituPicture> meituPictureList = new ArrayList<MeituPicture>();
-    private TextView textView;
     // 测试用。。。
 
     @Override
@@ -46,11 +50,9 @@ public class ShowMeizituGalleryActivity extends AppCompatActivity {
         groupId = bundle.getString("groupId");
         title = bundle.getString("title");
 
-        textView = (TextView)findViewById(R.id.testTextViewInMeizituGallery);
-        textView.setText(title + "\n" + groupId);
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("妹子图 " + groupId);
         // 为toolbar左边的返回按钮添加事件监听
         toolbar.setNavigationOnClickListener(new View.OnClickListener(){
 
@@ -61,8 +63,39 @@ public class ShowMeizituGalleryActivity extends AppCompatActivity {
             }
         });
 
+        mProgressBar = (ProgressBar)findViewById(R.id.progressBarInGallery);
+        mProgressBar.setVisibility(View.VISIBLE);
+
+        // 初始化PictureRecyclerView
+        setupRecyclerView();
+        // 开始下载图片
         beginDownLoad(groupId);
 
+    }
+
+    public void setupRecyclerView(){
+        mPictureRecyclerView = (MeituRecyclerView)findViewById(R.id.meituPictureRecyclerView);
+        StaggeredGridLayoutManager staggeredGridLayoutManager =
+                new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
+        mPictureRecyclerViewAdapter = new PictureRecyclerViewAdapter(mPictureRecyclerView);
+        mPictureRecyclerViewAdapter.initMeituPictureList(null);
+        mPictureRecyclerView.setHasFixedSize(true);
+        mPictureRecyclerView.setLayoutManager(staggeredGridLayoutManager);
+        mPictureRecyclerView.setAdapter(mPictureRecyclerViewAdapter);
+        mPictureRecyclerView.addOnScrollListener(new MeituRecyclerView.OnVerticalScrollListener(){
+
+            @Override
+            public void onBottom() {
+                ShowToast.showLongToast(ShowMeizituGalleryActivity.this,"已经没有照片啦");
+            }
+        });
+        mPictureRecyclerView.setOnItemClickListener(new MeituRecyclerView.OnItemClickListener(){
+
+            @Override
+            public void onItemClick(View view, int postion) {
+                ShowToast.showShortToast(ShowMeizituGalleryActivity.this,"点击了第"+(postion + 1)+"张图片!");
+            }
+        });
     }
 
     // 负责处理获取相册网页页数的事件
@@ -90,13 +123,16 @@ public class ShowMeizituGalleryActivity extends AppCompatActivity {
     Observer<ArrayList<MeituPicture>> observerMeituPictures = new Observer<ArrayList<MeituPicture>>() {
         @Override
         public void onCompleted() {
+            mProgressBar.setVisibility(View.INVISIBLE);
+            mPictureRecyclerViewAdapter.updateMeituPictureList(meituPictureList);
+            // test start
             ShowToast.showShortToast(ShowMeizituGalleryActivity.this,"完成获取相册信息的操作");
             StringBuilder information = new StringBuilder();
             for(MeituPicture meituPicture:meituPictureList){
                 information.append(meituPicture.getTitle() + " " + meituPicture.getPictureUrl() + "\n");
                 Logcat.showLog(TAG,meituPicture.getTitle() + " " + meituPicture.getPictureUrl());
             }
-            textView.setText(information.toString());
+            // test end
         }
 
         @Override
