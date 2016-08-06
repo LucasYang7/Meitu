@@ -1,5 +1,6 @@
 package com.xiaozhejun.meitu.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -93,7 +94,14 @@ public class ShowMeizituGalleryActivity extends AppCompatActivity {
 
             @Override
             public void onItemClick(View view, int postion) {
-                ShowToast.showShortToast(ShowMeizituGalleryActivity.this,"点击了第"+(postion + 1)+"张图片!");
+                // ShowToast.showShortToast(ShowMeizituGalleryActivity.this,"点击了第"+(postion + 1)+"张图片!");
+                // 跳转到PhotoViewActivity
+                Bundle bundle = new Bundle();
+                bundle.putInt("position",postion);
+                bundle.putParcelableArrayList("meituPictureList",meituPictureList);
+                Intent intent = new Intent(ShowMeizituGalleryActivity.this,PhotoViewActivity.class);
+                intent.putExtras(bundle);
+                startActivity(intent);
             }
         });
     }
