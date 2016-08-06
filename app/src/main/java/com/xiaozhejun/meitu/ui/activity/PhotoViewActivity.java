@@ -1,5 +1,6 @@
 package com.xiaozhejun.meitu.ui.activity;
 
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -83,7 +84,10 @@ public class PhotoViewActivity extends AppCompatActivity {
         int index = position + 1;
         int total = meituPictureArrayList.size();
         String title = meituPictureArrayList.get(position).getTitle();
-        String pictureDescription = index + "/" + total + "\t" + title;
+        //String pictureDescription = index + "/" + total + "\t" + title;
+        Resources resources = getResources();
+        String pictureDescription = String.format(resources.getString(R.string.photo_view_description),
+                index,total,title);
         return pictureDescription;
     }
 

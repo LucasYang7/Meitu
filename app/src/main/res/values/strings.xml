@@ -30,4 +30,7 @@
     <string name="title_activity_show_meizitu_gallery">ShowMeizituGalleryActivity</string>
     <string name="title_activity_photo_view">PhotoViewActivity</string>
 
+    <!--在用PhotoViewActivity展示图片时，位于图片左下方的描述信息-->
+    <string name="photo_view_description">%1$d/%2$d %3$s</string>
+
 </resources>
