@@ -5,6 +5,9 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+    <string name="action_search">搜索</string>
+    <string name="action_share">分享妹子图片</string>
+    <string name="action_download">保存妹子图片到本地</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_meizitutab_fragment">这是妹子图的主页</string>
@@ -28,7 +31,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_show_meizitu_gallery">ShowMeizituGalleryActivity</string>
-    <string name="title_activity_photo_view">PhotoViewActivity</string>
+    <string name="title_activity_photo_view"></string>
 
     <!--在用PhotoViewActivity展示图片时，位于图片左下方的描述信息-->
     <string name="photo_view_description">%1$d/%2$d %3$s</string>

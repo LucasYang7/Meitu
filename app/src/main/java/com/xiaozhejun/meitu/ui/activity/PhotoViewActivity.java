@@ -5,12 +5,15 @@ import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
 import com.xiaozhejun.meitu.R;
 import com.xiaozhejun.meitu.adapter.PhotoViewPagerAdapter;
 import com.xiaozhejun.meitu.model.MeituPicture;
+import com.xiaozhejun.meitu.ui.widget.ShowToast;
 
 import java.util.ArrayList;
 
@@ -76,6 +79,28 @@ public class PhotoViewActivity extends AppCompatActivity {
         */
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.photo_view,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id){
+            case R.id.action_share:
+                ShowToast.showShortToast(PhotoViewActivity.this,"分享功能");
+                return true;
+
+            case R.id.action_download:
+                ShowToast.showShortToast(PhotoViewActivity.this,"下载功能");
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     /**
      * 获取相册中第position张图片的详细描述信息
      * @param position 图片在相册中的位置
@@ -92,3 +117,5 @@ public class PhotoViewActivity extends AppCompatActivity {
     }
 
 }
+
+
