@@ -103,15 +103,13 @@ public class PhotoViewActivity extends AppCompatActivity {
         int id = item.getItemId();
         switch (id){
             case R.id.action_share:
-                ShowToast.showShortToast(PhotoViewActivity.this,"分享功能");
-
+                //ShowToast.showShortToast(PhotoViewActivity.this,"分享功能");
+                sharePicture(mPosition);
                 return true;
 
             case R.id.action_download:
                 //ShowToast.showShortToast(PhotoViewActivity.this,"下载功能");
-                String pictureUrl = meituPictureArrayList.get(mPosition).getPictureUrl();
-                String title = meituPictureArrayList.get(mPosition).getTitle();
-                downloadPicture(pictureUrl,title,mPosition);
+                downloadPicture(mPosition);
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -134,20 +132,26 @@ public class PhotoViewActivity extends AppCompatActivity {
 
     /**
      * 分享图片
+     * @param position 图片在相册中的位置
      * */
     public void sharePicture(int position){
-        String title = meituPictureArrayList.get(position).getTitle();
-        String pictureUrl = meituPictureArrayList.get(position).getPictureUrl();
-
+        String pictureUrl = meituPictureArrayList.get(mPosition).getPictureUrl();
+        String title = meituPictureArrayList.get(mPosition).getTitle();
+        String[] pictureUrls = new String[1];
+        pictureUrls[0] = pictureUrl;
+        new DownloadTask(this,"share",title,mPosition).execute(pictureUrls);
     }
 
     /**
      * 下载图片
+     * @param position 图片在相册中的位置
      * */
-    public void downloadPicture(String pictureUrl,String title,int positon){
+    public void downloadPicture(int position){
+        String pictureUrl = meituPictureArrayList.get(mPosition).getPictureUrl();
+        String title = meituPictureArrayList.get(mPosition).getTitle();
         String[] pictureUrls = new String[1];
         pictureUrls[0] = pictureUrl;
-        new DownloadTask(this,title,positon).execute(pictureUrls);
+        new DownloadTask(this,"download",title,position).execute(pictureUrls);
     }
 
 }
@@ -157,9 +161,11 @@ class DownloadTask extends AsyncTask<String,Void,Uri>{
     private String mTitle;
     private int mPosition;
     private String mExtensions = ".jpg";    // 图片的后缀名
+    private String mAction;               // 用于标记是下载图片还是共享图片
 
-    public DownloadTask(Context context,String title,int position){
+    public DownloadTask(Context context,String action,String title,int position){
         mContext = context;
+        mAction = action;
         mTitle = title;
         mPosition = position;
     }
@@ -174,7 +180,7 @@ class DownloadTask extends AsyncTask<String,Void,Uri>{
             e.printStackTrace();
         }
         if(bitmap == null){
-            ShowToast.showShortToast(mContext,"无法下载图片...");
+            ShowToast.showShortToast(mContext,"无法获取图片...");
         }else{
             File meituDir = new File(Environment.getExternalStorageDirectory(),"Meitu");
             if(meituDir.exists() == false){
@@ -207,9 +213,19 @@ class DownloadTask extends AsyncTask<String,Void,Uri>{
     @Override
     protected void onPostExecute(Uri uri) {
         super.onPostExecute(uri);
-        String meituDir=uri.getPath();
-        Resources resources = mContext.getResources();
-        String downloadMsg = String.format(resources.getString(R.string.picture_has_save_to),meituDir);
-        ShowToast.showShortToast(mContext,downloadMsg);
+        if(mAction.equals("download")){
+            String meituDir=uri.getPath();
+            Resources resources = mContext.getResources();
+            String downloadMsg = String.format(resources.getString(R.string.picture_has_save_to),meituDir);
+            ShowToast.showShortToast(mContext,downloadMsg);
+        }else {
+            String shareTitle = "分享妹子图片到...";
+            Intent shareIntent = new Intent();
+            shareIntent.setAction(Intent.ACTION_SEND);
+            shareIntent.putExtra(Intent.EXTRA_STREAM,uri);
+            shareIntent.setType("image/*");
+            mContext.startActivity(Intent.createChooser(shareIntent,shareTitle));
+        }
     }
 }
+
