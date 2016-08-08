@@ -10,6 +10,8 @@ import com.xiaozhejun.meitu.R;
 import com.xiaozhejun.meitu.model.MeituPicture;
 import com.xiaozhejun.meitu.ui.widget.MeituRecyclerView;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,20 +19,30 @@ import java.util.List;
  */
 public class MeituPictureListRecyclerViewAdapter extends RecyclerView.Adapter<MeituRecyclerView.PictureViewHolder> {
 
-    private List<MeituPicture> mMeituPictureList;
+    private ArrayList<MeituPicture> mMeituPictureList;
     private MeituRecyclerView meituRecyclerView;   //与该MeituPictureListRecyclerViewAdapter绑定的MeituRecyclerView
+    private boolean mShowIndex;         // 是否在图片名字中显示下标信息
 
-    public MeituPictureListRecyclerViewAdapter(MeituRecyclerView recyclerView){
+    public MeituPictureListRecyclerViewAdapter(MeituRecyclerView recyclerView,boolean showIndex){
         meituRecyclerView = recyclerView;
+        mShowIndex = showIndex;
     }
 
-    public void initMeituPictureList(List<MeituPicture> meituPictureList){
+    public void initMeituPictureList(ArrayList<MeituPicture> meituPictureList){
         mMeituPictureList = meituPictureList;
     }
 
-    public void updateMeituPictureList(List<MeituPicture> meituPictureList){
-        mMeituPictureList = meituPictureList;
-        notifyDataSetChanged();
+    public void updateMeituPictureList(ArrayList<MeituPicture> meituPictureList,int page){
+        if(page == 1){
+            initMeituPictureList(meituPictureList);
+        }else{
+            mMeituPictureList.addAll(meituPictureList);
+        }
+        notifyDataSetChanged();          // 通知注册了该Adapter的RecyclerView更新视图
+    }
+
+    public ArrayList<MeituPicture> getmMeituPictureList(){
+        return mMeituPictureList;
     }
 
     @Override
@@ -45,7 +57,11 @@ public class MeituPictureListRecyclerViewAdapter extends RecyclerView.Adapter<Me
         MeituPicture meituPicture = mMeituPictureList.get(position);
         String title = meituPicture.getTitle();
         String pictureUrl = meituPicture.getPictureUrl();
-        holder.textViewInViewholder.setText(title+ " (" + (position+1) + ")");
+        String pictureDescription = title;
+        if(mShowIndex == true){
+            pictureDescription = title+ " (" + (position+1) + ")";
+        }
+        holder.textViewInViewholder.setText(pictureDescription);
         Picasso.with(holder.imageViewInViewholder.getContext())
                 .load(pictureUrl)
                 .placeholder(R.drawable.place_holder)

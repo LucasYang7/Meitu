@@ -34,4 +34,9 @@ public interface Constants {
      * 豆瓣美女网站对应的妹子分类标题
      * */
     String[] DOUBAN_MEINV_TITLES = {"所有", "大胸妹", "小翘臀", "黑丝袜", "美腿控", "有颜值", "大杂烩"};
+
+    /**
+     * 每请求一次Gank Api所返回的妹子图片数目
+     * */
+    int GANK_MEIZI_NUMBER = 10;
 }

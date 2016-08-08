@@ -78,7 +78,7 @@ public class ShowMeizituGalleryActivity extends AppCompatActivity {
         mPictureRecyclerView = (MeituRecyclerView)findViewById(R.id.meituPictureRecyclerView);
         StaggeredGridLayoutManager staggeredGridLayoutManager =
                 new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
-        mPictureRecyclerViewAdapter = new MeituPictureListRecyclerViewAdapter(mPictureRecyclerView);
+        mPictureRecyclerViewAdapter = new MeituPictureListRecyclerViewAdapter(mPictureRecyclerView,true);
         mPictureRecyclerViewAdapter.initMeituPictureList(null);
         mPictureRecyclerView.setHasFixedSize(true);
         mPictureRecyclerView.setLayoutManager(staggeredGridLayoutManager);
@@ -132,7 +132,7 @@ public class ShowMeizituGalleryActivity extends AppCompatActivity {
         @Override
         public void onCompleted() {
             mProgressBar.setVisibility(View.INVISIBLE);
-            mPictureRecyclerViewAdapter.updateMeituPictureList(meituPictureList);
+            mPictureRecyclerViewAdapter.updateMeituPictureList(meituPictureList,1);
             // test start
             ShowToast.showShortToast(ShowMeizituGalleryActivity.this,"完成获取相册信息的操作");
             StringBuilder information = new StringBuilder();

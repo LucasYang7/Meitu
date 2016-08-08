@@ -1,5 +1,6 @@
 package com.xiaozhejun.meitu.network;
 
+import com.xiaozhejun.meitu.network.api.GankMeiziService;
 import com.xiaozhejun.meitu.network.api.MeizituService;
 
 import okhttp3.OkHttpClient;
@@ -21,6 +22,7 @@ public class Network {
     private static CallAdapter.Factory rxJavaCallAdapterFactory = RxJavaCallAdapterFactory.create(); // RxJava适配器
 
     private static MeizituService meizituService;  //用于请求妹子图网站的Http所对应的Retrofit Service
+    private static GankMeiziService gankMeiziService; //用于调用GankMeizi API所对应的Retrofit Service
 
     /**
      * 构建用于请求妹子图网站的Retrofit
@@ -43,5 +45,28 @@ public class Network {
             meizituService = retrofit.create(MeizituService.class);  // 调用create方法来实现MeizituService接口
         }
         return meizituService;
+    }
+
+    /**
+     * 构建用于调用GankMeizi API所对应的Retrofit
+     * */
+    public static GankMeiziService getGankMeiziService(){
+        if(gankMeiziService == null){
+            // 配置HttpLoggingInterceptor来查看Http的Log
+            HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
+            httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.HEADERS);
+            // 构建带有HttpLoggingInterceptor的OkHttpClient
+            OkHttpClient okHttpClientWithInterceptor = new OkHttpClient.Builder()
+                    .addInterceptor(httpLoggingInterceptor)
+                    .build();
+            Retrofit retrofit = new Retrofit.Builder()
+                    .client(okHttpClientWithInterceptor)
+                    .baseUrl("http://gank.io/api/")
+                    .addCallAdapterFactory(rxJavaCallAdapterFactory)
+                    .addConverterFactory(gsonConverterFactory)      // 为Retrofit客户端添加Gson转换器
+                    .build();
+            gankMeiziService = retrofit.create(GankMeiziService.class);
+        }
+        return gankMeiziService;
     }
 }
