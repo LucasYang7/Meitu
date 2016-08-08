@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.xiaozhejun.meitu.R;
-import com.xiaozhejun.meitu.adapter.PictureRecyclerViewAdapter;
+import com.xiaozhejun.meitu.adapter.MeituPictureListRecyclerViewAdapter;
 import com.xiaozhejun.meitu.model.MeituPicture;
 import com.xiaozhejun.meitu.network.Network;
 import com.xiaozhejun.meitu.network.parser.HtmlParser;
@@ -32,7 +32,7 @@ public class ShowMeizituGalleryActivity extends AppCompatActivity {
 
     private ProgressBar mProgressBar;
     private MeituRecyclerView mPictureRecyclerView;
-    private PictureRecyclerViewAdapter mPictureRecyclerViewAdapter;
+    private MeituPictureListRecyclerViewAdapter mPictureRecyclerViewAdapter;
     protected Subscription mSubscription;   // 用于解除Obserable与Observer之间的订阅关系，防止内存泄露
     private ArrayList<Integer> meituPageList = new ArrayList<Integer>();  //妹子图相册对应的网页页数
     private String groupId;
@@ -78,7 +78,7 @@ public class ShowMeizituGalleryActivity extends AppCompatActivity {
         mPictureRecyclerView = (MeituRecyclerView)findViewById(R.id.meituPictureRecyclerView);
         StaggeredGridLayoutManager staggeredGridLayoutManager =
                 new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
-        mPictureRecyclerViewAdapter = new PictureRecyclerViewAdapter(mPictureRecyclerView);
+        mPictureRecyclerViewAdapter = new MeituPictureListRecyclerViewAdapter(mPictureRecyclerView);
         mPictureRecyclerViewAdapter.initMeituPictureList(null);
         mPictureRecyclerView.setHasFixedSize(true);
         mPictureRecyclerView.setLayoutManager(staggeredGridLayoutManager);

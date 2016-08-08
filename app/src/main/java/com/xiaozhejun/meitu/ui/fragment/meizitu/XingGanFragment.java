@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.xiaozhejun.meitu.R;
-import com.xiaozhejun.meitu.adapter.MeizituRecyclerViewAdapter;
+import com.xiaozhejun.meitu.adapter.MeizituGalleryListRecyclerViewAdapter;
 import com.xiaozhejun.meitu.model.MeizituGallery;
 import com.xiaozhejun.meitu.network.Network;
 import com.xiaozhejun.meitu.ui.fragment.BaseFragment;
@@ -42,7 +42,7 @@ public class XingGanFragment extends BaseFragment implements SwipeRefreshLayout.
     private static final String TAG = "XingGanFragment";
     private SwipeRefreshLayout xingganSwipeRefreshLayout;
     private RecyclerView xingganRecyclerView;
-    private MeizituRecyclerViewAdapter meizituRecyclerViewAdapter;
+    private MeizituGalleryListRecyclerViewAdapter meizituRecyclerViewAdapter;
     private Context mContext;
     List<MeizituGallery> mMeizituGalleryList = new ArrayList<MeizituGallery>();    // 保存图片相册的信息，如果是下拉刷新，则清空meizituGalleryList。
     List<MeizituGallery> mNewMeizituGalleryList = new ArrayList<MeizituGallery>(); // 保存每次新增加的妹子图片的信息

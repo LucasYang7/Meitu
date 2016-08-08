@@ -20,12 +20,12 @@ import java.util.List;
 /**
  * Created by yangzhe on 16-7-29.
  */
-public class MeizituRecyclerViewAdapter extends RecyclerView.Adapter<MeituRecyclerView.MeizituViewHolder> {
+public class MeizituGalleryListRecyclerViewAdapter extends RecyclerView.Adapter<MeituRecyclerView.MeizituViewHolder> {
 
     private List<MeizituGallery> mMeizituGalleryList;
-    private MeituRecyclerView meituRecyclerView;   //与该MeizituRecyclerViewAdapter绑定的MeituRecyclerView
+    private MeituRecyclerView meituRecyclerView;   //与该MeizituGalleryListRecyclerViewAdapter绑定的MeituRecyclerView
 
-    public MeizituRecyclerViewAdapter(MeituRecyclerView recyclerView){
+    public MeizituGalleryListRecyclerViewAdapter(MeituRecyclerView recyclerView){
         meituRecyclerView = recyclerView;
     }
 

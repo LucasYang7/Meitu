@@ -15,12 +15,12 @@ import java.util.List;
 /**
  * Created by yangzhe on 16-8-5.
  */
-public class PictureRecyclerViewAdapter extends RecyclerView.Adapter<MeituRecyclerView.PictureViewHolder> {
+public class MeituPictureListRecyclerViewAdapter extends RecyclerView.Adapter<MeituRecyclerView.PictureViewHolder> {
 
     private List<MeituPicture> mMeituPictureList;
-    private MeituRecyclerView meituRecyclerView;   //与该PictureRecyclerViewAdapter绑定的MeituRecyclerView
+    private MeituRecyclerView meituRecyclerView;   //与该MeituPictureListRecyclerViewAdapter绑定的MeituRecyclerView
 
-    public PictureRecyclerViewAdapter(MeituRecyclerView recyclerView){
+    public MeituPictureListRecyclerViewAdapter(MeituRecyclerView recyclerView){
         meituRecyclerView = recyclerView;
     }
 

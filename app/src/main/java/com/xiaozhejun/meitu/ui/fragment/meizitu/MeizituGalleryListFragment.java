@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.xiaozhejun.meitu.R;
-import com.xiaozhejun.meitu.adapter.MeizituRecyclerViewAdapter;
+import com.xiaozhejun.meitu.adapter.MeizituGalleryListRecyclerViewAdapter;
 import com.xiaozhejun.meitu.model.MeizituGallery;
 import com.xiaozhejun.meitu.network.Network;
 import com.xiaozhejun.meitu.network.parser.HtmlParser;
@@ -39,7 +39,7 @@ public class MeizituGalleryListFragment extends BaseFragment implements SwipeRef
 
     private SwipeRefreshLayout meizituSwipeRefreshLayout;
     private MeituRecyclerView meizituRecyclerView;
-    private MeizituRecyclerViewAdapter meizituRecyclerViewAdapter;
+    private MeizituGalleryListRecyclerViewAdapter meizituRecyclerViewAdapter;
     private boolean mCanAddNewMeizitu;    // 判断能否请求新的网页，加载更多妹子的图片
     private int mPage;      //表示妹子图片相册链接后面的分页
     private String mType;   //表示妹子图片所属的类型，例如：日本妹子，性感妹子等
@@ -74,7 +74,7 @@ public class MeizituGalleryListFragment extends BaseFragment implements SwipeRef
         meizituRecyclerView = (MeituRecyclerView) view.findViewById(R.id.meizituGalleryListRecyclerView);
         StaggeredGridLayoutManager staggeredGridLayoutManager =
                 new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
-        meizituRecyclerViewAdapter = new MeizituRecyclerViewAdapter(meizituRecyclerView); //绑定meizituRecyclerViewAdapter和meizituRecyclerView
+        meizituRecyclerViewAdapter = new MeizituGalleryListRecyclerViewAdapter(meizituRecyclerView); //绑定meizituRecyclerViewAdapter和meizituRecyclerView
         meizituRecyclerViewAdapter.initMeizituGalleryList(null);
         meizituRecyclerView.setHasFixedSize(true);
         meizituRecyclerView.setLayoutManager(staggeredGridLayoutManager);  //设置RecyclerView的布局
