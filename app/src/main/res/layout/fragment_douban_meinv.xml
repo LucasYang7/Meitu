@@ -1,13 +1,24 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".ui.fragment.doubanmeinv.DoubanMeinvTabFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tabLayoutInDoubanMeinv"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_doubanmeinv_fragment" />
+        android:layout_height="48dp"
+        android:background="@color/colorPrimary"
+        app:tabMode="scrollable"
+        app:tabIndicatorHeight="0dp"
+        app:tabTextColor="@color/colorTextInTabLayout"
+        app:tabSelectedTextColor="@color/colorSelectedTextInTabLayout"/>
 
-</FrameLayout>
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewPagerInDoubanMeinv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>

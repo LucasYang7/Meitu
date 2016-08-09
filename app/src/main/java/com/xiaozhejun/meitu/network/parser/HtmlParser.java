@@ -93,4 +93,26 @@ public class HtmlParser {
         return meizituPictureList;
     }
 
+    /**
+     * 解析豆瓣美女网站的网页，得到该网页中的美女图片的信息
+     * */
+    public static ArrayList<MeituPicture> parseDoubanMeinvHtmlContent(String htmlContent){
+        ArrayList<MeituPicture> doubanMeinvPictureList = new ArrayList<MeituPicture>();
+        Document document = Jsoup.parse(htmlContent);
+        Elements elements = document.select("div.img_single");
+        for(Element element:elements){
+            Element elementImg = element.select("img.height_min").first();
+            MeituPicture meituPicture = new MeituPicture();
+            meituPicture.setTitle(elementImg.attr("title"));
+            //meituPicture.setPictureUrl(elementImg.attr("src"));
+            String pictureUrl = elementImg.attr("src");
+            Logcat.showLog("pictureUrl","1 " + pictureUrl);
+            pictureUrl = pictureUrl.replace("bmiddle","large"); // bmiddle -> large
+            Logcat.showLog("pictureUrl","2 " + pictureUrl);
+            meituPicture.setPictureUrl(pictureUrl);
+            doubanMeinvPictureList.add(meituPicture);
+        }
+        return doubanMeinvPictureList;
+    }
+
 }

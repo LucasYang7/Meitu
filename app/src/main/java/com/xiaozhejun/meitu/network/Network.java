@@ -1,5 +1,6 @@
 package com.xiaozhejun.meitu.network;
 
+import com.xiaozhejun.meitu.network.api.DoubanMeinvService;
 import com.xiaozhejun.meitu.network.api.GankMeiziService;
 import com.xiaozhejun.meitu.network.api.MeizituService;
 
@@ -23,6 +24,7 @@ public class Network {
 
     private static MeizituService meizituService;  //用于请求妹子图网站的Http所对应的Retrofit Service
     private static GankMeiziService gankMeiziService; //用于调用GankMeizi API所对应的Retrofit Service
+    private static DoubanMeinvService doubanMeinvService; // 用于请求豆瓣美女网站的Http所对应的Retrofit Service
 
     /**
      * 构建用于请求妹子图网站的Retrofit
@@ -68,5 +70,27 @@ public class Network {
             gankMeiziService = retrofit.create(GankMeiziService.class);
         }
         return gankMeiziService;
+    }
+
+    /**
+     * 构建用于访问豆瓣美女网站的Retrofit
+     * */
+    public static DoubanMeinvService getDoubanMeinvService(){
+        if(doubanMeinvService == null){
+            // 配置HttpLoggingInterceptor来查看Http的Log
+            HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
+            httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.HEADERS);
+            // 构建带有HttpLoggingInterceptor的OkHttpClient
+            OkHttpClient okHttpClientWithInterceptor = new OkHttpClient.Builder()
+                    .addInterceptor(httpLoggingInterceptor)
+                    .build();
+            Retrofit retrofit = new Retrofit.Builder()
+                    .client(okHttpClientWithInterceptor)
+                    .baseUrl("http://www.dbmeinv.com/")
+                    .addCallAdapterFactory(rxJavaCallAdapterFactory)
+                    .build();
+            doubanMeinvService = retrofit.create(DoubanMeinvService.class);
+        }
+        return doubanMeinvService;
     }
 }

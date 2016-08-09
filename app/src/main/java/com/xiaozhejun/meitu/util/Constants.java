@@ -36,6 +36,16 @@ public interface Constants {
     String[] DOUBAN_MEINV_TITLES = {"所有", "大胸妹", "小翘臀", "黑丝袜", "美腿控", "有颜值", "大杂烩"};
 
     /**
+     * 豆瓣美女网站每类妹子对应的分类id
+     * */
+    int[] DOUBAN_MEINV_CID = {1,2,6,7,3,4,5};
+
+    /**
+     * 豆瓣美女网站的图片分类数目，每一个分类对应一个Fragment
+     * */
+    int DOUBAN_MEINV_COUNT = DOUBAN_MEINV_TITLES.length;
+
+    /**
      * 每请求一次Gank Api所返回的妹子图片数目
      * */
     int GANK_MEIZI_NUMBER = 10;
