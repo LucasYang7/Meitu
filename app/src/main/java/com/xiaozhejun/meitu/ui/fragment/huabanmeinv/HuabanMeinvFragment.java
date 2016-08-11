@@ -92,7 +92,7 @@ public class HuabanMeinvFragment extends MeituPictureListFragment {
             public ArrayList<MeituPicture> call(HuabanMeinvJsonResult huabanMeinvJsonResult) {
                 List<HuabanMeinv> huabanMeinvList = huabanMeinvJsonResult.huabanMeinvList;
                 mMax = huabanMeinvList.get(huabanMeinvList.size() - 1).pin_id;    // 设置下一次调用API所用的max值
-                ArrayList<MeituPicture> meituPictureList = new ArrayList<MeituPicture>(huabanMeinvList.size());
+                ArrayList<MeituPicture> meituPictureList = new ArrayList<MeituPicture>();
                 for(HuabanMeinv huabanMeinv:huabanMeinvList){
                     MeituPicture meituPicture = new MeituPicture();
                     meituPicture.setTitle(huabanMeinv.raw_text);

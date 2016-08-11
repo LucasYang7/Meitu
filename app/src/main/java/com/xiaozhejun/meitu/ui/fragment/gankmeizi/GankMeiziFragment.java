@@ -79,7 +79,7 @@ public class GankMeiziFragment extends MeituPictureListFragment {
                     @Override
                     public ArrayList<MeituPicture> call(GankMeiziJsonResult gankMeiziJsonResult) {
                         List<GankMeizi> gankMeiziList = gankMeiziJsonResult.gankMeiziList;
-                        ArrayList<MeituPicture> meituPictureList = new ArrayList<MeituPicture>(gankMeiziList.size());
+                        ArrayList<MeituPicture> meituPictureList = new ArrayList<MeituPicture>();
                         for(GankMeizi gankMeizi:gankMeiziList){
                             MeituPicture meituPicture = new MeituPicture();
                             meituPicture.title = gankMeizi.desc;
