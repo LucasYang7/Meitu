@@ -2,6 +2,7 @@ package com.xiaozhejun.meitu.network;
 
 import com.xiaozhejun.meitu.network.api.DoubanMeinvService;
 import com.xiaozhejun.meitu.network.api.GankMeiziService;
+import com.xiaozhejun.meitu.network.api.HuabanMeinvService;
 import com.xiaozhejun.meitu.network.api.MeizituService;
 
 import okhttp3.OkHttpClient;
@@ -25,6 +26,7 @@ public class Network {
     private static MeizituService meizituService;  //用于请求妹子图网站的Http所对应的Retrofit Service
     private static GankMeiziService gankMeiziService; //用于调用GankMeizi API所对应的Retrofit Service
     private static DoubanMeinvService doubanMeinvService; // 用于请求豆瓣美女网站的Http所对应的Retrofit Service
+    private static HuabanMeinvService huabanMeinvService; // 用于请求花瓣美女API所对应的Retrofit Service
 
     /**
      * 构建用于请求妹子图网站的Retrofit
@@ -92,5 +94,28 @@ public class Network {
             doubanMeinvService = retrofit.create(DoubanMeinvService.class);
         }
         return doubanMeinvService;
+    }
+
+    /**
+     * 构建用于访问花瓣美女API的Retrofit客户端
+     * */
+    public static HuabanMeinvService getHuabanMeinvService(){
+        if(huabanMeinvService == null){
+            // 配置HttpLoggingInterceptor来查看Http的Log
+            HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
+            httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.HEADERS);
+            // 构建带有HttpLoggingInterceptor的OkHttpClient
+            OkHttpClient okHttpClientWithInterceptor = new OkHttpClient.Builder()
+                    .addInterceptor(httpLoggingInterceptor)
+                    .build();
+            Retrofit retrofit = new Retrofit.Builder()
+                    .client(okHttpClientWithInterceptor)
+                    .baseUrl("http://api.huaban.com/")
+                    .addCallAdapterFactory(rxJavaCallAdapterFactory)
+                    .addConverterFactory(gsonConverterFactory)      // 为Retrofit客户端添加Gson转换器
+                    .build();
+            huabanMeinvService = retrofit.create(HuabanMeinvService.class);
+        }
+        return huabanMeinvService;
     }
 }

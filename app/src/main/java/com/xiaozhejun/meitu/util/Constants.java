@@ -49,4 +49,9 @@ public interface Constants {
      * 每请求一次Gank Api所返回的妹子图片数目
      * */
     int GANK_MEIZI_NUMBER = 10;
+
+    /**
+     * 每请求一次花瓣美女API所返回的妹子图片数目
+     * */
+    int HUABAN_MEINV_NUMBER = 15;
 }
