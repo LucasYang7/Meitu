@@ -38,4 +38,12 @@ public interface MeizituService {
     @GET("{groupId}/{page}")
     Observable<ResponseBody> getPictureWithGroupIdInPage(@Path("groupId") String groupId,
                                                          @Path("page") int page);
+
+    // 访问"妹子自拍"的首页信息
+    @GET("share")
+    Observable<ResponseBody> getPictureInSelfiePage();
+
+    // 访问“妹子自拍”其余页面的信息
+    @GET("share/comment-page-{page}#comments")
+    Observable<ResponseBody> getPictureInSelfiePages(@Path("page") int page);
 }

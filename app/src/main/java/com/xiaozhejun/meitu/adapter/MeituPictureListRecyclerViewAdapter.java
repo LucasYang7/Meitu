@@ -41,6 +41,15 @@ public class MeituPictureListRecyclerViewAdapter extends RecyclerView.Adapter<Me
         notifyDataSetChanged();          // 通知注册了该Adapter的RecyclerView更新视图
     }
 
+    public void updateMeituPictureList(ArrayList<MeituPicture> meituPictureList,boolean isResetData){
+        if(isResetData == true){
+            initMeituPictureList(meituPictureList);
+        }else{
+            mMeituPictureList.addAll(meituPictureList);
+        }
+        notifyDataSetChanged();          // 通知注册了该Adapter的RecyclerView更新视图
+    }
+
     public ArrayList<MeituPicture> getmMeituPictureList(){
         return mMeituPictureList;
     }

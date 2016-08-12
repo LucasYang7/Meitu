@@ -5,6 +5,7 @@ import com.xiaozhejun.meitu.model.MeizituGallery;
 import com.xiaozhejun.meitu.util.Logcat;
 
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Attribute;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -113,6 +114,35 @@ public class HtmlParser {
             doubanMeinvPictureList.add(meituPicture);
         }
         return doubanMeinvPictureList;
+    }
+
+    /**
+     * 解析妹子图"美女自拍"页面，获取该类妹子图片所占有的网页数目
+     * */
+    public static int parseFirstMeizituSelfieHtmlContent(String htmlContent){
+        int page = 0;
+        Document document = Jsoup.parse(htmlContent);
+        Element element = document.select("span.page-numbers.current").first();
+        String pageText = element.text();
+        page = Integer.parseInt(pageText);
+        return page;
+    }
+
+    /**
+     * 解析妹子图"美女自拍"其余页面的妹子图片信息
+     * */
+    public static ArrayList<MeituPicture> parseMeizituSelfieHtmlContent(String htmlContent){
+        ArrayList<MeituPicture> meizituSelfiePictureList = new ArrayList<MeituPicture>();
+        Document document = Jsoup.parse(htmlContent);
+        Element mainContentDiv = document.select("div.main-content").first();
+        Elements pictureElements = mainContentDiv.select("img");
+        for(Element pictureElement:pictureElements){
+            MeituPicture meituPicture = new MeituPicture();
+            meituPicture.setTitle(pictureElement.attr("alt"));
+            meituPicture.setPictureUrl(pictureElement.attr("src"));
+            meizituSelfiePictureList.add(meituPicture);
+        }
+        return meizituSelfiePictureList;
     }
 
 }
