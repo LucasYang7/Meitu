@@ -18,12 +18,12 @@ public interface Constants {
     /**
      * 妹子图网站对应的妹子分类标题
      * */
-    String[] MEIZITU_TITLES = {"每日更新","热门妹子","妹子推荐","性感妹子","日本妹子","台湾妹子","清纯妹子","妹子自拍"};
+    String[] MEIZITU_TITLES = {"每日更新","妹子自拍","妹子推荐","热门妹子","性感妹子","日本妹子","台湾妹子","清纯妹子"};
 
     /**
      * 妹子图网站对应的妹子分类
      * */
-    String[] MEIZITU_TYPE = {"","hot","best","xinggan","japan","taiwan","mm","share"};
+    String[] MEIZITU_TYPE = {"","share","best","hot","xinggan","japan","taiwan","mm"};
 
     /**
      * 妹子图网站的图片分类数目，每一个分类对应一个Fragment
