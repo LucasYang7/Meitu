@@ -28,7 +28,7 @@ public class PhotoViewActivity extends AppCompatActivity {
     private int mPosition;
     private ViewPager mViewPager;
     private TextView mTextView;
-    private boolean isFavorited;                   // 标记图片是否收藏
+    private boolean mIsFavorited;                   // 标记图片是否收藏
     private MenuItem mFavorMenuItem;
     private MenuItem mUnFavorMenuItem;
     private MeituDatabaseHelper meituDatabaseHelper;
@@ -54,6 +54,8 @@ public class PhotoViewActivity extends AppCompatActivity {
         meituDatabaseHelper = new MeituDatabaseHelper(PhotoViewActivity.this,
                 "Meitu.db",null,1);
         mSQLiteDatabase = meituDatabaseHelper.getReadableDatabase();
+        // 查看PhotoViewActivity初始化后所展示的第一张图片是否已经被收藏
+        mIsFavorited = queryDatabase(meituPictureArrayList.get(mPosition).getPictureUrl());
 
         mTextView = (TextView)findViewById(R.id.textViewInPhotoViewActivity);
         String pictureDescription = getPictureDescription(mPosition);
@@ -68,9 +70,10 @@ public class PhotoViewActivity extends AppCompatActivity {
             public void onPageSelected(int position) {
                 String pictureDescription = getPictureDescription(position);
                 String pictureUrl = meituPictureArrayList.get(position).getPictureUrl();
+                boolean isFavorited = queryDatabase(pictureUrl);
                 mTextView.setText(pictureDescription);
                 mPosition = position;
-                queryDatabase(pictureUrl);
+                changeMenuItemState(isFavorited);
             }
 
             @Override
@@ -94,15 +97,12 @@ public class PhotoViewActivity extends AppCompatActivity {
         return true;
     }
 
-    /*
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        menu.findItem(R.id.action_favor).setVisible(isFavorited);
-        menu.findItem(R.id.action_unfavor).setVisible(!isFavorited);
+        changeMenuItemState(mIsFavorited);
         return true;
     }
-    */
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -125,8 +125,8 @@ public class PhotoViewActivity extends AppCompatActivity {
                 values.put("pictureUrl",meituPictureArrayList.get(mPosition).getPictureUrl());
                 values.put("title",meituPictureArrayList.get(mPosition).getTitle());
                 mSQLiteDatabase.insert("Favorites",null,values);
-                isFavorited = true;
-                changeMenuItemState(isFavorited);
+                mIsFavorited = true;
+                changeMenuItemState(mIsFavorited);
                 return true;
 
             case R.id.action_unfavor:
@@ -134,8 +134,8 @@ public class PhotoViewActivity extends AppCompatActivity {
                 //将选定的图片从数据库中删除
                 mSQLiteDatabase.delete("Favorites","pictureUrl = ?",new String[]{
                         meituPictureArrayList.get(mPosition).getPictureUrl()});
-                isFavorited = false;
-                changeMenuItemState(isFavorited);
+                mIsFavorited = false;
+                changeMenuItemState(mIsFavorited);
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -192,7 +192,7 @@ public class PhotoViewActivity extends AppCompatActivity {
     /**
      * 查询某张图片是否已经被收藏
      * */
-    public void queryDatabase(String pictureUrl){
+    public boolean queryDatabase(String pictureUrl){
         Cursor cursor = mSQLiteDatabase.query("Favorites",null,null,null,null,null,null);
         String queryUrl = "";
         boolean isFavorited = false;
@@ -206,7 +206,7 @@ public class PhotoViewActivity extends AppCompatActivity {
             }while(cursor.moveToNext());
         }
         cursor.close();
-        changeMenuItemState(isFavorited);
+        return isFavorited;
     }
 
 }
