@@ -44,11 +44,6 @@ public class MainActivity extends AppCompatActivity
         // 使用妹子图网站作为初始化页面
         MeizituTabFragment meizituTabFragment = new MeizituTabFragment();
         replaceFragment(meizituTabFragment);
-
-        // 创建数据库
-        MeituDatabaseHelper meituDatabaseHelper = new MeituDatabaseHelper(MainActivity.this,
-                "Meitu.db", null,1);
-        meituDatabaseHelper.getWritableDatabase();
     }
 
     @Override

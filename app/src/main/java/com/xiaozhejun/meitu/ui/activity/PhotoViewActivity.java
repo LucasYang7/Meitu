@@ -1,6 +1,9 @@
 package com.xiaozhejun.meitu.ui.activity;
 
+import android.content.ContentValues;
 import android.content.res.Resources;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +15,7 @@ import android.widget.TextView;
 
 import com.xiaozhejun.meitu.R;
 import com.xiaozhejun.meitu.adapter.PhotoViewPagerAdapter;
+import com.xiaozhejun.meitu.db.MeituDatabaseHelper;
 import com.xiaozhejun.meitu.model.MeituPicture;
 import com.xiaozhejun.meitu.ui.widget.ShowToast;
 import com.xiaozhejun.meitu.util.DownloadTask;
@@ -27,6 +31,8 @@ public class PhotoViewActivity extends AppCompatActivity {
     private boolean isFavorited;                   // 标记图片是否收藏
     private MenuItem mFavorMenuItem;
     private MenuItem mUnFavorMenuItem;
+    private MeituDatabaseHelper meituDatabaseHelper;
+    private SQLiteDatabase mSQLiteDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +50,10 @@ public class PhotoViewActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         mPosition = bundle.getInt("position");
         meituPictureArrayList = bundle.getParcelableArrayList("meituPictureList");
+        // 创建数据库
+        meituDatabaseHelper = new MeituDatabaseHelper(PhotoViewActivity.this,
+                "Meitu.db",null,1);
+        mSQLiteDatabase = meituDatabaseHelper.getReadableDatabase();
 
         mTextView = (TextView)findViewById(R.id.textViewInPhotoViewActivity);
         String pictureDescription = getPictureDescription(mPosition);
@@ -57,8 +67,10 @@ public class PhotoViewActivity extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
                 String pictureDescription = getPictureDescription(position);
+                String pictureUrl = meituPictureArrayList.get(position).getPictureUrl();
                 mTextView.setText(pictureDescription);
                 mPosition = position;
+                queryDatabase(pictureUrl);
             }
 
             @Override
@@ -108,12 +120,20 @@ public class PhotoViewActivity extends AppCompatActivity {
 
             case R.id.action_favor:
                 ShowToast.showShortToast(PhotoViewActivity.this,"收藏成功!");
+                //将收藏的图片信息插入到数据库中
+                ContentValues values = new ContentValues();
+                values.put("pictureUrl",meituPictureArrayList.get(mPosition).getPictureUrl());
+                values.put("title",meituPictureArrayList.get(mPosition).getTitle());
+                mSQLiteDatabase.insert("Favorites",null,values);
                 isFavorited = true;
                 changeMenuItemState(isFavorited);
                 return true;
 
             case R.id.action_unfavor:
                 ShowToast.showShortToast(PhotoViewActivity.this,"取消收藏!");
+                //将选定的图片从数据库中删除
+                mSQLiteDatabase.delete("Favorites","pictureUrl = ?",new String[]{
+                        meituPictureArrayList.get(mPosition).getPictureUrl()});
                 isFavorited = false;
                 changeMenuItemState(isFavorited);
                 return true;
@@ -121,6 +141,9 @@ public class PhotoViewActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * 改变Menu中的MenuItem的状态
+     * */
     public void changeMenuItemState(boolean isFavorited){
         mFavorMenuItem.setVisible(!isFavorited);
         mUnFavorMenuItem.setVisible(isFavorited);
@@ -163,6 +186,27 @@ public class PhotoViewActivity extends AppCompatActivity {
         String[] pictureUrls = new String[1];
         pictureUrls[0] = pictureUrl;
         new DownloadTask(this,"download",title,position).execute(pictureUrls);
+    }
+
+
+    /**
+     * 查询某张图片是否已经被收藏
+     * */
+    public void queryDatabase(String pictureUrl){
+        Cursor cursor = mSQLiteDatabase.query("Favorites",null,null,null,null,null,null);
+        String queryUrl = "";
+        boolean isFavorited = false;
+        if(cursor.moveToFirst()){
+            do{
+                queryUrl = cursor.getString(cursor.getColumnIndex("pictureUrl"));
+                if(queryUrl.equals(pictureUrl)){
+                    isFavorited = true;
+                    break;
+                }
+            }while(cursor.moveToNext());
+        }
+        cursor.close();
+        changeMenuItemState(isFavorited);
     }
 
 }
