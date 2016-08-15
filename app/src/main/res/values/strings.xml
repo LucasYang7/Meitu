@@ -8,6 +8,8 @@
     <string name="action_search">搜索</string>
     <string name="action_share">分享妹子图片</string>
     <string name="action_download">保存妹子图片到本地</string>
+    <string name="action_favor">收藏成功!</string>
+    <string name="action_unfavor">取消收藏!</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_meizitutab_fragment">这是妹子图的主页</string>

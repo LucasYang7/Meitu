@@ -1,13 +1,7 @@
 package com.xiaozhejun.meitu.ui.activity;
 
-import android.content.Context;
-import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -16,17 +10,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
 import com.xiaozhejun.meitu.R;
 import com.xiaozhejun.meitu.adapter.PhotoViewPagerAdapter;
 import com.xiaozhejun.meitu.model.MeituPicture;
 import com.xiaozhejun.meitu.ui.widget.ShowToast;
 import com.xiaozhejun.meitu.util.DownloadTask;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class PhotoViewActivity extends AppCompatActivity {
@@ -35,6 +24,9 @@ public class PhotoViewActivity extends AppCompatActivity {
     private int mPosition;
     private ViewPager mViewPager;
     private TextView mTextView;
+    private boolean isFavorited;                   // 标记图片是否收藏
+    private MenuItem mFavorMenuItem;
+    private MenuItem mUnFavorMenuItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,25 +71,26 @@ public class PhotoViewActivity extends AppCompatActivity {
 
             }
         });
-
-        /*
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-        */
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.photo_view,menu);
+        mFavorMenuItem = menu.findItem(R.id.action_favor);
+        mUnFavorMenuItem = menu.findItem(R.id.action_unfavor);
         return true;
     }
+
+    /*
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        menu.findItem(R.id.action_favor).setVisible(isFavorited);
+        menu.findItem(R.id.action_unfavor).setVisible(!isFavorited);
+        return true;
+    }
+    */
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -112,8 +105,25 @@ public class PhotoViewActivity extends AppCompatActivity {
                 //ShowToast.showShortToast(PhotoViewActivity.this,"下载功能");
                 downloadPicture(mPosition);
                 return true;
+
+            case R.id.action_favor:
+                ShowToast.showShortToast(PhotoViewActivity.this,"收藏成功!");
+                isFavorited = true;
+                changeMenuItemState(isFavorited);
+                return true;
+
+            case R.id.action_unfavor:
+                ShowToast.showShortToast(PhotoViewActivity.this,"取消收藏!");
+                isFavorited = false;
+                changeMenuItemState(isFavorited);
+                return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void changeMenuItemState(boolean isFavorited){
+        mFavorMenuItem.setVisible(!isFavorited);
+        mUnFavorMenuItem.setVisible(isFavorited);
     }
 
     /**

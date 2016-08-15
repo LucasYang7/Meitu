@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.xiaozhejun.meitu.R;
+import com.xiaozhejun.meitu.db.MeituDatabaseHelper;
 import com.xiaozhejun.meitu.ui.fragment.doubanmeinv.DoubanMeinvTabFragment;
 import com.xiaozhejun.meitu.ui.fragment.gankmeizi.GankMeiziFragment;
 import com.xiaozhejun.meitu.ui.fragment.huabanmeinv.HuabanMeinvFragment;
@@ -44,6 +45,10 @@ public class MainActivity extends AppCompatActivity
         MeizituTabFragment meizituTabFragment = new MeizituTabFragment();
         replaceFragment(meizituTabFragment);
 
+        // 创建数据库
+        MeituDatabaseHelper meituDatabaseHelper = new MeituDatabaseHelper(MainActivity.this,
+                "Meitu.db", null,1);
+        meituDatabaseHelper.getWritableDatabase();
     }
 
     @Override

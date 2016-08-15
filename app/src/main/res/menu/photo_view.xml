@@ -3,6 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/action_unfavor"
+        android:icon="@drawable/ic_favorite_menu"
+        android:title="@string/action_unfavor"
+        android:visible="false"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/action_favor"
+        android:icon="@drawable/ic_unfavorite_menu"
+        android:title="@string/action_favor"
+        app:showAsAction="always"/>
+
+    <item
         android:id="@+id/action_download"
         android:icon="@drawable/ic_download_menu"
         android:title="@string/action_share"
