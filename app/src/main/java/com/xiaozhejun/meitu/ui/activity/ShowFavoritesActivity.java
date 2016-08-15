@@ -1,5 +1,6 @@
 package com.xiaozhejun.meitu.ui.activity;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import com.xiaozhejun.meitu.db.MeituDatabaseHelper;
 import com.xiaozhejun.meitu.model.MeituPicture;
 import com.xiaozhejun.meitu.ui.widget.MeituRecyclerView;
 import com.xiaozhejun.meitu.ui.widget.MeituRecyclerView.OnVerticalScrollListener;
+import com.xiaozhejun.meitu.ui.widget.ShowToast;
 
 import java.util.ArrayList;
 
@@ -40,12 +42,20 @@ public class ShowFavoritesActivity extends AppCompatActivity {
             }
         });
 
-        // 从数据库中查询所收藏的图片信息
-        queryFavoritesFromDatabase();
-
         // 初始化PictureRecyclerView
         setupRecyclerView();
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // 清空原有的数据
+        mFavoritesPictureList.clear();
+        // 从数据库中查询所收藏的图片信息
+        queryFavoritesFromDatabase();
+        // 更新MeituPictureListRecyclerViewAdapter中的数据
+        mFavoritesRecyclerViewAdapter.updateMeituPictureList(mFavoritesPictureList,true);
     }
 
     public void setupRecyclerView(){
@@ -54,7 +64,7 @@ public class ShowFavoritesActivity extends AppCompatActivity {
                 new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
         mFavoritesRecyclerViewAdapter = new MeituPictureListRecyclerViewAdapter(
                 mFavoritesRecyclerView,false);
-        mFavoritesRecyclerViewAdapter.initMeituPictureList(mFavoritesPictureList);
+        mFavoritesRecyclerViewAdapter.initMeituPictureList(null);
         mFavoritesRecyclerView.setHasFixedSize(true);
         mFavoritesRecyclerView.setLayoutManager(staggeredGridLayoutManager);
         mFavoritesRecyclerView.setAdapter(mFavoritesRecyclerViewAdapter);
@@ -62,7 +72,7 @@ public class ShowFavoritesActivity extends AppCompatActivity {
 
             @Override
             public void onBottom() {
-
+                ShowToast.showLongToast(ShowFavoritesActivity.this,"已经没有照片啦");
             }
         });
 
@@ -70,12 +80,20 @@ public class ShowFavoritesActivity extends AppCompatActivity {
 
             @Override
             public void onItemClick(View view, int postion) {
-
+                Bundle bundle = new Bundle();
+                bundle.putInt("position",postion);
+                bundle.putParcelableArrayList("meituPictureList",mFavoritesPictureList);
+                Intent intent = new Intent(ShowFavoritesActivity.this,PhotoViewActivity.class);
+                intent.putExtras(bundle);
+                startActivity(intent);
             }
         });
 
     }
 
+    /**
+     * 从数据库中下载已经收藏的妹子图片信息
+     * */
     public void queryFavoritesFromDatabase(){
         // 创建数据库
         MeituDatabaseHelper meituDatabaseHelper = new MeituDatabaseHelper(ShowFavoritesActivity.this,
