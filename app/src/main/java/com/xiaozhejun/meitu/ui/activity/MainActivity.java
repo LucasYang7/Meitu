@@ -118,6 +118,7 @@ public class MainActivity extends AppCompatActivity
 
             case R.id.nav_download:
                 ShowToast.showShortToast(MainActivity.this,"下载");
+                gotoOtherActivity(ShowDownloadActivity.class);
                 break;
 
             case R.id.nav_about:
