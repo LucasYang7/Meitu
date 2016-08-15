@@ -29,6 +29,10 @@
         <activity
             android:name=".ui.activity.PhotoViewActivity"
             android:label="@string/title_activity_photo_view"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ui.activity.ShowFavoritesActivity"
+            android:label="@string/title_activity_show_favorites"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

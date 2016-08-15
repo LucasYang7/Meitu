@@ -1,6 +1,7 @@
 package com.xiaozhejun.meitu.ui.activity;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -112,6 +113,7 @@ public class MainActivity extends AppCompatActivity
 
             case R.id.nav_favorite:
                 ShowToast.showShortToast(MainActivity.this,"收藏夹");
+                gotoOtherActivity(ShowFavoritesActivity.class);
                 break;
 
             case R.id.nav_download:
@@ -140,5 +142,13 @@ public class MainActivity extends AppCompatActivity
                 getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.mainContentInMainActivity,fragment);
         fragmentTransaction.commit();
+    }
+
+    /**
+     * 跳转到其它的Activity
+     * */
+    public void gotoOtherActivity(Class clazz){
+        Intent intent = new Intent(MainActivity.this,clazz);
+        startActivity(intent);
     }
 }
