@@ -37,12 +37,14 @@ public class ShareFragment extends MeituPictureListFragment {
         @Override
         public void onCompleted() {
             ShowToast.showShortToast(getActivity(),"完成获取相册网页页数的操作 mPage = " + mPage);
+            mMeituPictureListSwipeRefreshLayout.setRefreshing(false);
             // 开始下载"美女自拍"的第一个相册
             loadMoreMeituPicture(mPage);
         }
 
         @Override
         public void onError(Throwable e) {
+            mMeituPictureListSwipeRefreshLayout.setRefreshing(false);
             ShowToast.showShortToast(getActivity(),"获取网页页数操作失败"
                     + e.toString());
         }
