@@ -7,19 +7,19 @@
         <item
             android:id="@+id/nav_meizitu"
             android:icon="@drawable/meizitu"
-            android:title="妹子图" />
+            android:title="@string/meizitu_title"/>
         <item
             android:id="@+id/nav_douban_meinv"
             android:icon="@drawable/douban"
-            android:title="豆瓣美女" />
+            android:title="@string/douban_meinv_title" />
         <item
             android:id="@+id/nav_huaban_meinv"
             android:icon="@drawable/huaban"
-            android:title="花瓣美女" />
+            android:title="@string/huaban_meinv_title" />
         <item
             android:id="@+id/nav_gank_meizi"
             android:icon="@drawable/gank"
-            android:title="Gank妹子" />
+            android:title="@string/gank_meizi_title" />
     </group>
 
     <group

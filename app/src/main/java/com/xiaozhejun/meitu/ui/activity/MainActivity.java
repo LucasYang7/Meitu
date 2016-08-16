@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(R.string.meizitu_title);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -88,24 +89,28 @@ public class MainActivity extends AppCompatActivity
         switch (id){
             case R.id.nav_meizitu:
                 ShowToast.showTestShortToast(MainActivity.this,"妹子图");
+                getSupportActionBar().setTitle(R.string.meizitu_title);
                 MeizituTabFragment meizituTabFragment = new MeizituTabFragment();
                 replaceFragment(meizituTabFragment);
                 break;
 
             case R.id.nav_douban_meinv:
                 ShowToast.showTestShortToast(MainActivity.this,"豆瓣美女");
+                getSupportActionBar().setTitle(R.string.douban_meinv_title);
                 DoubanMeinvTabFragment doubanMeinvFragment = new DoubanMeinvTabFragment();
                 replaceFragment(doubanMeinvFragment);
                 break;
 
             case R.id.nav_huaban_meinv:
                 ShowToast.showTestShortToast(MainActivity.this,"花瓣美女");
+                getSupportActionBar().setTitle(R.string.huaban_meinv_title);
                 HuabanMeinvFragment huabanMeinvFragment = new HuabanMeinvFragment();
                 replaceFragment(huabanMeinvFragment);
                 break;
 
             case R.id.nav_gank_meizi:
                 ShowToast.showTestShortToast(MainActivity.this,"Gank妹子");
+                getSupportActionBar().setTitle(R.string.gank_meizi_title);
                 GankMeiziFragment gankMeiziFragment = new GankMeiziFragment();
                 replaceFragment(gankMeiziFragment);
                 break;

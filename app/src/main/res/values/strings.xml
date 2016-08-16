@@ -4,6 +4,11 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
+    <string name="meizitu_title">妹子图</string>
+    <string name="douban_meinv_title">豆瓣美女</string>
+    <string name="huaban_meinv_title">花瓣美女</string>
+    <string name="gank_meizi_title">Gank妹子</string>
+
     <string name="action_settings">Settings</string>
     <string name="action_search">搜索</string>
     <string name="action_share">分享妹子图片</string>
