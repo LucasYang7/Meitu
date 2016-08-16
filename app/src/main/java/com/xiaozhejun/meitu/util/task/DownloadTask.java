@@ -1,4 +1,4 @@
-package com.xiaozhejun.meitu.util;
+package com.xiaozhejun.meitu.util.task;
 
 import android.content.Context;
 import android.content.Intent;

@@ -18,7 +18,7 @@ import com.xiaozhejun.meitu.adapter.PhotoViewPagerAdapter;
 import com.xiaozhejun.meitu.db.MeituDatabaseHelper;
 import com.xiaozhejun.meitu.model.MeituPicture;
 import com.xiaozhejun.meitu.ui.widget.ShowToast;
-import com.xiaozhejun.meitu.util.DownloadTask;
+import com.xiaozhejun.meitu.util.task.DownloadTask;
 
 import java.util.ArrayList;
 
