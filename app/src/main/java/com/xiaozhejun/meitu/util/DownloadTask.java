@@ -45,7 +45,8 @@ public class DownloadTask extends AsyncTask<String,Void,Uri> {
             e.printStackTrace();
         }
         if(bitmap == null){
-            ShowToast.showShortToast(mContext,"无法获取图片...");
+            //doInBackground在工作线程中执行，而显示Toast需要在UI线程中执行
+            //ShowToast.showShortToast(mContext,"无法获取图片...");
         }else{
             File meituDir = new File(Environment.getExternalStorageDirectory(),"Meitu");
             if(meituDir.exists() == false){
@@ -78,18 +79,25 @@ public class DownloadTask extends AsyncTask<String,Void,Uri> {
     @Override
     protected void onPostExecute(Uri uri) {
         super.onPostExecute(uri);
-        if(mAction.equals("download")){
-            String meituDir=uri.getPath();
-            Resources resources = mContext.getResources();
-            String downloadMsg = String.format(resources.getString(R.string.picture_has_save_to),meituDir);
-            ShowToast.showShortToast(mContext,downloadMsg);
-        }else {
-            String shareTitle = "分享妹子图片到...";
-            Intent shareIntent = new Intent();
-            shareIntent.setAction(Intent.ACTION_SEND);
-            shareIntent.putExtra(Intent.EXTRA_STREAM,uri);
-            shareIntent.setType("image/*");
-            mContext.startActivity(Intent.createChooser(shareIntent,shareTitle));
+        if(uri == null){
+            //onPostExecute在UI线程中执行
+            //显示Toast需要在UI线程中执行
+            ShowToast.showShortToast(mContext,"无法获取图片...");
+        }else{
+            if(mAction.equals("download")){
+                String meituDir=uri.getPath();
+                Resources resources = mContext.getResources();
+                String downloadMsg = String.format(resources.getString(R.string.picture_has_save_to),meituDir);
+                ShowToast.showShortToast(mContext,downloadMsg);
+            }else {
+                String shareTitle = "分享妹子图片到...";
+                Intent shareIntent = new Intent();
+                shareIntent.setAction(Intent.ACTION_SEND);
+                shareIntent.putExtra(Intent.EXTRA_STREAM,uri);
+                shareIntent.setType("image/*");
+                mContext.startActivity(Intent.createChooser(shareIntent,shareTitle));
+            }
         }
+
     }
 }
