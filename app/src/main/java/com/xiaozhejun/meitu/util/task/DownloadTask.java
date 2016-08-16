@@ -54,8 +54,10 @@ public class DownloadTask extends AsyncTask<String,Void,Uri> {
             }
             //String pictureName = mTitle.replace('/','_') + "(" + mPosition + ")" +  mExtensions;  //保存到手机中的图片名字
             Resources resources = mContext.getResources();
-            String pictureName = String.format(resources.getString(R.string.picture_name),mTitle.replace('/','_'),
+            mTitle = mTitle.replace('/','_');       // 替换掉标题中的'/'
+            String pictureName = String.format(resources.getString(R.string.picture_name),mTitle,
                     mPosition+1,mExtensions);
+            pictureName = pictureName.replaceAll("[~!@#$%^&]","_");        // 替换图片名字中的特殊字符
             File picture = new File(meituDir,pictureName);
 
             try {
