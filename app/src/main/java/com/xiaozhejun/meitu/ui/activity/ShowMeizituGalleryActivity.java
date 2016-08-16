@@ -98,6 +98,7 @@ public class ShowMeizituGalleryActivity extends AppCompatActivity {
                 // 跳转到PhotoViewActivity
                 Bundle bundle = new Bundle();
                 bundle.putInt("position",postion);
+                bundle.putBoolean("isDownload",false);
                 bundle.putParcelableArrayList("meituPictureList",meituPictureList);
                 Intent intent = new Intent(ShowMeizituGalleryActivity.this,PhotoViewActivity.class);
                 intent.putExtras(bundle);

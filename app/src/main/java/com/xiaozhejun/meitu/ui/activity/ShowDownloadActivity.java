@@ -57,7 +57,8 @@ public class ShowDownloadActivity extends AppCompatActivity {
         mDownloadPictureList.clear();
         File meituDir = new File(Environment.getExternalStorageDirectory(),"Meitu");
         String meituFolderPath = meituDir.getPath();
-        new GetDownloadPicturesTask(ShowDownloadActivity.this,mDownloadRecyclerViewAdapter)
+        new GetDownloadPicturesTask(ShowDownloadActivity.this,mDownloadPictureList
+                ,mDownloadRecyclerViewAdapter)
                 .execute(new String[]{meituFolderPath});
     }
 
@@ -83,7 +84,13 @@ public class ShowDownloadActivity extends AppCompatActivity {
 
             @Override
             public void onItemClick(View view, int postion) {
-
+                Bundle bundle = new Bundle();
+                bundle.putInt("position",postion);
+                bundle.putBoolean("isDownload",true);
+                bundle.putParcelableArrayList("meituPictureList",mDownloadPictureList);
+                Intent intent = new Intent(ShowDownloadActivity.this,PhotoViewActivity.class);
+                intent.putExtras(bundle);
+                startActivity(intent);
             }
         });
 
@@ -93,11 +100,14 @@ public class ShowDownloadActivity extends AppCompatActivity {
 
 class GetDownloadPicturesTask extends AsyncTask<String,Void,ArrayList<MeituPicture>>{
 
-    private MeituPictureListRecyclerViewAdapter mDownloadRecyclerViewAdapter;
     private Context mContext;
+    private ArrayList<MeituPicture> mDownloadPictureList;
+    private MeituPictureListRecyclerViewAdapter mDownloadRecyclerViewAdapter;
 
-    public GetDownloadPicturesTask(Context context,MeituPictureListRecyclerViewAdapter downloadRecyclerViewAdapter){
+    public GetDownloadPicturesTask(Context context,ArrayList<MeituPicture> downloadPictureList,
+                                   MeituPictureListRecyclerViewAdapter downloadRecyclerViewAdapter){
         this.mContext = context;
+        this.mDownloadPictureList = downloadPictureList;
         this.mDownloadRecyclerViewAdapter = downloadRecyclerViewAdapter;
     }
 
@@ -126,6 +136,7 @@ class GetDownloadPicturesTask extends AsyncTask<String,Void,ArrayList<MeituPictu
     @Override
     protected void onPostExecute(ArrayList<MeituPicture> meituPictures) {
         super.onPostExecute(meituPictures);
+        mDownloadPictureList.addAll(meituPictures);
         mDownloadRecyclerViewAdapter.updateMeituPictureList(meituPictures,true);
     }
 }

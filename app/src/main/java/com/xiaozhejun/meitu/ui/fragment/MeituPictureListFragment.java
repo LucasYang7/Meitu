@@ -80,6 +80,7 @@ public abstract class MeituPictureListFragment extends BaseFragment implements S
                 // 跳转到PhotoViewActivity
                 Bundle bundle = new Bundle();
                 bundle.putInt("position",postion);
+                bundle.putBoolean("isDownload",false);
                 bundle.putParcelableArrayList("meituPictureList",
                         meituPictureListRecyclerViewAdapter.getmMeituPictureList());
                 Intent intent = new Intent(getActivity(),PhotoViewActivity.class);

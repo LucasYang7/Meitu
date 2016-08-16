@@ -82,6 +82,7 @@ public class ShowFavoritesActivity extends AppCompatActivity {
             public void onItemClick(View view, int postion) {
                 Bundle bundle = new Bundle();
                 bundle.putInt("position",postion);
+                bundle.putBoolean("isDownload",false);
                 bundle.putParcelableArrayList("meituPictureList",mFavoritesPictureList);
                 Intent intent = new Intent(ShowFavoritesActivity.this,PhotoViewActivity.class);
                 intent.putExtras(bundle);
