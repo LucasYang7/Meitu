@@ -1,19 +1,14 @@
 package com.xiaozhejun.meitu.ui.fragment.huabanmeinv;
 
 
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
-import com.xiaozhejun.meitu.R;
 import com.xiaozhejun.meitu.model.HuabanMeinv;
 import com.xiaozhejun.meitu.model.HuabanMeinvJsonResult;
 import com.xiaozhejun.meitu.model.MeituPicture;
 import com.xiaozhejun.meitu.network.Network;
 import com.xiaozhejun.meitu.ui.fragment.MeituPictureListFragment;
-import com.xiaozhejun.meitu.ui.widget.ShowToast;
+import com.xiaozhejun.meitu.util.ShowToast;
 import com.xiaozhejun.meitu.util.Constants;
 
 import java.util.ArrayList;
@@ -42,7 +37,7 @@ public class HuabanMeinvFragment extends MeituPictureListFragment {
     Observer<ArrayList<MeituPicture>> observer = new Observer<ArrayList<MeituPicture>>() {
         @Override
         public void onCompleted() {
-            ShowToast.showLongToast(mContext,mType + " load page " + mPage + " onCompleted()!");
+            ShowToast.showTestLongToast(mContext,mType + " load page " + mPage + " onCompleted()!");
             mMeituPictureListSwipeRefreshLayout.setRefreshing(false);
             mIsLoadingData = false;
             mPage++;
@@ -50,7 +45,7 @@ public class HuabanMeinvFragment extends MeituPictureListFragment {
 
         @Override
         public void onError(Throwable e) {
-            ShowToast.showLongToast(mContext,mType + " load page " + mPage + " onError()! " + e.toString());
+            ShowToast.showTestLongToast(mContext,mType + " load page " + mPage + " onError()! " + e.toString());
             mMeituPictureListSwipeRefreshLayout.setRefreshing(false);
             mIsLoadingData = false;
         }

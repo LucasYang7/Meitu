@@ -10,7 +10,7 @@ import android.os.Environment;
 
 import com.squareup.picasso.Picasso;
 import com.xiaozhejun.meitu.R;
-import com.xiaozhejun.meitu.ui.widget.ShowToast;
+import com.xiaozhejun.meitu.util.ShowToast;
 
 import java.io.File;
 import java.io.FileNotFoundException;

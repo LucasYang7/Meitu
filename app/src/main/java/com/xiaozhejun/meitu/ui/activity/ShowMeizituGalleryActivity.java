@@ -14,7 +14,7 @@ import com.xiaozhejun.meitu.model.MeituPicture;
 import com.xiaozhejun.meitu.network.Network;
 import com.xiaozhejun.meitu.network.parser.HtmlParser;
 import com.xiaozhejun.meitu.ui.widget.MeituRecyclerView;
-import com.xiaozhejun.meitu.ui.widget.ShowToast;
+import com.xiaozhejun.meitu.util.ShowToast;
 import com.xiaozhejun.meitu.util.Logcat;
 
 import java.io.IOException;
@@ -87,14 +87,14 @@ public class ShowMeizituGalleryActivity extends AppCompatActivity {
 
             @Override
             public void onBottom() {
-                ShowToast.showLongToast(ShowMeizituGalleryActivity.this,"已经没有照片啦");
+                ShowToast.showShortToast(ShowMeizituGalleryActivity.this,"已经没有照片啦");
             }
         });
         mPictureRecyclerView.setOnItemClickListener(new MeituRecyclerView.OnItemClickListener(){
 
             @Override
             public void onItemClick(View view, int postion) {
-                // ShowToast.showShortToast(ShowMeizituGalleryActivity.this,"点击了第"+(postion + 1)+"张图片!");
+                // ShowToast.showTestShortToast(ShowMeizituGalleryActivity.this,"点击了第"+(postion + 1)+"张图片!");
                 // 跳转到PhotoViewActivity
                 Bundle bundle = new Bundle();
                 bundle.putInt("position",postion);
@@ -111,14 +111,14 @@ public class ShowMeizituGalleryActivity extends AppCompatActivity {
     Observer<ArrayList<Integer>> observerPages = new Observer<ArrayList<Integer>>() {
         @Override
         public void onCompleted() {
-            ShowToast.showShortToast(ShowMeizituGalleryActivity.this,"完成获取相册网页页数的操作");
+            ShowToast.showTestShortToast(ShowMeizituGalleryActivity.this,"完成获取相册网页页数的操作");
             // 开始下载相册中的每张妹子图片
             downLoadingPicture(groupId);
         }
 
         @Override
         public void onError(Throwable e) {
-            ShowToast.showShortToast(ShowMeizituGalleryActivity.this,"获取网页页数操作失败"
+            ShowToast.showTestShortToast(ShowMeizituGalleryActivity.this,"获取网页页数操作失败"
                     + e.toString());
         }
 
@@ -135,7 +135,7 @@ public class ShowMeizituGalleryActivity extends AppCompatActivity {
             mProgressBar.setVisibility(View.INVISIBLE);
             mPictureRecyclerViewAdapter.updateMeituPictureList(meituPictureList,1);
             // test start
-            ShowToast.showShortToast(ShowMeizituGalleryActivity.this,"完成获取相册信息的操作");
+            ShowToast.showTestShortToast(ShowMeizituGalleryActivity.this,"完成获取相册信息的操作");
             StringBuilder information = new StringBuilder();
             for(MeituPicture meituPicture:meituPictureList){
                 information.append(meituPicture.getTitle() + " " + meituPicture.getPictureUrl() + "\n");
@@ -146,7 +146,7 @@ public class ShowMeizituGalleryActivity extends AppCompatActivity {
 
         @Override
         public void onError(Throwable e) {
-            ShowToast.showShortToast(ShowMeizituGalleryActivity.this,"获取相册信息操作失败"
+            ShowToast.showTestShortToast(ShowMeizituGalleryActivity.this,"获取相册信息操作失败"
                     + e.toString());
         }
 

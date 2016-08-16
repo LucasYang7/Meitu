@@ -19,7 +19,7 @@ import com.xiaozhejun.meitu.network.parser.HtmlParser;
 import com.xiaozhejun.meitu.ui.activity.ShowMeizituGalleryActivity;
 import com.xiaozhejun.meitu.ui.fragment.BaseFragment;
 import com.xiaozhejun.meitu.ui.widget.MeituRecyclerView;
-import com.xiaozhejun.meitu.ui.widget.ShowToast;
+import com.xiaozhejun.meitu.util.ShowToast;
 import com.xiaozhejun.meitu.util.Logcat;
 
 import java.io.IOException;
@@ -82,9 +82,9 @@ public class MeizituGalleryListFragment extends BaseFragment implements SwipeRef
         meizituRecyclerView.addOnScrollListener(new MeituRecyclerView.OnVerticalScrollListener() {
             @Override
             public void onBottom() {
-                ShowToast.showShortToast(mContext,mType + " 已经滑到底部了" + "page " + mPage);
+                ShowToast.showTestShortToast(mContext,mType + " 已经滑到底部了" + "page " + mPage);
                 if(mCanAddNewMeizitu == true){
-                    ShowToast.showShortToast(mContext,mType + " 正在加载第" + mPage + "页的妹子数据");
+                    ShowToast.showTestShortToast(mContext,mType + " 正在加载第" + mPage + "页的妹子数据");
                     AddNewMeizituGalleryData(mPage);
                 }
             }
@@ -94,7 +94,7 @@ public class MeizituGalleryListFragment extends BaseFragment implements SwipeRef
             @Override
             public void onItemClick(View view, int postion) {
                 MeizituGallery meizituGallery = meizituRecyclerViewAdapter.getMeizituGallery(postion);
-                ShowToast.showLongToast(mContext, meizituGallery.getObjectInformation());
+                ShowToast.showTestLongToast(mContext, meizituGallery.getObjectInformation());
                 // 跳转到展示相册图片的Activity
                 Bundle bundle = new Bundle();
                 bundle.putString("groupId",meizituGallery.getGroupId());
@@ -127,7 +127,7 @@ public class MeizituGalleryListFragment extends BaseFragment implements SwipeRef
     Observer<List<MeizituGallery>> observer = new Observer<List<MeizituGallery>>() {
         @Override
         public void onCompleted() {
-            ShowToast.showLongToast(mContext,mType + " load page " + mPage + " onCompleted()!");
+            ShowToast.showTestLongToast(mContext,mType + " load page " + mPage + " onCompleted()!");
             meizituSwipeRefreshLayout.setRefreshing(false);
             mCanAddNewMeizitu = true;
             mPage++;
@@ -137,7 +137,7 @@ public class MeizituGalleryListFragment extends BaseFragment implements SwipeRef
         public void onError(Throwable e) {
             meizituSwipeRefreshLayout.setRefreshing(false);
             mCanAddNewMeizitu = true;
-            ShowToast.showLongToast(mContext,mType + " load page " + mPage + " onError()! " + e.toString());
+            ShowToast.showTestLongToast(mContext,mType + " load page " + mPage + " onError()! " + e.toString());
         }
 
         @Override

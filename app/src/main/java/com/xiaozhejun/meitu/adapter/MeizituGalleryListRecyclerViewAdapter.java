@@ -1,19 +1,14 @@
 package com.xiaozhejun.meitu.adapter;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.xiaozhejun.meitu.R;
 import com.xiaozhejun.meitu.model.MeizituGallery;
 import com.xiaozhejun.meitu.ui.widget.MeituRecyclerView;
-import com.xiaozhejun.meitu.ui.widget.ShowToast;
-import com.xiaozhejun.meitu.util.Logcat;
 
 import java.util.List;
 

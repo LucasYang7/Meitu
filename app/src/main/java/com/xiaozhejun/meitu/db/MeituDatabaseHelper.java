@@ -4,7 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.xiaozhejun.meitu.ui.widget.ShowToast;
+import com.xiaozhejun.meitu.util.ShowToast;
 
 /**
  * Created by yangzhe on 16-8-15.
@@ -29,7 +29,7 @@ public class MeituDatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_MEITU_FAVORITES);
-        ShowToast.showShortToast(mContext,"Create Favorites table succeeded!");
+        ShowToast.showTestShortToast(mContext,"Create Favorites table succeeded!");
     }
 
     @Override

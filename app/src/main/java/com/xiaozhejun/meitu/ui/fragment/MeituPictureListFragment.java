@@ -15,7 +15,7 @@ import com.xiaozhejun.meitu.R;
 import com.xiaozhejun.meitu.adapter.MeituPictureListRecyclerViewAdapter;
 import com.xiaozhejun.meitu.ui.activity.PhotoViewActivity;
 import com.xiaozhejun.meitu.ui.widget.MeituRecyclerView;
-import com.xiaozhejun.meitu.ui.widget.ShowToast;
+import com.xiaozhejun.meitu.util.ShowToast;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -67,9 +67,9 @@ public abstract class MeituPictureListFragment extends BaseFragment implements S
         mMeituPictureListMeituRecyclerView.addOnScrollListener(new MeituRecyclerView.OnVerticalScrollListener() {
             @Override
             public void onBottom() {
-                ShowToast.showShortToast(mContext,mType + " 已经滑到底部了" + "page " + mPage);
+                ShowToast.showTestShortToast(mContext,mType + " 已经滑到底部了" + "page " + mPage);
                 if(mIsLoadingData == false){
-                    ShowToast.showShortToast(mContext,mType + " 正在加载第" + mPage + "页的妹子数据");
+                    ShowToast.showTestShortToast(mContext,mType + " 正在加载第" + mPage + "页的妹子数据");
                     loadMoreMeituPicture(mPage);
                 }
             }

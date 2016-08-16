@@ -4,8 +4,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
@@ -17,7 +15,7 @@ import com.xiaozhejun.meitu.db.MeituDatabaseHelper;
 import com.xiaozhejun.meitu.model.MeituPicture;
 import com.xiaozhejun.meitu.ui.widget.MeituRecyclerView;
 import com.xiaozhejun.meitu.ui.widget.MeituRecyclerView.OnVerticalScrollListener;
-import com.xiaozhejun.meitu.ui.widget.ShowToast;
+import com.xiaozhejun.meitu.util.ShowToast;
 
 import java.util.ArrayList;
 
@@ -72,7 +70,7 @@ public class ShowFavoritesActivity extends AppCompatActivity {
 
             @Override
             public void onBottom() {
-                ShowToast.showLongToast(ShowFavoritesActivity.this,"已经没有照片啦");
+                ShowToast.showShortToast(ShowFavoritesActivity.this,"已经没有照片啦");
             }
         });
 

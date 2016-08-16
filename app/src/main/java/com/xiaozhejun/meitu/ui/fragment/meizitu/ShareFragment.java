@@ -7,7 +7,7 @@ import com.xiaozhejun.meitu.model.MeituPicture;
 import com.xiaozhejun.meitu.network.Network;
 import com.xiaozhejun.meitu.network.parser.HtmlParser;
 import com.xiaozhejun.meitu.ui.fragment.MeituPictureListFragment;
-import com.xiaozhejun.meitu.ui.widget.ShowToast;
+import com.xiaozhejun.meitu.util.ShowToast;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -36,7 +36,7 @@ public class ShareFragment extends MeituPictureListFragment {
     Observer<Integer> observerPage = new Observer<Integer>() {
         @Override
         public void onCompleted() {
-            ShowToast.showShortToast(getActivity(),"完成获取相册网页页数的操作 mPage = " + mPage);
+            ShowToast.showTestShortToast(getActivity(),"完成获取相册网页页数的操作 mPage = " + mPage);
             mMeituPictureListSwipeRefreshLayout.setRefreshing(false);
             // 开始下载"美女自拍"的第一个相册
             loadMoreMeituPicture(mPage);
@@ -45,7 +45,7 @@ public class ShareFragment extends MeituPictureListFragment {
         @Override
         public void onError(Throwable e) {
             mMeituPictureListSwipeRefreshLayout.setRefreshing(false);
-            ShowToast.showShortToast(getActivity(),"获取网页页数操作失败"
+            ShowToast.showTestShortToast(getActivity(),"获取网页页数操作失败"
                     + e.toString());
         }
 
@@ -61,7 +61,7 @@ public class ShareFragment extends MeituPictureListFragment {
     Observer<ArrayList<MeituPicture>> observerPictures = new Observer<ArrayList<MeituPicture>>() {
         @Override
         public void onCompleted() {
-            ShowToast.showLongToast(mContext,"load page " + mPage + " onCompleted()!");
+            ShowToast.showTestLongToast(mContext,"load page " + mPage + " onCompleted()!");
             mMeituPictureListSwipeRefreshLayout.setRefreshing(false);
             mIsLoadingData = false;
             mPage--;
@@ -69,7 +69,7 @@ public class ShareFragment extends MeituPictureListFragment {
 
         @Override
         public void onError(Throwable e) {
-            ShowToast.showLongToast(mContext,"load page " + mPage + " onError()! " + e.toString());
+            ShowToast.showTestLongToast(mContext,"load page " + mPage + " onError()! " + e.toString());
             mMeituPictureListSwipeRefreshLayout.setRefreshing(false);
             mIsLoadingData = false;
         }

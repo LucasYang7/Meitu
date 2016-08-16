@@ -1,17 +1,8 @@
 package com.xiaozhejun.meitu.ui.activity;
 
-import android.content.ContentResolver;
-import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
@@ -21,7 +12,7 @@ import com.xiaozhejun.meitu.R;
 import com.xiaozhejun.meitu.adapter.MeituPictureListRecyclerViewAdapter;
 import com.xiaozhejun.meitu.model.MeituPicture;
 import com.xiaozhejun.meitu.ui.widget.MeituRecyclerView;
-import com.xiaozhejun.meitu.ui.widget.ShowToast;
+import com.xiaozhejun.meitu.util.ShowToast;
 import com.xiaozhejun.meitu.util.task.GetDownloadPicturesTask;
 
 import java.io.File;
@@ -77,7 +68,7 @@ public class ShowDownloadActivity extends AppCompatActivity {
 
             @Override
             public void onBottom() {
-                ShowToast.showLongToast(ShowDownloadActivity.this,"已经没有照片啦");
+                ShowToast.showShortToast(ShowDownloadActivity.this,"已经没有照片啦");
             }
         });
 

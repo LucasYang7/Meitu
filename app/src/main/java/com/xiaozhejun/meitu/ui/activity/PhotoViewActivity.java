@@ -17,7 +17,7 @@ import com.xiaozhejun.meitu.R;
 import com.xiaozhejun.meitu.adapter.PhotoViewPagerAdapter;
 import com.xiaozhejun.meitu.db.MeituDatabaseHelper;
 import com.xiaozhejun.meitu.model.MeituPicture;
-import com.xiaozhejun.meitu.ui.widget.ShowToast;
+import com.xiaozhejun.meitu.util.ShowToast;
 import com.xiaozhejun.meitu.util.task.DownloadTask;
 
 import java.util.ArrayList;
@@ -121,12 +121,12 @@ public class PhotoViewActivity extends AppCompatActivity {
         int id = item.getItemId();
         switch (id){
             case R.id.action_share:
-                //ShowToast.showShortToast(PhotoViewActivity.this,"分享功能");
+                //ShowToast.showTestShortToast(PhotoViewActivity.this,"分享功能");
                 sharePicture(mPosition);
                 return true;
 
             case R.id.action_download:
-                //ShowToast.showShortToast(PhotoViewActivity.this,"下载功能");
+                //ShowToast.showTestShortToast(PhotoViewActivity.this,"下载功能");
                 downloadPicture(mPosition);
                 return true;
 

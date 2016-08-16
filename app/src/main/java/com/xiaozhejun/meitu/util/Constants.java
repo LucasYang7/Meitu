@@ -6,9 +6,9 @@ package com.xiaozhejun.meitu.util;
 public interface Constants {
 
     /**
-     * 用于控制是否显示Toast
+     * 用于控制是否显示用于测试目的的Toast
      * */
-    boolean SHOW_TOAST = true;
+    boolean SHOW_TEST_TOAST = true;
 
     /**
      * 用于控制是否显示自己定义的Log

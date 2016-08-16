@@ -16,7 +16,7 @@ import com.xiaozhejun.meitu.adapter.MeizituGalleryListRecyclerViewAdapter;
 import com.xiaozhejun.meitu.model.MeizituGallery;
 import com.xiaozhejun.meitu.network.Network;
 import com.xiaozhejun.meitu.ui.fragment.BaseFragment;
-import com.xiaozhejun.meitu.ui.widget.ShowToast;
+import com.xiaozhejun.meitu.util.ShowToast;
 import com.xiaozhejun.meitu.util.Logcat;
 
 import org.jsoup.Jsoup;
@@ -63,7 +63,7 @@ public class XingGanFragment extends BaseFragment implements SwipeRefreshLayout.
             mMeizituGalleryList.addAll(mNewMeizituGalleryList);  //更新XingGanFragment的妹子图数据
             meizituRecyclerViewAdapter.initMeizituGalleryList(mMeizituGalleryList);
             meizituRecyclerViewAdapter.notifyDataSetChanged();
-            ShowToast.showLongToast(mContext,"load page " + page + " onCompleted()!");
+            ShowToast.showTestLongToast(mContext,"load page " + page + " onCompleted()!");
             page++;   // 增大妹子图相册所在的网页页数
             canAddMeizitu = true;
         }
@@ -72,7 +72,7 @@ public class XingGanFragment extends BaseFragment implements SwipeRefreshLayout.
         public void onError(Throwable e) {
             xingganSwipeRefreshLayout.setRefreshing(false);
             canAddMeizitu = true;
-            ShowToast.showLongToast(mContext,"load page " + page + " onError()! " + e.toString());
+            ShowToast.showTestLongToast(mContext,"load page " + page + " onError()! " + e.toString());
             //Log.e(TAG,"onError()!" + e.toString());
             Logcat.showLog(TAG,"onError()!" + e.toString());
         }
@@ -245,9 +245,9 @@ public class XingGanFragment extends BaseFragment implements SwipeRefreshLayout.
             // RecyclerView已经滑到底部且RecyclerView处于静止状态
             if(isLastItemDisplaying(recyclerView) == true && newState == RecyclerView.SCROLL_STATE_IDLE){
                 //Toast.makeText(mContext,"已经滑到底部了，没有图片了。。。",Toast.LENGTH_SHORT).show();
-                ShowToast.showShortToast(mContext,"已经滑到底部了" + "page " + page);
+                ShowToast.showTestShortToast(mContext,"已经滑到底部了" + "page " + page);
                 if(canAddMeizitu == true){
-                    ShowToast.showShortToast(mContext,"正在加载第" + page + "页的妹子数据");
+                    ShowToast.showTestShortToast(mContext,"正在加载第" + page + "页的妹子数据");
                     AddXingganMeiziData(page);
                 }
             }

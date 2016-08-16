@@ -15,12 +15,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.xiaozhejun.meitu.R;
-import com.xiaozhejun.meitu.db.MeituDatabaseHelper;
 import com.xiaozhejun.meitu.ui.fragment.doubanmeinv.DoubanMeinvTabFragment;
 import com.xiaozhejun.meitu.ui.fragment.gankmeizi.GankMeiziFragment;
 import com.xiaozhejun.meitu.ui.fragment.huabanmeinv.HuabanMeinvFragment;
 import com.xiaozhejun.meitu.ui.fragment.meizitu.MeizituTabFragment;
-import com.xiaozhejun.meitu.ui.widget.ShowToast;
+import com.xiaozhejun.meitu.util.ShowToast;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -88,45 +87,45 @@ public class MainActivity extends AppCompatActivity
 
         switch (id){
             case R.id.nav_meizitu:
-                ShowToast.showShortToast(MainActivity.this,"妹子图");
+                ShowToast.showTestShortToast(MainActivity.this,"妹子图");
                 MeizituTabFragment meizituTabFragment = new MeizituTabFragment();
                 replaceFragment(meizituTabFragment);
                 break;
 
             case R.id.nav_douban_meinv:
-                ShowToast.showShortToast(MainActivity.this,"豆瓣美女");
+                ShowToast.showTestShortToast(MainActivity.this,"豆瓣美女");
                 DoubanMeinvTabFragment doubanMeinvFragment = new DoubanMeinvTabFragment();
                 replaceFragment(doubanMeinvFragment);
                 break;
 
             case R.id.nav_huaban_meinv:
-                ShowToast.showShortToast(MainActivity.this,"花瓣美女");
+                ShowToast.showTestShortToast(MainActivity.this,"花瓣美女");
                 HuabanMeinvFragment huabanMeinvFragment = new HuabanMeinvFragment();
                 replaceFragment(huabanMeinvFragment);
                 break;
 
             case R.id.nav_gank_meizi:
-                ShowToast.showShortToast(MainActivity.this,"Gank妹子");
+                ShowToast.showTestShortToast(MainActivity.this,"Gank妹子");
                 GankMeiziFragment gankMeiziFragment = new GankMeiziFragment();
                 replaceFragment(gankMeiziFragment);
                 break;
 
             case R.id.nav_favorite:
-                ShowToast.showShortToast(MainActivity.this,"收藏夹");
+                ShowToast.showTestShortToast(MainActivity.this,"收藏夹");
                 gotoOtherActivity(ShowFavoritesActivity.class);
                 break;
 
             case R.id.nav_download:
-                ShowToast.showShortToast(MainActivity.this,"下载");
+                ShowToast.showTestShortToast(MainActivity.this,"下载");
                 gotoOtherActivity(ShowDownloadActivity.class);
                 break;
 
             case R.id.nav_about:
-                ShowToast.showShortToast(MainActivity.this,"关于");
+                ShowToast.showTestShortToast(MainActivity.this,"关于");
                 break;
 
             default:
-                ShowToast.showShortToast(MainActivity.this,"妹子图");
+                ShowToast.showTestShortToast(MainActivity.this,"妹子图");
                 break;
         }
 
