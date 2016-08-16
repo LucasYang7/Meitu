@@ -22,6 +22,7 @@ import com.xiaozhejun.meitu.adapter.MeituPictureListRecyclerViewAdapter;
 import com.xiaozhejun.meitu.model.MeituPicture;
 import com.xiaozhejun.meitu.ui.widget.MeituRecyclerView;
 import com.xiaozhejun.meitu.ui.widget.ShowToast;
+import com.xiaozhejun.meitu.util.task.GetDownloadPicturesTask;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -68,7 +69,7 @@ public class ShowDownloadActivity extends AppCompatActivity {
                 new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
         mDownloadRecyclerViewAdapter = new MeituPictureListRecyclerViewAdapter(
                 mDownloadRecyclerView,false);
-        mDownloadRecyclerViewAdapter.initMeituPictureList(mDownloadPictureList);
+        mDownloadRecyclerViewAdapter.initMeituPictureList(null);
         mDownloadRecyclerView.setHasFixedSize(true);
         mDownloadRecyclerView.setLayoutManager(staggeredGridLayoutManager);
         mDownloadRecyclerView.setAdapter(mDownloadRecyclerViewAdapter);
@@ -96,47 +97,4 @@ public class ShowDownloadActivity extends AppCompatActivity {
 
     }
 
-}
-
-class GetDownloadPicturesTask extends AsyncTask<String,Void,ArrayList<MeituPicture>>{
-
-    private Context mContext;
-    private ArrayList<MeituPicture> mDownloadPictureList;
-    private MeituPictureListRecyclerViewAdapter mDownloadRecyclerViewAdapter;
-
-    public GetDownloadPicturesTask(Context context,ArrayList<MeituPicture> downloadPictureList,
-                                   MeituPictureListRecyclerViewAdapter downloadRecyclerViewAdapter){
-        this.mContext = context;
-        this.mDownloadPictureList = downloadPictureList;
-        this.mDownloadRecyclerViewAdapter = downloadRecyclerViewAdapter;
-    }
-
-    @Override
-    protected ArrayList<MeituPicture> doInBackground(String... downloadPicturePath) {
-        ArrayList<MeituPicture> downloadPictureList = new ArrayList<MeituPicture>();
-        final Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-        final ContentResolver contentResolver = mContext.getContentResolver();
-        final String meituFolderPath = "%" + downloadPicturePath[0] + "%"; // 加上%是为了使用sql中的like语句
-        Cursor cursor = contentResolver.query(uri,null,MediaStore.Images.Media.DATA + " like ? ",
-                new String[]{meituFolderPath},MediaStore.Images.Media.DATE_MODIFIED + " desc");
-        if(cursor != null){
-            while(cursor.moveToNext()){
-                String picturePath = "file://" + cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
-                String title = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME));
-                MeituPicture meituPicture = new MeituPicture();
-                meituPicture.setPictureUrl(picturePath);
-                meituPicture.setTitle(title);
-                downloadPictureList.add(meituPicture);
-            }
-        }
-        cursor.close();
-        return downloadPictureList;
-    }
-
-    @Override
-    protected void onPostExecute(ArrayList<MeituPicture> meituPictures) {
-        super.onPostExecute(meituPictures);
-        mDownloadPictureList.addAll(meituPictures);
-        mDownloadRecyclerViewAdapter.updateMeituPictureList(meituPictures,true);
-    }
 }
