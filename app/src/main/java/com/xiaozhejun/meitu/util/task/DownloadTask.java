@@ -26,13 +26,19 @@ public class DownloadTask extends AsyncTask<String,Void,Uri> {
     private String mTitle;
     private int mPosition;
     private String mExtensions = ".jpg";    // 图片的后缀名
-    private String mAction;               // 用于标记是下载图片还是共享图片
+    private String mAction;                 // 用于标记是下载图片还是共享图片
+    private String downloadPictureFolder;   // 用于保存下载图片的文件夹
 
     public DownloadTask(Context context,String action,String title,int position){
         mContext = context;
         mAction = action;
         mTitle = title;
         mPosition = position;
+        if(action.equalsIgnoreCase("download")){
+            downloadPictureFolder = "Meitu";
+        }else{
+            downloadPictureFolder = "TempMeitu";
+        }
     }
 
     @Override
@@ -48,7 +54,7 @@ public class DownloadTask extends AsyncTask<String,Void,Uri> {
             //doInBackground在工作线程中执行，而显示Toast需要在UI线程中执行
             //ShowToast.showShortToast(mContext,"无法获取图片...");
         }else{
-            File meituDir = new File(Environment.getExternalStorageDirectory(),"Meitu");
+            File meituDir = new File(Environment.getExternalStorageDirectory(),downloadPictureFolder);
             if(meituDir.exists() == false){
                 meituDir.mkdir();
             }

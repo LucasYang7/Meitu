@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -20,6 +21,7 @@ import com.xiaozhejun.meitu.model.MeituPicture;
 import com.xiaozhejun.meitu.util.ShowToast;
 import com.xiaozhejun.meitu.util.task.DownloadTask;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class PhotoViewActivity extends AppCompatActivity {
@@ -153,6 +155,12 @@ public class PhotoViewActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        deleteTempPicture();
+    }
+
     /**
      * 改变Menu中的MenuItem的状态
      * */
@@ -198,6 +206,33 @@ public class PhotoViewActivity extends AppCompatActivity {
         String[] pictureUrls = new String[1];
         pictureUrls[0] = pictureUrl;
         new DownloadTask(this,"download",title,position).execute(pictureUrls);
+    }
+
+
+    /**
+     * 删除共享图片后所产生的临时图片
+     * */
+    public void deleteTempPicture(){
+        File tempMeituDir = new File(Environment.getExternalStorageDirectory(),"TempMeitu");
+        if(tempMeituDir.isDirectory()){
+            String[] tempPictures = tempMeituDir.list();
+            for(String tempPicture:tempPictures){
+                new File(tempMeituDir,tempPicture).delete();
+            }
+        }
+        tempMeituDir.delete();
+
+        // use FileUtils.deleteDirectory from the Apache Commons IO library to delete tempMeituDir
+        /*
+        File tempMeituDir = new File(Environment.getExternalStorageDirectory(),"TempMeitu");
+        if(tempMeituDir.isDirectory() && tempMeituDir.exists()){
+            try {
+                FileUtils.deleteDirectory(tempMeituDir);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        */
     }
 
 
