@@ -51,7 +51,8 @@ public class ShareFragment extends MeituPictureListFragment {
 
         @Override
         public void onNext(Integer page) {
-            mPage = page.intValue();
+            mPage = page.intValue();                 // 获取“妹子自拍”分类图片的网页总数
+            //mPage = 5;              // test
         }
     };
 
@@ -114,27 +115,32 @@ public class ShareFragment extends MeituPictureListFragment {
 
     @Override
     protected void loadMoreMeituPicture(int page) {
-        unsubscribe();   // 在新的Http请求前，取消上一次Http操作中所涉及的obserable与observer之间的订阅关系
-        mIsLoadingData = true;
-        subscription = Network.getMeizituService()
-                .getPictureInSelfiePages(mPage)
-                .map(new Func1<ResponseBody, ArrayList<MeituPicture>>() {
+        if(mPage > 0){
+            unsubscribe();   // 在新的Http请求前，取消上一次Http操作中所涉及的obserable与observer之间的订阅关系
+            mIsLoadingData = true;
+            subscription = Network.getMeizituService()
+                    .getPictureInSelfiePages(mPage)
+                    .map(new Func1<ResponseBody, ArrayList<MeituPicture>>() {
 
-                    @Override
-                    public ArrayList<MeituPicture> call(ResponseBody responseBody) {
-                        ArrayList<MeituPicture> meizituSelfieList = new ArrayList<MeituPicture>();
-                        try {
-                            String responseBodyContent = responseBody.string();
-                            meizituSelfieList = HtmlParser.parseMeizituSelfieHtmlContent(responseBodyContent);
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                        @Override
+                        public ArrayList<MeituPicture> call(ResponseBody responseBody) {
+                            ArrayList<MeituPicture> meizituSelfieList = new ArrayList<MeituPicture>();
+                            try {
+                                String responseBodyContent = responseBody.string();
+                                meizituSelfieList = HtmlParser.parseMeizituSelfieHtmlContent(responseBodyContent);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            return meizituSelfieList;
                         }
-                        return meizituSelfieList;
-                    }
-                })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(observerPictures);
+                    })
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(observerPictures);
+        }else{
+            ShowToast.showShortToast(getActivity(),"妹子被你看完啦 O(∩_∩)O哈哈~");
+        }
+
     }
 
 
