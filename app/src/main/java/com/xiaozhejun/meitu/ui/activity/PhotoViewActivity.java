@@ -19,6 +19,7 @@ import com.xiaozhejun.meitu.adapter.PhotoViewPagerAdapter;
 import com.xiaozhejun.meitu.db.MeituDatabaseHelper;
 import com.xiaozhejun.meitu.model.MeituPicture;
 import com.xiaozhejun.meitu.util.ShowToast;
+import com.xiaozhejun.meitu.util.task.DeleteTempPicturesTask;
 import com.xiaozhejun.meitu.util.task.DownloadTask;
 
 import java.io.File;
@@ -213,6 +214,14 @@ public class PhotoViewActivity extends AppCompatActivity {
      * 删除共享图片后所产生的临时图片
      * */
     public void deleteTempPicture(){
+        // 使用ContentResolver中的delete方法进行删除，使用这种方式在删除照片后能够及时清除相册中的信息
+        File tempMeituDir = new File(Environment.getExternalStorageDirectory(),"TempMeitu");
+        String tempMeituFolderPath = tempMeituDir.getPath();
+        new DeleteTempPicturesTask(PhotoViewActivity.this).execute(new String[]{tempMeituFolderPath});
+
+
+        // 使用普通的方法删除临时图片
+        /*
         File tempMeituDir = new File(Environment.getExternalStorageDirectory(),"TempMeitu");
         if(tempMeituDir.isDirectory()){
             String[] tempPictures = tempMeituDir.list();
@@ -221,6 +230,7 @@ public class PhotoViewActivity extends AppCompatActivity {
             }
         }
         tempMeituDir.delete();
+        */
 
         // use FileUtils.deleteDirectory from the Apache Commons IO library to delete tempMeituDir
         /*
