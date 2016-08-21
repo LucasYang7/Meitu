@@ -42,6 +42,7 @@ public class MeizituGalleryListFragment extends BaseFragment implements SwipeRef
     private MeituRecyclerView meizituRecyclerView;
     private MeizituGalleryListRecyclerViewAdapter meizituRecyclerViewAdapter;
     private boolean mIsLoadingData;    // 判断能否请求新的网页，加载更多妹子的图片
+    private boolean mCanConnectToServer;
     private int mPage;       //表示妹子图片相册链接后面的分页
     private int mTotalPages = Integer.MAX_VALUE; //表示妹子图某类相册所对应的网页总页数，总页数初始值为整型数的最大值
     private String mType;    //表示妹子图片所属的类型，例如：日本妹子，性感妹子等
@@ -133,8 +134,10 @@ public class MeizituGalleryListFragment extends BaseFragment implements SwipeRef
         public void onCompleted() {
             meizituSwipeRefreshLayout.setRefreshing(false);
             mIsLoadingData = false;
-            loadMoreMeizituGalleryData(mPage);         // 加载某类妹子图相册首页中的相册信息
-            ShowToast.showTestShortToast(mContext,"妹子图 " + mType + " 的网页总数为" + mTotalPages);
+            if(mCanConnectToServer == true){
+                loadMoreMeizituGalleryData(mPage);         // 加载某类妹子图相册首页中的相册信息
+                ShowToast.showTestShortToast(mContext,"妹子图 " + mType + " 的网页总数为" + mTotalPages);
+            }
         }
 
         @Override
@@ -165,7 +168,9 @@ public class MeizituGalleryListFragment extends BaseFragment implements SwipeRef
             ShowToast.showTestShortToast(mContext,mType + " load page " + mPage + " onCompleted()!");
             meizituSwipeRefreshLayout.setRefreshing(false);
             mIsLoadingData = false;
-            mPage++;
+            if(mCanConnectToServer == true) {
+                mPage++;
+            }
         }
 
         @Override
@@ -212,7 +217,8 @@ public class MeizituGalleryListFragment extends BaseFragment implements SwipeRef
                         Integer totalPages = null;
                         try {
                             String responseBodyContent = responseBody.string();
-                            if(HtmlParser.canConnectToServer(responseBodyContent, Constants.MEIZITU_WEBSITE)){
+                            mCanConnectToServer = HtmlParser.canConnectToServer(responseBodyContent, Constants.MEIZITU_WEBSITE);
+                            if(mCanConnectToServer == true){
                                 totalPages = HtmlParser.parseFirstMeizituGalleryListHtmlContent(responseBodyContent);
                             }else{ //连上了wifi热点，但是无法访问Internet
                                 Logcat.showLog("canConnectToServerLog","无法访问www.mzitu.com");
@@ -244,7 +250,8 @@ public class MeizituGalleryListFragment extends BaseFragment implements SwipeRef
                             ArrayList<MeizituGallery> meizituGalleryList = null;
                             try {
                                 String responseBodyContent = responseBody.string();
-                                if(HtmlParser.canConnectToServer(responseBodyContent,Constants.MEIZITU_WEBSITE)){
+                                mCanConnectToServer = HtmlParser.canConnectToServer(responseBodyContent,Constants.MEIZITU_WEBSITE);
+                                if(mCanConnectToServer == true){
                                     meizituGalleryList = HtmlParser.parseMeizituGalleryListHtmlContent(responseBodyContent);
                                 }else{ //连上了wifi热点，但是无法访问Internet
                                     Logcat.showLog("canConnectToServerLog","无法访问www.mzitu.com");
