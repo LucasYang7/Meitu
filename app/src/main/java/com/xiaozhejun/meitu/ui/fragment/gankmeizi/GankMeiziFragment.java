@@ -44,13 +44,18 @@ public class GankMeiziFragment extends MeituPictureListFragment {
         @Override
         public void onError(Throwable e) {
             ShowToast.showTestLongToast(mContext,mType + " load page " + mPage + " onError()! " + e.toString());
+            ShowToast.showShortToast(getActivity(),"无法连接到Gank妹子的服务器... 发生错误：" + e.toString());
             mMeituPictureListSwipeRefreshLayout.setRefreshing(false);
             mIsLoadingData = false;
         }
 
         @Override
         public void onNext(ArrayList<MeituPicture> meituPictures) {
-            meituPictureListRecyclerViewAdapter.updateMeituPictureList(meituPictures,mPage);
+            if(meituPictures.size() > 0){
+                meituPictureListRecyclerViewAdapter.updateMeituPictureList(meituPictures,mPage);
+            }else{
+                ShowToast.showShortToast(getActivity(),"妹子被你看完啦 O(∩_∩)O哈哈~");
+            }
         }
     };
 
