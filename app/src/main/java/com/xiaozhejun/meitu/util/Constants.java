@@ -30,6 +30,12 @@ public interface Constants {
      * */
     int MEIZITU_COUNT = MEIZITU_TITLES.length;
 
+
+    /**
+     * 妹子图网站的网址，通过查看responsebody中是否有这个网址来判断能否连接上妹子图的网站
+     * */
+    String MEIZITU_WEBSITE = "www.mzitu.com";
+
     /**
      * 豆瓣美女网站对应的妹子分类标题
      * */

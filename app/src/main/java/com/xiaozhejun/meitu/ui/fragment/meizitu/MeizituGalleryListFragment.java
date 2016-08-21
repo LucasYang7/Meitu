@@ -19,6 +19,7 @@ import com.xiaozhejun.meitu.network.parser.HtmlParser;
 import com.xiaozhejun.meitu.ui.activity.ShowMeizituGalleryActivity;
 import com.xiaozhejun.meitu.ui.fragment.BaseFragment;
 import com.xiaozhejun.meitu.ui.widget.MeituRecyclerView;
+import com.xiaozhejun.meitu.util.Constants;
 import com.xiaozhejun.meitu.util.ShowToast;
 import com.xiaozhejun.meitu.util.Logcat;
 
@@ -130,6 +131,7 @@ public class MeizituGalleryListFragment extends BaseFragment implements SwipeRef
     Observer<Integer> observerPages = new Observer<Integer>() {
         @Override
         public void onCompleted() {
+            meizituSwipeRefreshLayout.setRefreshing(false);
             mIsLoadingData = false;
             loadMoreMeizituGalleryData(mPage);         // 加载某类妹子图相册首页中的相册信息
             ShowToast.showTestShortToast(mContext,"妹子图 " + mType + " 的网页总数为" + mTotalPages);
@@ -137,6 +139,7 @@ public class MeizituGalleryListFragment extends BaseFragment implements SwipeRef
 
         @Override
         public void onError(Throwable e) {
+            meizituSwipeRefreshLayout.setRefreshing(false);
             mIsLoadingData = false;
             ShowToast.showShortToast(getActivity(),"无法连接到妹子图的服务器... 妹子图 " + mType
                     + " 的获取网页总数信息失败!");
@@ -209,7 +212,7 @@ public class MeizituGalleryListFragment extends BaseFragment implements SwipeRef
                         Integer totalPages = null;
                         try {
                             String responseBodyContent = responseBody.string();
-                            if(HtmlParser.canConnectToServer(responseBodyContent,"www.mzitu.com")){
+                            if(HtmlParser.canConnectToServer(responseBodyContent, Constants.MEIZITU_WEBSITE)){
                                 totalPages = HtmlParser.parseFirstMeizituGalleryListHtmlContent(responseBodyContent);
                             }else{ //连上了wifi热点，但是无法访问Internet
                                 Logcat.showLog("canConnectToServerLog","无法访问www.mzitu.com");
@@ -241,7 +244,7 @@ public class MeizituGalleryListFragment extends BaseFragment implements SwipeRef
                             ArrayList<MeizituGallery> meizituGalleryList = null;
                             try {
                                 String responseBodyContent = responseBody.string();
-                                if(HtmlParser.canConnectToServer(responseBodyContent,"www.mzitu.com")){
+                                if(HtmlParser.canConnectToServer(responseBodyContent,Constants.MEIZITU_WEBSITE)){
                                     meizituGalleryList = HtmlParser.parseMeizituGalleryListHtmlContent(responseBodyContent);
                                 }else{ //连上了wifi热点，但是无法访问Internet
                                     Logcat.showLog("canConnectToServerLog","无法访问www.mzitu.com");

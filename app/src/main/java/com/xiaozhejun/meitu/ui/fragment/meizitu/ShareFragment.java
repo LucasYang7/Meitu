@@ -7,6 +7,7 @@ import com.xiaozhejun.meitu.model.MeituPicture;
 import com.xiaozhejun.meitu.network.Network;
 import com.xiaozhejun.meitu.network.parser.HtmlParser;
 import com.xiaozhejun.meitu.ui.fragment.MeituPictureListFragment;
+import com.xiaozhejun.meitu.util.Constants;
 import com.xiaozhejun.meitu.util.ShowToast;
 
 import java.io.IOException;
@@ -36,23 +37,31 @@ public class ShareFragment extends MeituPictureListFragment {
     Observer<Integer> observerPage = new Observer<Integer>() {
         @Override
         public void onCompleted() {
-            ShowToast.showTestShortToast(getActivity(),"妹子自拍完成获取相册网页页数的操作 mPage = " + mPage);
             mMeituPictureListSwipeRefreshLayout.setRefreshing(false);
-            // 开始下载"美女自拍"的第一个相册
-            loadMoreMeituPicture(mPage);
+            if(mPage > 0){
+                ShowToast.showTestShortToast(getActivity(),"妹子自拍完成获取相册网页页数的操作 mPage = " + mPage);
+                // 开始下载"美女自拍"的第一个相册
+                loadMoreMeituPicture(mPage);
+            }else{
+                ShowToast.showShortToast(getActivity(),"无法连接到妹子图服务器，妹子自拍获取网页页数操作失败");
+            }
         }
 
         @Override
         public void onError(Throwable e) {
             mMeituPictureListSwipeRefreshLayout.setRefreshing(false);
-            ShowToast.showTestShortToast(getActivity(),"妹子自拍获取网页页数操作失败"
+            ShowToast.showShortToast(getActivity(),"无法连接到妹子图服务器，妹子自拍获取网页页数操作失败"
                     + e.toString());
         }
 
         @Override
         public void onNext(Integer page) {
-            mPage = page.intValue();                 // 获取“妹子自拍”分类图片的网页总数
-            //mPage = 5;              // test
+            if(page == null){
+                mPage = -1;
+            }else{
+                mPage = page.intValue();                 // 获取“妹子自拍”分类图片的网页总数
+            }
+            //mPage = 3;              // test
         }
     };
 
@@ -71,15 +80,20 @@ public class ShareFragment extends MeituPictureListFragment {
         @Override
         public void onError(Throwable e) {
             ShowToast.showTestLongToast(mContext,"load page " + mPage + " onError()! " + e.toString());
+            ShowToast.showShortToast(getActivity(),"出现了错误:" + e.toString() + " 无法连接到妹子图服务器，获取妹子图片失败...");
             mMeituPictureListSwipeRefreshLayout.setRefreshing(false);
             mIsLoadingData = false;
         }
 
         @Override
         public void onNext(ArrayList<MeituPicture> meituPictures) {
-            meituPictureListRecyclerViewAdapter.updateMeituPictureList(meituPictures,isResetData);
-            if(isResetData == true)
-                isResetData = false;
+            if(meituPictures == null){
+                ShowToast.showShortToast(getActivity(),"无法连接到妹子图服务器，获取妹子图片失败...");
+            }else{
+                meituPictureListRecyclerViewAdapter.updateMeituPictureList(meituPictures,isResetData);
+                if(isResetData == true)
+                    isResetData = false;
+            }
         }
     };
 
@@ -101,7 +115,9 @@ public class ShareFragment extends MeituPictureListFragment {
                         Integer pages = null;
                         try {
                             String responseBodyContent = responseBody.string();
-                            pages = HtmlParser.parseFirstMeizituSelfieHtmlContent(responseBodyContent);
+                            if(HtmlParser.canConnectToServer(responseBodyContent, Constants.MEIZITU_WEBSITE)){
+                                pages = HtmlParser.parseFirstMeizituSelfieHtmlContent(responseBodyContent);
+                            }
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -115,19 +131,21 @@ public class ShareFragment extends MeituPictureListFragment {
 
     @Override
     protected void loadMoreMeituPicture(int page) {
-        if(mPage > 0){
+        if(page > 0){
             unsubscribe();   // 在新的Http请求前，取消上一次Http操作中所涉及的obserable与observer之间的订阅关系
             mIsLoadingData = true;
             subscription = Network.getMeizituService()
-                    .getPictureInSelfiePages(mPage)
+                    .getPictureInSelfiePages(page)
                     .map(new Func1<ResponseBody, ArrayList<MeituPicture>>() {
 
                         @Override
                         public ArrayList<MeituPicture> call(ResponseBody responseBody) {
-                            ArrayList<MeituPicture> meizituSelfieList = new ArrayList<MeituPicture>();
+                            ArrayList<MeituPicture> meizituSelfieList = null;
                             try {
                                 String responseBodyContent = responseBody.string();
-                                meizituSelfieList = HtmlParser.parseMeizituSelfieHtmlContent(responseBodyContent);
+                                if(HtmlParser.canConnectToServer(responseBodyContent,Constants.MEIZITU_WEBSITE)){
+                                    meizituSelfieList = HtmlParser.parseMeizituSelfieHtmlContent(responseBodyContent);
+                                }
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
