@@ -4,6 +4,7 @@ import com.xiaozhejun.meitu.model.MeituPicture;
 import com.xiaozhejun.meitu.network.Network;
 import com.xiaozhejun.meitu.network.parser.HtmlParser;
 import com.xiaozhejun.meitu.ui.fragment.MeituPictureListFragment;
+import com.xiaozhejun.meitu.util.Constants;
 import com.xiaozhejun.meitu.util.ShowToast;
 
 import java.io.IOException;
@@ -22,6 +23,7 @@ import rx.schedulers.Schedulers;
 public class DoubanMeinvListFragment extends MeituPictureListFragment {
 
     private int mCid;
+    private boolean mIsResetData;
 
     public DoubanMeinvListFragment(){
 
@@ -49,22 +51,42 @@ public class DoubanMeinvListFragment extends MeituPictureListFragment {
         @Override
         public void onError(Throwable e) {
             ShowToast.showTestLongToast(mContext,mCid + " load page " + mPage + " onError()! " + e.toString());
+            ShowToast.showShortToast(getActivity(),"无法连接到豆瓣美女的服务器...出现了错误:" + e.toString());
             mMeituPictureListSwipeRefreshLayout.setRefreshing(false);
             mIsLoadingData = false;
         }
 
         @Override
         public void onNext(ArrayList<MeituPicture> meituPictures) {
-            meituPictureListRecyclerViewAdapter.updateMeituPictureList(meituPictures,mPage);
+            if(meituPictures == null){
+                ShowToast.showShortToast(getActivity(),"无法连接到豆瓣美女的服务器...");
+            }else{
+                if(meituPictures.size() > 0){
+                    meituPictureListRecyclerViewAdapter.updateMeituPictureList(meituPictures,mIsResetData);
+                    if(mIsResetData == true){
+                        mIsResetData = false;
+                    }
+                }else{
+                    ShowToast.showShortToast(getActivity(),"妹子被你看完啦 O(∩_∩)O哈哈~");
+                }
+
+            }
+
         }
     };
+
+    @Override
+    protected void resetMeiziData() {
+        mIsResetData = true;
+        mPage = 1;                            //test
+    }
 
     @Override
     protected void refreshMeituPicture() {
         unsubscribe();   // 在新的Http请求前，取消上一次Http操作中所涉及的obserable与observer之间的订阅关系
         resetMeiziData();
         mMeituPictureListSwipeRefreshLayout.setRefreshing(true);
-        loadMoreMeituPicture(1);
+        loadMoreMeituPicture(mPage);
     }
 
     @Override
@@ -82,10 +104,12 @@ public class DoubanMeinvListFragment extends MeituPictureListFragment {
         observable.map(new Func1<ResponseBody, ArrayList<MeituPicture>>() {
             @Override
             public ArrayList<MeituPicture> call(ResponseBody responseBody) {
-                ArrayList<MeituPicture> doubanMeinvPictureList = new ArrayList<MeituPicture>();
+                ArrayList<MeituPicture> doubanMeinvPictureList = null;
                 try {
                     String responseBodyContent = responseBody.string();
-                    doubanMeinvPictureList = HtmlParser.parseDoubanMeinvHtmlContent(responseBodyContent);
+                    if(HtmlParser.canConnectToServer(responseBodyContent, Constants.DOUBAN_MEINV_WEBSITE)){
+                        doubanMeinvPictureList = HtmlParser.parseDoubanMeinvHtmlContent(responseBodyContent);
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

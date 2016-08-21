@@ -30,7 +30,6 @@ public interface Constants {
      * */
     int MEIZITU_COUNT = MEIZITU_TITLES.length;
 
-
     /**
      * 妹子图网站的网址，通过查看responsebody中是否有这个网址来判断能否连接上妹子图的网站
      * */
@@ -50,6 +49,11 @@ public interface Constants {
      * 豆瓣美女网站的图片分类数目，每一个分类对应一个Fragment
      * */
     int DOUBAN_MEINV_COUNT = DOUBAN_MEINV_TITLES.length;
+
+    /**
+     * 豆瓣美女网站的网址，通过查看responsebody中是否有这个网址来判断能否连接上豆瓣美女的网站
+     * */
+    String DOUBAN_MEINV_WEBSITE = "www.dbmeinv.com";
 
     /**
      * 每请求一次Gank Api所返回的妹子图片数目
