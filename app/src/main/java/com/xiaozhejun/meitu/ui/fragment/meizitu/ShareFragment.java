@@ -25,6 +25,7 @@ import rx.schedulers.Schedulers;
 public class ShareFragment extends MeituPictureListFragment {
 
     boolean isResetData;
+    boolean mCanConnectToServer;
 
     public ShareFragment() {
         // Required empty public constructor
@@ -74,7 +75,9 @@ public class ShareFragment extends MeituPictureListFragment {
             ShowToast.showTestLongToast(mContext,"load page " + mPage + " onCompleted()!");
             mMeituPictureListSwipeRefreshLayout.setRefreshing(false);
             mIsLoadingData = false;
-            mPage--;
+            if(mCanConnectToServer == true){
+                mPage--;
+            }
         }
 
         @Override
@@ -143,7 +146,8 @@ public class ShareFragment extends MeituPictureListFragment {
                             ArrayList<MeituPicture> meizituSelfieList = null;
                             try {
                                 String responseBodyContent = responseBody.string();
-                                if(HtmlParser.canConnectToServer(responseBodyContent,Constants.MEIZITU_WEBSITE)){
+                                mCanConnectToServer = HtmlParser.canConnectToServer(responseBodyContent,Constants.MEIZITU_WEBSITE);
+                                if(mCanConnectToServer == true){
                                     meizituSelfieList = HtmlParser.parseMeizituSelfieHtmlContent(responseBodyContent);
                                 }
                             } catch (IOException e) {
