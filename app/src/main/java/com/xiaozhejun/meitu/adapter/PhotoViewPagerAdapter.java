@@ -14,6 +14,7 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Callback;
 import com.xiaozhejun.meitu.R;
 import com.xiaozhejun.meitu.model.MeituPicture;
+import com.xiaozhejun.meitu.ui.activity.PhotoViewActivity;
 
 import java.util.ArrayList;
 
@@ -49,12 +50,14 @@ public class PhotoViewPagerAdapter extends PagerAdapter {
 
                     @Override
                     public void onSuccess() {
+                        PhotoViewActivity.mCanDownloadPicture = true;//在图片加载成功后，才能执行下载图片和分享图片的操作
                         progressBar.setVisibility(View.GONE);
                         photoViewAttacher.update();
                     }
 
                     @Override
                     public void onError() {
+                        PhotoViewActivity.mCanDownloadPicture = true;//在图片加载操作结束后，才能执行下载图片和分享图片的操作
                         progressBar.setVisibility(View.GONE);
                         textView.setVisibility(View.VISIBLE);
                     }

@@ -30,6 +30,7 @@ public class PhotoViewActivity extends AppCompatActivity {
     private ArrayList<MeituPicture> meituPictureArrayList;
     private boolean mIsFavorited;                   // 标记图片是否收藏
     private boolean mIsDownloadPicture;             // 标记图片是否为手机中已经下载好的图片
+    public static boolean mCanDownloadPicture;      // 判断能否执行下载图片的操作
     private int mPosition;
     private ViewPager mViewPager;
     private TextView mTextView;
@@ -62,6 +63,7 @@ public class PhotoViewActivity extends AppCompatActivity {
         mSQLiteDatabase = meituDatabaseHelper.getReadableDatabase();
         // 查看PhotoViewActivity初始化后所展示的第一张图片是否已经被收藏
         mIsFavorited = queryDatabase(meituPictureArrayList.get(mPosition).getPictureUrl());
+        mCanDownloadPicture = false;
 
         mTextView = (TextView)findViewById(R.id.textViewInPhotoViewActivity);
         String pictureDescription = getPictureDescription(mPosition);
@@ -74,6 +76,7 @@ public class PhotoViewActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
+                mCanDownloadPicture = false;
                 String pictureDescription = getPictureDescription(position);
                 String pictureUrl = meituPictureArrayList.get(position).getPictureUrl();
                 boolean isFavorited = queryDatabase(pictureUrl);
@@ -125,12 +128,20 @@ public class PhotoViewActivity extends AppCompatActivity {
         switch (id){
             case R.id.action_share:
                 //ShowToast.showTestShortToast(PhotoViewActivity.this,"分享功能");
-                sharePicture(mPosition);
+                if(mCanDownloadPicture == true){
+                    sharePicture(mPosition);
+                }else{
+                    ShowToast.showShortToast(PhotoViewActivity.this,"正在加载图片，暂时无法分享...");
+                }
                 return true;
 
             case R.id.action_download:
                 //ShowToast.showTestShortToast(PhotoViewActivity.this,"下载功能");
-                downloadPicture(mPosition);
+                if(mCanDownloadPicture == true){
+                    downloadPicture(mPosition);
+                }else {
+                    ShowToast.showShortToast(PhotoViewActivity.this, "正在加载图片，暂时无法下载...");
+                }
                 return true;
 
             case R.id.action_favor:
