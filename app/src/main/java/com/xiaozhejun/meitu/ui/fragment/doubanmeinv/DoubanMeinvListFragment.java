@@ -24,6 +24,7 @@ public class DoubanMeinvListFragment extends MeituPictureListFragment {
 
     private int mCid;
     private boolean mIsResetData;
+    private boolean mCanConnectToServer;
 
     public DoubanMeinvListFragment(){
 
@@ -45,7 +46,9 @@ public class DoubanMeinvListFragment extends MeituPictureListFragment {
             ShowToast.showTestLongToast(mContext,mCid + " load page " + mPage + " onCompleted()!");
             mMeituPictureListSwipeRefreshLayout.setRefreshing(false);
             mIsLoadingData = false;
-            mPage++;
+            if(mCanConnectToServer == true){
+                mPage++;
+            }
         }
 
         @Override
@@ -107,7 +110,9 @@ public class DoubanMeinvListFragment extends MeituPictureListFragment {
                 ArrayList<MeituPicture> doubanMeinvPictureList = null;
                 try {
                     String responseBodyContent = responseBody.string();
-                    if(HtmlParser.canConnectToServer(responseBodyContent, Constants.DOUBAN_MEINV_WEBSITE)){
+                    mCanConnectToServer = HtmlParser.canConnectToServer(responseBodyContent,
+                            Constants.DOUBAN_MEINV_WEBSITE);
+                    if(mCanConnectToServer == true){
                         doubanMeinvPictureList = HtmlParser.parseDoubanMeinvHtmlContent(responseBodyContent);
                     }
                 } catch (IOException e) {
