@@ -40,9 +40,10 @@ public class MeizituGalleryListFragment extends BaseFragment implements SwipeRef
     private SwipeRefreshLayout meizituSwipeRefreshLayout;
     private MeituRecyclerView meizituRecyclerView;
     private MeizituGalleryListRecyclerViewAdapter meizituRecyclerViewAdapter;
-    private boolean mCanAddNewMeizitu;    // 判断能否请求新的网页，加载更多妹子的图片
-    private int mPage;      //表示妹子图片相册链接后面的分页
-    private String mType;   //表示妹子图片所属的类型，例如：日本妹子，性感妹子等
+    private boolean mIsLoadingData;    // 判断能否请求新的网页，加载更多妹子的图片
+    private int mPage;       //表示妹子图片相册链接后面的分页
+    private int mTotalPages = Integer.MAX_VALUE; //表示妹子图某类相册所对应的网页总页数，总页数初始值为整型数的最大值
+    private String mType;    //表示妹子图片所属的类型，例如：日本妹子，性感妹子等
     private Context mContext;       // 测试用
 
     public MeizituGalleryListFragment() {
@@ -61,7 +62,7 @@ public class MeizituGalleryListFragment extends BaseFragment implements SwipeRef
      * */
     public void resetMeiziData(){
         mPage = 1;                     // 重新加载首页的妹子图信息
-        mCanAddNewMeizitu = false;     // 在加载完首页的数据前，不能再加载新的妹子数据
+        mIsLoadingData = true;     // 在加载完首页的数据前，不能再加载新的妹子数据
     }
 
     @Override
@@ -83,9 +84,9 @@ public class MeizituGalleryListFragment extends BaseFragment implements SwipeRef
             @Override
             public void onBottom() {
                 ShowToast.showTestShortToast(mContext,mType + " 已经滑到底部了" + "page " + mPage);
-                if(mCanAddNewMeizitu == true){
+                if(mIsLoadingData == false){
                     ShowToast.showTestShortToast(mContext,mType + " 正在加载第" + mPage + "页的妹子数据");
-                    AddNewMeizituGalleryData(mPage);
+                    loadMoreMeizituGalleryData(mPage);
                 }
             }
         }); // 为RecyclerView添加滑动事件监听
@@ -123,37 +124,77 @@ public class MeizituGalleryListFragment extends BaseFragment implements SwipeRef
         refreshMeizituGalleryData();
     }
 
-    // observer是一个匿名内部类对象
-    Observer<List<MeizituGallery>> observer = new Observer<List<MeizituGallery>>() {
+    /**
+     * 用于获取妹子图某类相册的网页页数信息
+     * */
+    Observer<Integer> observerPages = new Observer<Integer>() {
         @Override
         public void onCompleted() {
-            ShowToast.showTestLongToast(mContext,mType + " load page " + mPage + " onCompleted()!");
+            mIsLoadingData = false;
+            loadMoreMeizituGalleryData(mPage);         // 加载某类妹子图相册首页中的相册信息
+            ShowToast.showTestShortToast(mContext,"妹子图 " + mType + " 的网页总数为" + mTotalPages);
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            mIsLoadingData = false;
+            ShowToast.showShortToast(getActivity(),"无法连接到妹子图的服务器... 妹子图 " + mType
+                    + " 的获取网页总数信息失败!");
+        }
+
+        @Override
+        public void onNext(Integer totalPages) {
+            if(totalPages == null){
+                ShowToast.showShortToast(getActivity(),"无法连接到妹子图的服务器... 妹子图 " + mType
+                        + " 的获取网页总数信息失败!");
+            }else{
+                mTotalPages = totalPages.intValue();
+            }
+        }
+    };
+
+    /**
+     * 用于获取妹子图相册的图片列表信息
+     * */
+    Observer<List<MeizituGallery>> observerGalleries = new Observer<List<MeizituGallery>>() {
+        @Override
+        public void onCompleted() {
+            ShowToast.showTestShortToast(mContext,mType + " load page " + mPage + " onCompleted()!");
             meizituSwipeRefreshLayout.setRefreshing(false);
-            mCanAddNewMeizitu = true;
+            mIsLoadingData = false;
             mPage++;
         }
 
         @Override
         public void onError(Throwable e) {
             meizituSwipeRefreshLayout.setRefreshing(false);
-            mCanAddNewMeizitu = true;
-            ShowToast.showTestLongToast(mContext,mType + " load page " + mPage + " onError()! " + e.toString());
+            mIsLoadingData = false;
+            ShowToast.showShortToast(getActivity(),"无法连接到妹子图的服务器..."
+                    + mType + " load page " + mPage + " onError()! " + e.toString());
         }
 
         @Override
         public void onNext(List<MeizituGallery> meizituGalleryList) {
-            meizituRecyclerViewAdapter.updateMeizituGalleryList(meizituGalleryList,mPage);
-            // test meizituGalleryList start
-            for(MeizituGallery meizituGallery:meizituGalleryList){
-                //Log.e("MeizituGallery",meizituGallery.getObjectInformation());
-                Logcat.showLog("MeizituGallery",meizituGallery.getObjectInformation());
+            if(meizituGalleryList == null){
+                ShowToast.showShortToast(getActivity(),"无法连接到妹子图的服务器...");
+            }else{
+                if(meizituGalleryList.size() == 0){
+                    ShowToast.showShortToast(getActivity(),"获取到了妹子图相册，但是里面没有图片...");
+                }else{
+                    meizituRecyclerViewAdapter.updateMeizituGalleryList(meizituGalleryList,mPage);
+                    // test meizituGalleryList start
+                    for(MeizituGallery meizituGallery:meizituGalleryList){
+                        //Log.e("MeizituGallery",meizituGallery.getObjectInformation());
+                        Logcat.showLog("MeizituGallery",meizituGallery.getObjectInformation());
+                    }
+                    // test meizituGalleryList end
+                }
             }
-            // test meizituGalleryList end
         }
     };
 
     /**
-     * 刷新从妹子图网站上下载的妹子相册信息
+     * 刷新从妹子图网站上下载的妹子相册信息，获取妹子图相册所占用的网页页数信息
      * */
     public void refreshMeizituGalleryData(){
         meizituSwipeRefreshLayout.setRefreshing(true);
@@ -161,49 +202,61 @@ public class MeizituGalleryListFragment extends BaseFragment implements SwipeRef
         unsubscribe();
         subscription = Network.getMeizituService()
                 .getPictureType(mType)
-                .map(new Func1<ResponseBody, List<MeizituGallery>>() {
+                .map(new Func1<ResponseBody, Integer>() {
 
                     @Override
-                    public List<MeizituGallery> call(ResponseBody responseBody) {
-                        ArrayList<MeizituGallery> meizituGalleryList = null;
+                    public Integer call(ResponseBody responseBody) {
+                        Integer totalPages = null;
                         try {
                             String responseBodyContent = responseBody.string();
-                            meizituGalleryList = HtmlParser.parseMeizituGalleryListHtmlContent(responseBodyContent);
+                            if(HtmlParser.canConnectToServer(responseBodyContent,"www.mzitu.com")){
+                                totalPages = HtmlParser.parseFirstMeizituGalleryListHtmlContent(responseBodyContent);
+                            }else{ //连上了wifi热点，但是无法访问Internet
+                                Logcat.showLog("canConnectToServerLog","无法访问www.mzitu.com");
+                            }
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-                        return meizituGalleryList;
+                        return totalPages;
                     }
                 })
                 .subscribeOn(Schedulers.io())              //指定产生事件的线程
                 .observeOn(AndroidSchedulers.mainThread()) //指定消费事件的线程
-                .subscribe(observer);
+                .subscribe(observerPages);
     }
 
     /**
      * 向下滑动时，从网上加载第page页的妹子信息
      * */
-    public void AddNewMeizituGalleryData(int page){
-        unsubscribe();   // 在新的Http请求前，取消上一次Http操作中所涉及的obserable与observer之间的订阅关系
-        mCanAddNewMeizitu = false;                   // 在加载完第page页的妹子数据前，不能加载新的数据
-        subscription = Network.getMeizituService()
-                .getPictureTypeInPage(mType,page)
-                .map(new Func1<ResponseBody, List<MeizituGallery>>() {
+    public void loadMoreMeizituGalleryData(int page){
+        if(page <= mTotalPages){
+            unsubscribe();   // 在新的Http请求前，取消上一次Http操作中所涉及的obserable与observer之间的订阅关系
+            mIsLoadingData = true;                   // 在加载完第page页的妹子数据前，不能加载新的数据
+            subscription = Network.getMeizituService()
+                    .getPictureTypeInPage(mType,page)
+                    .map(new Func1<ResponseBody, List<MeizituGallery>>() {
 
-                    @Override
-                    public List<MeizituGallery> call(ResponseBody responseBody) {
-                        ArrayList<MeizituGallery> meizituGalleryList = null;
-                        try {
-                            String responseBodyContent = responseBody.string();
-                            meizituGalleryList = HtmlParser.parseMeizituGalleryListHtmlContent(responseBodyContent);
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                        @Override
+                        public List<MeizituGallery> call(ResponseBody responseBody) {
+                            ArrayList<MeizituGallery> meizituGalleryList = null;
+                            try {
+                                String responseBodyContent = responseBody.string();
+                                if(HtmlParser.canConnectToServer(responseBodyContent,"www.mzitu.com")){
+                                    meizituGalleryList = HtmlParser.parseMeizituGalleryListHtmlContent(responseBodyContent);
+                                }else{ //连上了wifi热点，但是无法访问Internet
+                                    Logcat.showLog("canConnectToServerLog","无法访问www.mzitu.com");
+                                }
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            return meizituGalleryList;
                         }
-                        return meizituGalleryList;
-                    }
-                })
-                .subscribeOn(Schedulers.io())              //指定产生事件的线程
-                .observeOn(AndroidSchedulers.mainThread()) //指定消费事件的线程
-                .subscribe(observer);
+                    })
+                    .subscribeOn(Schedulers.io())              //指定产生事件的线程
+                    .observeOn(AndroidSchedulers.mainThread()) //指定消费事件的线程
+                    .subscribe(observerGalleries);
+        }else{
+            ShowToast.showShortToast(getActivity(),"妹子被你看完啦 O(∩_∩)O哈哈~");
+        }
     }
 }

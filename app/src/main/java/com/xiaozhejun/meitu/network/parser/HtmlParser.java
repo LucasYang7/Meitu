@@ -19,6 +19,39 @@ import java.util.regex.Pattern;
  */
 public class HtmlParser {
 
+
+    /**
+     * 通过解析http请求返回的网页，判断是否能够访问到妹子图片所在的目标网站
+     * */
+    public static boolean canConnectToServer(String htmlContent, String url){
+        boolean isConnected = htmlContent.contains(url);
+        return isConnected;
+    }
+
+    /**
+     * 使用jsoup解析某个妹子图相册的首页，获取到该类相册所拥有的总的网页页数信息
+     * */
+    public static int parseFirstMeizituGalleryListHtmlContent(String htmlContent){
+        int totalPages = Integer.MAX_VALUE;
+        Document document = Jsoup.parse(htmlContent);
+        Element navLinksDivElement = document.select("div.nav-links").first();
+        if(navLinksDivElement != null){
+            totalPages = 1;
+            Pattern pattern = Pattern.compile("\\d+");    //匹配整数的正则表达式
+            Elements pageNumbersAElements = navLinksDivElement.select("a.page-numbers");
+            for(Element pageNumbersAElement:pageNumbersAElements){
+                Matcher matcher = pattern.matcher(pageNumbersAElement.text());
+                while(matcher.find()){
+                    int temp = Integer.parseInt(matcher.group());
+                    if(temp > totalPages){
+                        totalPages = temp;
+                    }
+                }
+            }
+        }
+        return totalPages;
+    }
+
     /**
      * 使用jsoup解析相册列表所在网页的html文档获取妹子图相册的详细信息
      * */

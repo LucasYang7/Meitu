@@ -36,7 +36,7 @@ public class ShareFragment extends MeituPictureListFragment {
     Observer<Integer> observerPage = new Observer<Integer>() {
         @Override
         public void onCompleted() {
-            ShowToast.showTestShortToast(getActivity(),"完成获取相册网页页数的操作 mPage = " + mPage);
+            ShowToast.showTestShortToast(getActivity(),"妹子自拍完成获取相册网页页数的操作 mPage = " + mPage);
             mMeituPictureListSwipeRefreshLayout.setRefreshing(false);
             // 开始下载"美女自拍"的第一个相册
             loadMoreMeituPicture(mPage);
@@ -45,7 +45,7 @@ public class ShareFragment extends MeituPictureListFragment {
         @Override
         public void onError(Throwable e) {
             mMeituPictureListSwipeRefreshLayout.setRefreshing(false);
-            ShowToast.showTestShortToast(getActivity(),"获取网页页数操作失败"
+            ShowToast.showTestShortToast(getActivity(),"妹子自拍获取网页页数操作失败"
                     + e.toString());
         }
 
