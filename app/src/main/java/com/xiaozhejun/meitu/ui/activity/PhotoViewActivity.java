@@ -30,7 +30,8 @@ public class PhotoViewActivity extends AppCompatActivity {
     private ArrayList<MeituPicture> meituPictureArrayList;
     private boolean mIsFavorited;                   // 标记图片是否收藏
     private boolean mIsDownloadPicture;             // 标记图片是否为手机中已经下载好的图片
-    public static boolean[] mCanDownloadPicture;      // 判断能否执行下载图片的操作
+    public static boolean[] mIsFinishLoadingPicture;// 判断图片是否已经加载完成
+    public static boolean[] mCanDownloadPicture;    // 判断能否执行下载图片的操作
     private int mPosition;
     private ViewPager mViewPager;
     private TextView mTextView;
@@ -57,6 +58,7 @@ public class PhotoViewActivity extends AppCompatActivity {
         mPosition = bundle.getInt("position");
         mIsDownloadPicture = bundle.getBoolean("isDownload");
         meituPictureArrayList = bundle.getParcelableArrayList("meituPictureList");
+        mIsFinishLoadingPicture = new boolean[meituPictureArrayList.size()];
         mCanDownloadPicture = new boolean[meituPictureArrayList.size()];
         // 创建数据库
         meituDatabaseHelper = new MeituDatabaseHelper(PhotoViewActivity.this,
@@ -76,7 +78,6 @@ public class PhotoViewActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-                //mCanDownloadPicture = false;
                 String pictureDescription = getPictureDescription(position);
                 String pictureUrl = meituPictureArrayList.get(position).getPictureUrl();
                 boolean isFavorited = queryDatabase(pictureUrl);
@@ -128,8 +129,12 @@ public class PhotoViewActivity extends AppCompatActivity {
         switch (id){
             case R.id.action_share:
                 //ShowToast.showTestShortToast(PhotoViewActivity.this,"分享功能");
-                if(mCanDownloadPicture[mPosition] == true){
-                    sharePicture(mPosition);
+                if(mIsFinishLoadingPicture[mPosition] == true){
+                    if(mCanDownloadPicture[mPosition] == true){
+                        sharePicture(mPosition);
+                    }else{
+                        ShowToast.showShortToast(PhotoViewActivity.this,"图片加载失败，无法分享...");
+                    }
                 }else{
                     ShowToast.showShortToast(PhotoViewActivity.this,"正在加载图片，暂时无法分享...");
                 }
@@ -137,8 +142,12 @@ public class PhotoViewActivity extends AppCompatActivity {
 
             case R.id.action_download:
                 //ShowToast.showTestShortToast(PhotoViewActivity.this,"下载功能");
-                if(mCanDownloadPicture[mPosition] == true){
-                    downloadPicture(mPosition);
+                if(mIsFinishLoadingPicture[mPosition] == true){
+                    if(mCanDownloadPicture[mPosition] == true){
+                        downloadPicture(mPosition);
+                    }else{
+                        ShowToast.showShortToast(PhotoViewActivity.this,"图片加载失败，无法下载...");
+                    }
                 }else {
                     ShowToast.showShortToast(PhotoViewActivity.this, "正在加载图片，暂时无法下载...");
                 }

@@ -1,7 +1,6 @@
 package com.xiaozhejun.meitu.adapter;
 
 import android.content.Context;
-import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -53,7 +52,8 @@ public class PhotoViewPagerAdapter extends PagerAdapter {
 
                     @Override
                     public void onSuccess() {
-                        PhotoViewActivity.mCanDownloadPicture[picturePosition] = true;//在图片加载成功后，才能执行下载图片和分享图片的操作
+                        PhotoViewActivity.mIsFinishLoadingPicture[picturePosition] = true;//在图片加载成功后，才能执行下载图片和分享图片的操作
+                        PhotoViewActivity.mCanDownloadPicture[picturePosition] = true;
                         progressBar.setVisibility(View.GONE);
                         photoViewAttacher.update();
                         Logcat.showLog("viewpagerPosition","onSuccess()" + picturePosition);
@@ -61,7 +61,8 @@ public class PhotoViewPagerAdapter extends PagerAdapter {
 
                     @Override
                     public void onError() {
-                        PhotoViewActivity.mCanDownloadPicture[picturePosition] = true;//在图片加载操作结束后，才能执行下载图片和分享图片的操作
+                        PhotoViewActivity.mIsFinishLoadingPicture[picturePosition] = true;//在图片加载操作结束后，才能执行下载图片和分享图片的操作
+                        PhotoViewActivity.mCanDownloadPicture[picturePosition] = false;
                         progressBar.setVisibility(View.GONE);
                         textView.setVisibility(View.VISIBLE);
                         Logcat.showLog("viewpagerPosition","onError()" + picturePosition);
