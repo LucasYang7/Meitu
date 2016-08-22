@@ -118,7 +118,8 @@ public class ShowMeizituGalleryActivity extends AppCompatActivity {
 
         @Override
         public void onError(Throwable e) {
-            ShowToast.showTestShortToast(ShowMeizituGalleryActivity.this,"获取网页页数操作失败"
+            mProgressBar.setVisibility(View.INVISIBLE);
+            ShowToast.showShortToast(ShowMeizituGalleryActivity.this,"获取相册的网页页数操作失败:"
                     + e.toString());
         }
 
@@ -146,8 +147,9 @@ public class ShowMeizituGalleryActivity extends AppCompatActivity {
 
         @Override
         public void onError(Throwable e) {
-            ShowToast.showTestShortToast(ShowMeizituGalleryActivity.this,"获取相册信息操作失败"
-                    + e.toString());
+            mProgressBar.setVisibility(View.INVISIBLE);
+            ShowToast.showShortToast(ShowMeizituGalleryActivity.this,"获取相册信息操作失败,发生了错误:" +
+                    e.toString());
         }
 
         @Override
