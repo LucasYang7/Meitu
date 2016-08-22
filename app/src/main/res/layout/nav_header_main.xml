@@ -22,13 +22,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
+        android:textSize="18sp"
         android:text="妹图"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
     <TextView
         android:id="@+id/textView"
+        android:paddingTop="12dp"
+        android:textSize="12sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="xiaozhejun" />
+        android:text="一个欣赏漂亮妹子图片的App" />
 
 </LinearLayout>

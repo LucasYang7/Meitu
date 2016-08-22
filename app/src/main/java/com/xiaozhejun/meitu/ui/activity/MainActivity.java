@@ -127,6 +127,7 @@ public class MainActivity extends AppCompatActivity
 
             case R.id.nav_about:
                 ShowToast.showTestShortToast(MainActivity.this,"关于");
+                gotoOtherActivity(AboutActivity.class);
                 break;
 
             default:

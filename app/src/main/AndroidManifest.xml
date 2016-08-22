@@ -37,6 +37,10 @@
         <activity
             android:name=".ui.activity.ShowDownloadActivity"
             android:label="@string/title_activity_show_download"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ui.activity.AboutActivity"
+            android:label="@string/title_activity_about"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
