@@ -15,6 +15,7 @@ import com.squareup.picasso.Callback;
 import com.xiaozhejun.meitu.R;
 import com.xiaozhejun.meitu.model.MeituPicture;
 import com.xiaozhejun.meitu.ui.activity.PhotoViewActivity;
+import com.xiaozhejun.meitu.util.Logcat;
 
 import java.util.ArrayList;
 
@@ -34,6 +35,8 @@ public class PhotoViewPagerAdapter extends PagerAdapter {
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
+        final int picturePosition = position;
+        //Logcat.showLog("viewpagerPosition","" + picturePosition);
         Context context = container.getContext();
         //从photo_view.xml加载PhotoView
         LayoutInflater layoutInflater = LayoutInflater.from(context);
@@ -45,21 +48,23 @@ public class PhotoViewPagerAdapter extends PagerAdapter {
         container.addView(view, ViewPager.LayoutParams.MATCH_PARENT,
                 ViewPager.LayoutParams.MATCH_PARENT);
         Picasso.with(context)
-                .load(meituPictureArrayList.get(position).getPictureUrl())
+                .load(meituPictureArrayList.get(picturePosition).getPictureUrl())
                 .into(photoView,new Callback(){
 
                     @Override
                     public void onSuccess() {
-                        PhotoViewActivity.mCanDownloadPicture = true;//在图片加载成功后，才能执行下载图片和分享图片的操作
+                        PhotoViewActivity.mCanDownloadPicture[picturePosition] = true;//在图片加载成功后，才能执行下载图片和分享图片的操作
                         progressBar.setVisibility(View.GONE);
                         photoViewAttacher.update();
+                        Logcat.showLog("viewpagerPosition","onSuccess()" + picturePosition);
                     }
 
                     @Override
                     public void onError() {
-                        PhotoViewActivity.mCanDownloadPicture = true;//在图片加载操作结束后，才能执行下载图片和分享图片的操作
+                        PhotoViewActivity.mCanDownloadPicture[picturePosition] = true;//在图片加载操作结束后，才能执行下载图片和分享图片的操作
                         progressBar.setVisibility(View.GONE);
                         textView.setVisibility(View.VISIBLE);
+                        Logcat.showLog("viewpagerPosition","onError()" + picturePosition);
                     }
                 });
         return view; // 这里返回ViewPager中一个item所对应的View
@@ -70,6 +75,7 @@ public class PhotoViewPagerAdapter extends PagerAdapter {
         //super.destroyItem(container, position, object);
         container.removeView((View)object);
     }
+
     @Override
     public int getCount() {
         return meituPictureArrayList == null ? 0 : meituPictureArrayList.size();
