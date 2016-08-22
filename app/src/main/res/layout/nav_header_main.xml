@@ -32,6 +32,6 @@
         android:textSize="12sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="一个欣赏漂亮妹子图片的App" />
+        android:text="一个可以欣赏漂亮妹子图片的App" />
 
 </LinearLayout>
