@@ -7,5 +7,5 @@
     <color name="colorSelectedTextInTabLayout">#FFFFFF</color>
     <color name="colorSwipeRefresh">#FB7299</color>
     <color name="colorTextViewInPhotoView">#FFFFFF</color>
-    <color name="colorPhotoViewBackGround">#AA000000</color>
+    <color name="colorPhotoViewBackGround">#000000</color>
 </resources>

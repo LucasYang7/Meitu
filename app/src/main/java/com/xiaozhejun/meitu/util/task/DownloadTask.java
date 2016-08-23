@@ -51,7 +51,13 @@ public class DownloadTask extends AsyncTask<String,Void,Uri> {
             bitmap = Picasso.with(mContext).load(url[0]).get();
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (OutOfMemoryError outOfMemoryError){
+            //doInBackground在工作线程中执行，而显示Toast需要在UI线程中执行
+            //ShowToast.showShortToast(mContext, "图片太大，下载失败...");
+            outOfMemoryError.printStackTrace();
+            return pictureUri;
         }
+
         if(bitmap == null){
             //doInBackground在工作线程中执行，而显示Toast需要在UI线程中执行
             //ShowToast.showShortToast(mContext,"无法获取图片...");
@@ -94,7 +100,7 @@ public class DownloadTask extends AsyncTask<String,Void,Uri> {
         if(uri == null){
             //onPostExecute在UI线程中执行
             //显示Toast需要在UI线程中执行
-            ShowToast.showShortToast(mContext,"无法获取图片...");
+            ShowToast.showShortToast(mContext,"无法获取图片.也有可能是图片太大了，无法保存到手机中...");
         }else{
             if(mAction.equals("download")){
                 String meituDir=uri.getPath();

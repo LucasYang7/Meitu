@@ -35,7 +35,7 @@ public class PhotoViewPagerAdapter extends PagerAdapter {
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         final int picturePosition = position;
-        //Logcat.showLog("viewpagerPosition","" + picturePosition);
+        PhotoViewActivity.mIsFinishLoadingPicture[picturePosition] = false;//在图片加载操作结束前，不能执行下载图片和分享图片的操作
         Context context = container.getContext();
         //从photo_view.xml加载PhotoView
         LayoutInflater layoutInflater = LayoutInflater.from(context);
