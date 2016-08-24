@@ -24,6 +24,8 @@ import com.xiaozhejun.meitu.util.ShowToast;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private long exitTime = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,7 +55,7 @@ public class MainActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            exit();
         }
     }
 
@@ -163,5 +165,14 @@ public class MainActivity extends AppCompatActivity
     public void gotoOtherActivity(Class clazz){
         Intent intent = new Intent(MainActivity.this,clazz);
         startActivity(intent);
+    }
+
+    public void exit(){
+        if(System.currentTimeMillis() - exitTime > 2000){
+             ShowToast.showShortToast(MainActivity.this,"再按一次退出妹图");
+             exitTime = System.currentTimeMillis();
+        }else{
+            MainActivity.this.finish();
+        }
     }
 }
