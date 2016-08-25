@@ -71,7 +71,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="4.0dip"
-                android:text="1.按照各分类查看，下拉刷新图片。"/>
+                android:text="1.按照各分类查看图片，下拉刷新图片。"/>
 
             <TextView
                 android:layout_width="match_parent"
