@@ -83,25 +83,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="4.0dip"
-                android:text="3.可以将图片保存到手机相册中。"/>
+                android:text="3.碰到自己喜欢的妹子图片，可以将其保存到手机相册中。"/>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="4.0dip"
-                android:text="4.可以收藏图片。"/>
+                android:text="4.支持收藏图片，这样无需下载图片，也可以随时在线浏览自己喜欢的妹子图片。"/>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="4.0dip"
-                android:text="5.可以将图片分享到朋友圈和微博，或者通过微信,QQ等发送给好友。"/>
+                android:text="5.当然您还可以将图片分享到朋友圈和微博，或者通过微信,QQ等发送给好友。"/>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="4.0dip"
-                android:text="6.可以尽情搜索妹子图网站中的妹子图片。"/>
+                android:text="6.支持在线搜索妹子图网站的图片，这样您可以尽情浏览自己心仪的妹子图片。"/>
 
         </LinearLayout>
 
