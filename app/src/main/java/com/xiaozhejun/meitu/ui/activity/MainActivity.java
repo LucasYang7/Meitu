@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private long exitTime = 0;
+    private MenuItem mSearchMenuItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +64,7 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+        mSearchMenuItem = menu.findItem(R.id.action_search);
         return true;
     }
 
@@ -93,6 +95,7 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_meizitu:
                 ShowToast.showTestShortToast(MainActivity.this,"妹子图");
                 getSupportActionBar().setTitle(R.string.meizitu_title);
+                changeSearchMenuItemState(true);
                 MeizituTabFragment meizituTabFragment = new MeizituTabFragment();
                 replaceFragment(meizituTabFragment);
                 isCloseDrawer = true;
@@ -101,6 +104,7 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_douban_meinv:
                 ShowToast.showTestShortToast(MainActivity.this,"豆瓣美女");
                 getSupportActionBar().setTitle(R.string.douban_meinv_title);
+                changeSearchMenuItemState(false);
                 DoubanMeinvTabFragment doubanMeinvFragment = new DoubanMeinvTabFragment();
                 replaceFragment(doubanMeinvFragment);
                 isCloseDrawer = true;
@@ -109,6 +113,7 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_huaban_meinv:
                 ShowToast.showTestShortToast(MainActivity.this,"花瓣美女");
                 getSupportActionBar().setTitle(R.string.huaban_meinv_title);
+                changeSearchMenuItemState(false);
                 HuabanMeinvFragment huabanMeinvFragment = new HuabanMeinvFragment();
                 replaceFragment(huabanMeinvFragment);
                 isCloseDrawer = true;
@@ -117,6 +122,7 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_gank_meizi:
                 ShowToast.showTestShortToast(MainActivity.this,"Gank妹子");
                 getSupportActionBar().setTitle(R.string.gank_meizi_title);
+                changeSearchMenuItemState(false);
                 GankMeiziFragment gankMeiziFragment = new GankMeiziFragment();
                 replaceFragment(gankMeiziFragment);
                 isCloseDrawer = true;
@@ -175,5 +181,12 @@ public class MainActivity extends AppCompatActivity
         }else{
             MainActivity.this.finish();
         }
+    }
+
+    /**
+     * 控制搜索菜单条目的可见性
+     * */
+    public void changeSearchMenuItemState(boolean isVisible){
+        mSearchMenuItem.setVisible(isVisible);
     }
 }
