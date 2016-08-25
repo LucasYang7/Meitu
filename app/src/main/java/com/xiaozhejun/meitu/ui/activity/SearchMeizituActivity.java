@@ -2,10 +2,12 @@ package com.xiaozhejun.meitu.ui.activity;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.SearchRecentSuggestions;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -80,7 +82,7 @@ public class SearchMeizituActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int clickItemId = item.getItemId();
         if(clickItemId == R.id.action_clear_history){
-            clearSuggestionData();
+            showClearSuggestionDataDialog();
         }
         return true;
     }
@@ -119,6 +121,29 @@ public class SearchMeizituActivity extends AppCompatActivity {
         SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
                 MeituSuggestionProvider.AUTHORITY,MeituSuggestionProvider.MODE);
         suggestions.clearHistory();
+    }
+
+    /**
+     * 弹出对话框提示用户是否删除搜索记录
+     * */
+    public void showClearSuggestionDataDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(SearchMeizituActivity.this);
+        builder.setTitle("提示")
+                .setMessage("确定清除搜索记录？")
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        clearSuggestionData();
+                    }
+                })
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 
 }
