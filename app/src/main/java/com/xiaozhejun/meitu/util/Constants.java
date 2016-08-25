@@ -8,12 +8,12 @@ public interface Constants {
     /**
      * 用于控制是否显示用于测试目的的Toast
      * */
-    boolean SHOW_TEST_TOAST = true;
+    boolean SHOW_TEST_TOAST = false;
 
     /**
      * 用于控制是否显示自己定义的Log
      * */
-    boolean SHOW_LOG = true;
+    boolean SHOW_LOG = false;
 
     /**
      * 妹子图网站对应的妹子分类标题

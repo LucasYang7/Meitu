@@ -206,7 +206,6 @@ public class MeizituSearchFragment extends BaseFragment implements SwipeRefreshL
                     meizituRecyclerViewAdapter.updateMeizituGalleryList(meizituGalleryList,mPage);
                     // test meizituGalleryList start
                     for(MeizituGallery meizituGallery:meizituGalleryList){
-                        //Log.e("MeizituGallery",meizituGallery.getObjectInformation());
                         Logcat.showLog("MeizituGallery",meizituGallery.getObjectInformation());
                     }
                     // test meizituGalleryList end

@@ -97,6 +97,12 @@
                 android:padding="4.0dip"
                 android:text="5.可以将图片分享到朋友圈和微博，或者通过微信,QQ等发送给好友。"/>
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="4.0dip"
+                android:text="6.可以尽情搜索妹子图网站中的妹子图片。"/>
+
         </LinearLayout>
 
     </LinearLayout>

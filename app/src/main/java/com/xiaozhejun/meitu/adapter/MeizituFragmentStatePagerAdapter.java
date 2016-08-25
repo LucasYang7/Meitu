@@ -23,7 +23,6 @@ public class MeizituFragmentStatePagerAdapter extends FragmentStatePagerAdapter 
 
     @Override
     public Fragment getItem(int position) {            // 这里的position并不准确!!!
-        //Log.e("position","getItem " + position);
         Logcat.showLog("position","getItem " + position);
         /*
         if(position < Constants.MEIZITU_COUNT - 1){    // 对应妹子图网站的各个相册页面
