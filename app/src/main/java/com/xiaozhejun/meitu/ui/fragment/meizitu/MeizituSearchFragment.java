@@ -192,7 +192,8 @@ public class MeizituSearchFragment extends BaseFragment implements SwipeRefreshL
                 ShowToast.showShortToast(getActivity(),"无法连接到妹子图的服务器...");
             }else{
                 if(meizituGalleryList.size() == 0){
-                    ShowToast.showShortToast(getActivity(),"获取到了妹子图相册，但是里面没有图片...");
+                    ShowToast.showShortToast(getActivity(),"对不起,没有找到与" + mSearchKeyword + "相关的妹子!");
+                    meizituRecyclerViewAdapter.updateMeizituGalleryList(meizituGalleryList,mPage);
                 }else{
                     meizituRecyclerViewAdapter.updateMeizituGalleryList(meizituGalleryList,mPage);
                     // test meizituGalleryList start
