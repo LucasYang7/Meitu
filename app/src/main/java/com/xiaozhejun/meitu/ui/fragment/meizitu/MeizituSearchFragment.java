@@ -46,7 +46,7 @@ public class MeizituSearchFragment extends BaseFragment implements SwipeRefreshL
     private boolean mIsAutoRefresh = false;    // 判断是否自动刷新数据
     private int mPage;       //表示妹子图片相册链接后面的分页
     private int mTotalPages = 1; //表示妹子图某类相册所对应的网页总页数，总页数初始值为整型数的最大值
-    private String mSearchKeyword; // 搜索妹子图网站所用的关键字
+    private String mSearchKeyword = " "; // 搜索妹子图网站所用的关键字
     private Context mContext;       // 测试用
 
     public MeizituSearchFragment(){
@@ -148,7 +148,7 @@ public class MeizituSearchFragment extends BaseFragment implements SwipeRefreshL
             meizituSwipeRefreshLayout.setRefreshing(false);
             mIsLoadingData = false;
             ShowToast.showShortToast(getActivity(),"无法连接到妹子图的服务器... 妹子图 " + mSearchKeyword
-                    + " 的获取网页总数信息失败!");
+                    + " 的获取网页总数信息失败! " + e.toString());
         }
 
         @Override
