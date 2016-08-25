@@ -1,12 +1,12 @@
 package com.xiaozhejun.meitu.ui.fragment.meizitu;
 
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,8 +20,8 @@ import com.xiaozhejun.meitu.ui.activity.ShowMeizituGalleryActivity;
 import com.xiaozhejun.meitu.ui.fragment.BaseFragment;
 import com.xiaozhejun.meitu.ui.widget.MeituRecyclerView;
 import com.xiaozhejun.meitu.util.Constants;
-import com.xiaozhejun.meitu.util.ShowToast;
 import com.xiaozhejun.meitu.util.Logcat;
+import com.xiaozhejun.meitu.util.ShowToast;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,31 +34,29 @@ import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 /**
- * A simple {@link Fragment} subclass.
+ * Created by yangzhe on 16-8-25.
  */
-public class MeizituGalleryListFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener{
+public class MeizituSearchFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener{
 
     private SwipeRefreshLayout meizituSwipeRefreshLayout;
     private MeituRecyclerView meizituRecyclerView;
     private MeizituGalleryListRecyclerViewAdapter meizituRecyclerViewAdapter;
     private boolean mIsLoadingData;    // 判断能否请求新的网页，加载更多妹子的图片
     private boolean mCanConnectToServer;
-    private boolean mIsAutoRefresh = true;    // 判断是否自动刷新数据
+    private boolean mIsAutoRefresh = false;    // 判断是否自动刷新数据
     private int mPage;       //表示妹子图片相册链接后面的分页
-    private int mTotalPages = Integer.MAX_VALUE; //表示妹子图某类相册所对应的网页总页数，总页数初始值为整型数的最大值
-    private String mType;    //表示妹子图片所属的类型，例如：日本妹子，性感妹子等
+    private int mTotalPages = 1; //表示妹子图某类相册所对应的网页总页数，总页数初始值为整型数的最大值
     private String mSearchKeyword; // 搜索妹子图网站所用的关键字
     private Context mContext;       // 测试用
 
-    public MeizituGalleryListFragment() {
-        // Required empty public constructor
+    public MeizituSearchFragment(){
     }
 
     /**
-     * 标记妹子图片相册所属的分类
+     * 设置搜索妹子图网站的关键字
      * */
-    public void setType(String type){
-        mType = type;
+    public void setSearchKeyword(String keyword){
+        mSearchKeyword = keyword;
     }
 
     /**
@@ -74,9 +72,9 @@ public class MeizituGalleryListFragment extends BaseFragment implements SwipeRef
                              Bundle savedInstanceState) {
         mContext = container.getContext();
         // Inflate the layout for this fragment
-        View view =  inflater.inflate(R.layout.fragment_meizitu_gallery_list, container, false);
+        View view =  inflater.inflate(R.layout.fragment_meizitu_search, container, false);
         // 设置RecyclerView
-        meizituRecyclerView = (MeituRecyclerView) view.findViewById(R.id.meizituGalleryListRecyclerView);
+        meizituRecyclerView = (MeituRecyclerView) view.findViewById(R.id.meizituSearchRecyclerView);
         StaggeredGridLayoutManager staggeredGridLayoutManager =
                 new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
         meizituRecyclerViewAdapter = new MeizituGalleryListRecyclerViewAdapter(meizituRecyclerView); //绑定meizituRecyclerViewAdapter和meizituRecyclerView
@@ -87,9 +85,9 @@ public class MeizituGalleryListFragment extends BaseFragment implements SwipeRef
         meizituRecyclerView.addOnScrollListener(new MeituRecyclerView.OnVerticalScrollListener() {
             @Override
             public void onBottom() {
-                ShowToast.showTestShortToast(mContext,mType + " 已经滑到底部了" + "page " + mPage);
+                ShowToast.showTestShortToast(mContext,mSearchKeyword + " 已经滑到底部了" + "page " + mPage);
                 if(mIsLoadingData == false){
-                    ShowToast.showTestShortToast(mContext,mType + " 正在加载第" + mPage + "页的妹子数据");
+                    ShowToast.showTestShortToast(mContext,mSearchKeyword + " 正在加载第" + mPage + "页的妹子数据");
                     loadMoreMeizituGalleryData(mPage);
                 }
             }
@@ -110,7 +108,7 @@ public class MeizituGalleryListFragment extends BaseFragment implements SwipeRef
             }
         });
         // 设置SwipeRefreshLayout
-        meizituSwipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.meizituGalleryListSwipeRefreshLayout);
+        meizituSwipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.meizituSearchSwipeRefreshLayout);
         meizituSwipeRefreshLayout.setOnRefreshListener(this);
         meizituSwipeRefreshLayout.setColorSchemeResources(R.color.colorSwipeRefresh);
         if(mIsAutoRefresh == true){
@@ -124,7 +122,6 @@ public class MeizituGalleryListFragment extends BaseFragment implements SwipeRef
         return view;
     }
 
-    // 对应SwipeRefreshLayout的刷新事件监听
     @Override
     public void onRefresh() {
         refreshMeizituGalleryData();
@@ -140,7 +137,7 @@ public class MeizituGalleryListFragment extends BaseFragment implements SwipeRef
             mIsLoadingData = false;
             if(mCanConnectToServer == true){
                 loadMoreMeizituGalleryData(mPage);         // 加载某类妹子图相册首页中的相册信息
-                ShowToast.showTestShortToast(mContext,"妹子图 " + mType + " 的网页总数为" + mTotalPages);
+                ShowToast.showTestShortToast(mContext,"妹子图 " + mSearchKeyword + " 的网页总数为" + mTotalPages);
             }
         }
 
@@ -148,17 +145,21 @@ public class MeizituGalleryListFragment extends BaseFragment implements SwipeRef
         public void onError(Throwable e) {
             meizituSwipeRefreshLayout.setRefreshing(false);
             mIsLoadingData = false;
-            ShowToast.showShortToast(getActivity(),"无法连接到妹子图的服务器... 妹子图 " + mType
+            ShowToast.showShortToast(getActivity(),"无法连接到妹子图的服务器... 妹子图 " + mSearchKeyword
                     + " 的获取网页总数信息失败!");
         }
 
         @Override
         public void onNext(Integer totalPages) {
             if(totalPages == null){
-                ShowToast.showShortToast(getActivity(),"无法连接到妹子图的服务器... 妹子图 " + mType
+                ShowToast.showShortToast(getActivity(),"无法连接到妹子图的服务器... 妹子图 " + mSearchKeyword
                         + " 的获取网页总数信息失败!");
             }else{
-                mTotalPages = totalPages.intValue();
+                if(totalPages.intValue() != Integer.MAX_VALUE){
+                    mTotalPages = totalPages.intValue();
+                }else{
+                    mTotalPages = 1;
+                }
             }
         }
     };
@@ -169,7 +170,7 @@ public class MeizituGalleryListFragment extends BaseFragment implements SwipeRef
     Observer<List<MeizituGallery>> observerGalleries = new Observer<List<MeizituGallery>>() {
         @Override
         public void onCompleted() {
-            ShowToast.showTestShortToast(mContext,mType + " load page " + mPage + " onCompleted()!");
+            ShowToast.showTestShortToast(mContext,mSearchKeyword + " load page " + mPage + " onCompleted()!");
             meizituSwipeRefreshLayout.setRefreshing(false);
             mIsLoadingData = false;
             if(mCanConnectToServer == true) {
@@ -182,7 +183,7 @@ public class MeizituGalleryListFragment extends BaseFragment implements SwipeRef
             meizituSwipeRefreshLayout.setRefreshing(false);
             mIsLoadingData = false;
             ShowToast.showShortToast(getActivity(),"无法连接到妹子图的服务器..."
-                    + mType + " load page " + mPage + " onError()! " + e.toString());
+                    + mSearchKeyword + " load page " + mPage + " onError()! " + e.toString());
         }
 
         @Override
@@ -205,15 +206,12 @@ public class MeizituGalleryListFragment extends BaseFragment implements SwipeRef
         }
     };
 
-    /**
-     * 刷新从妹子图网站上下载的妹子相册信息，获取妹子图相册所占用的网页页数信息
-     * */
-    public void refreshMeizituGalleryData(){
+    public void refreshMeizituGalleryData() {
         meizituSwipeRefreshLayout.setRefreshing(true);
         resetMeiziData();       // 清空妹子相册信息
         unsubscribe();
         subscription = Network.getMeizituService()
-                .getPictureType(mType)
+                .getSearchResult(mSearchKeyword)
                 .map(new Func1<ResponseBody, Integer>() {
 
                     @Override
@@ -238,15 +236,12 @@ public class MeizituGalleryListFragment extends BaseFragment implements SwipeRef
                 .subscribe(observerPages);
     }
 
-    /**
-     * 向下滑动时，从网上加载第page页的妹子信息
-     * */
-    public void loadMoreMeizituGalleryData(int page){
+    public void loadMoreMeizituGalleryData(int page) {
         if(page <= mTotalPages){
             unsubscribe();   // 在新的Http请求前，取消上一次Http操作中所涉及的obserable与observer之间的订阅关系
             mIsLoadingData = true;                   // 在加载完第page页的妹子数据前，不能加载新的数据
             subscription = Network.getMeizituService()
-                    .getPictureTypeInPage(mType,page)
+                    .getSearchResultInPages(mSearchKeyword,page)
                     .map(new Func1<ResponseBody, List<MeizituGallery>>() {
 
                         @Override
@@ -273,4 +268,6 @@ public class MeizituGalleryListFragment extends BaseFragment implements SwipeRef
             ShowToast.showShortToast(getActivity(),"妹子被你看完啦 O(∩_∩)O哈哈~");
         }
     }
+
+
 }
