@@ -49,7 +49,8 @@ public class SearchMeizituActivity extends AppCompatActivity {
         SearchView searchView = (SearchView)menu.findItem(R.id.action_search_meizitu).getActionView();
         // 当前的Activity为searchable activity
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        searchView.setIconifiedByDefault(false);
+        searchView.setIconified(false);                 // 自动展开SearchView
+        searchView.requestFocusFromTouch();             // 输入框自动获取焦点
         return true;
     }
 
