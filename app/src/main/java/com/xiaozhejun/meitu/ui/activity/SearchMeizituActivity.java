@@ -10,6 +10,7 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.xiaozhejun.meitu.R;
@@ -57,6 +58,15 @@ public class SearchMeizituActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int clickItemId = item.getItemId();
+        if(clickItemId == R.id.action_clear_history){
+            clearSuggestionData();
+        }
+        return true;
+    }
+
+    @Override
     protected void onNewIntent(Intent intent) {
         setIntent(intent);
         handleIntent(intent);
@@ -78,6 +88,15 @@ public class SearchMeizituActivity extends AppCompatActivity {
         suggestions.saveRecentQuery(query,null);           // 保存这次搜索所用的关键字
         meizituSearchFragment.setSearchKeyword(query);
         meizituSearchFragment.refreshMeizituGalleryData();
+    }
+
+    /**
+     * 清除搜索记录
+     * */
+    public void clearSuggestionData(){
+        SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
+                MeituSuggestionProvider.AUTHORITY,MeituSuggestionProvider.MODE);
+        suggestions.clearHistory();
     }
 
 }
