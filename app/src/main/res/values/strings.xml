@@ -51,5 +51,5 @@
     <string name="str_about_introduce">妹图是一个专注看美女图片的App。\n我们并不生产妹子图片，我们只是美图搬运工。\n所有的美女图片来自于妹子图，\n豆瓣美女，花瓣网和Gank美女等网站。\n</string>
     <string name="title_activity_search_meizitu">""</string>
 
-    <string name="search_hint">"请输入关键字搜索妹子图..."</string>
+    <string name="search_hint">"搜你想看的妹子图..."</string>
 </resources>
