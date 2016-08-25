@@ -3,13 +3,12 @@ package com.xiaozhejun.meitu.ui.fragment.meizitu;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.xiaozhejun.meitu.R;
 import com.xiaozhejun.meitu.adapter.MeizituGalleryListRecyclerViewAdapter;
@@ -38,6 +37,7 @@ import rx.schedulers.Schedulers;
  */
 public class MeizituSearchFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener{
 
+    private TextView mNotFoundHintTextView;
     private SwipeRefreshLayout meizituSwipeRefreshLayout;
     private MeituRecyclerView meizituRecyclerView;
     private MeizituGalleryListRecyclerViewAdapter meizituRecyclerViewAdapter;
@@ -119,6 +119,8 @@ public class MeizituSearchFragment extends BaseFragment implements SwipeRefreshL
                 }
             });
         }
+        // 设置未找到妹子的提示信息
+        mNotFoundHintTextView = (TextView)view.findViewById(R.id.notFoundHintTextView);
         return view;
     }
 
@@ -192,9 +194,12 @@ public class MeizituSearchFragment extends BaseFragment implements SwipeRefreshL
                 ShowToast.showShortToast(getActivity(),"无法连接到妹子图的服务器...");
             }else{
                 if(meizituGalleryList.size() == 0){
-                    ShowToast.showShortToast(getActivity(),"对不起,没有找到与" + mSearchKeyword + "相关的妹子!");
+                    //ShowToast.showShortToast(getActivity(),"对不起,没有找到与" + mSearchKeyword + "相关的妹子!");
+                    mNotFoundHintTextView.setText("对不起,没有找到与" + mSearchKeyword + "相关的妹子!");
+                    mNotFoundHintTextView.setVisibility(View.VISIBLE);
                     meizituRecyclerViewAdapter.updateMeizituGalleryList(meizituGalleryList,mPage);
                 }else{
+                    mNotFoundHintTextView.setVisibility(View.GONE);
                     meizituRecyclerViewAdapter.updateMeizituGalleryList(meizituGalleryList,mPage);
                     // test meizituGalleryList start
                     for(MeizituGallery meizituGallery:meizituGalleryList){

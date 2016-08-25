@@ -54,4 +54,5 @@
     <string name="title_activity_search_meizitu">""</string>
 
     <string name="search_hint">"搜你想看的妹子图..."</string>
+    <string name="not_found_hint">"对不起，没有找到妹子..."</string>
 </resources>

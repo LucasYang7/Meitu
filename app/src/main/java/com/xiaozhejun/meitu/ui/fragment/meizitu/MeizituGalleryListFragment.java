@@ -47,7 +47,6 @@ public class MeizituGalleryListFragment extends BaseFragment implements SwipeRef
     private int mPage;       //表示妹子图片相册链接后面的分页
     private int mTotalPages = Integer.MAX_VALUE; //表示妹子图某类相册所对应的网页总页数，总页数初始值为整型数的最大值
     private String mType;    //表示妹子图片所属的类型，例如：日本妹子，性感妹子等
-    private String mSearchKeyword; // 搜索妹子图网站所用的关键字
     private Context mContext;       // 测试用
 
     public MeizituGalleryListFragment() {
