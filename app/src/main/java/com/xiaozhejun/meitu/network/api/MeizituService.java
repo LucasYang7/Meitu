@@ -3,6 +3,7 @@ package com.xiaozhejun.meitu.network.api;
 import okhttp3.ResponseBody;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 import rx.Observable;
 
 /**
@@ -47,8 +48,12 @@ public interface MeizituService {
     Observable<ResponseBody> getPictureInSelfiePages(@Path("page") int page);
 
     // 搜索妹子图网站中的相册
-    @GET("search/{search}")
-    Observable<ResponseBody> getSearchResult(@Path("search") String search);
+    // @GET("search/{search}")
+    // Observable<ResponseBody> getSearchResult(@Path("search") String search);
+
+    // 搜索妹子图网站中的相册
+    @GET("/")
+    Observable<ResponseBody> getSearchResult(@Query("s") String search);
 
     // 展示妹子网站的搜索结果
     @GET("search/{search}/page/{page}")
