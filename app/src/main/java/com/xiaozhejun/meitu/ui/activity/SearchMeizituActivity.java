@@ -4,6 +4,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.SearchRecentSuggestions;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -13,6 +14,7 @@ import android.view.View;
 
 import com.xiaozhejun.meitu.R;
 import com.xiaozhejun.meitu.ui.fragment.meizitu.MeizituSearchFragment;
+import com.xiaozhejun.meitu.util.provider.MeituSuggestionProvider;
 
 public class SearchMeizituActivity extends AppCompatActivity {
 
@@ -71,6 +73,9 @@ public class SearchMeizituActivity extends AppCompatActivity {
      * 搜索妹子图
      * */
     public void searchMeizitu(String query){
+        SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
+                MeituSuggestionProvider.AUTHORITY,MeituSuggestionProvider.MODE);
+        suggestions.saveRecentQuery(query,null);           // 保存这次搜索所用的关键字
         meizituSearchFragment.setSearchKeyword(query);
         meizituSearchFragment.refreshMeizituGalleryData();
     }
