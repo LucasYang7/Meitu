@@ -47,6 +47,7 @@ public class MeizituSearchFragment extends BaseFragment implements SwipeRefreshL
     private int mPage;       //表示妹子图片相册链接后面的分页
     private int mTotalPages = 1; //表示妹子图某类相册所对应的网页总页数，总页数初始值为整型数的最大值
     private String mSearchKeyword = ""; // 搜索妹子图网站所用的关键字
+    private String mURLEncoderSearchKeyword = "";  // 经过URL编码后的搜索关键字
     private Context mContext;       // 测试用
 
     public MeizituSearchFragment(){
@@ -55,8 +56,9 @@ public class MeizituSearchFragment extends BaseFragment implements SwipeRefreshL
     /**
      * 设置搜索妹子图网站的关键字
      * */
-    public void setSearchKeyword(String keyword){
+    public void setSearchKeyword(String keyword,String URLEncoderKeyword){
         mSearchKeyword = keyword;
+        mURLEncoderSearchKeyword = URLEncoderKeyword;
     }
 
     /**
@@ -219,7 +221,7 @@ public class MeizituSearchFragment extends BaseFragment implements SwipeRefreshL
         resetMeiziData();       // 清空妹子相册信息
         unsubscribe();
         subscription = Network.getMeizituService()
-                .getSearchResult(mSearchKeyword)
+                .getSearchResult(mURLEncoderSearchKeyword)
                 .map(new Func1<ResponseBody, Integer>() {
 
                     @Override
@@ -249,7 +251,7 @@ public class MeizituSearchFragment extends BaseFragment implements SwipeRefreshL
             unsubscribe();   // 在新的Http请求前，取消上一次Http操作中所涉及的obserable与observer之间的订阅关系
             mIsLoadingData = true;                   // 在加载完第page页的妹子数据前，不能加载新的数据
             subscription = Network.getMeizituService()
-                    .getSearchResultInPages(mSearchKeyword,page)
+                    .getSearchResultInPages(mURLEncoderSearchKeyword,page)
                     .map(new Func1<ResponseBody, List<MeizituGallery>>() {
 
                         @Override

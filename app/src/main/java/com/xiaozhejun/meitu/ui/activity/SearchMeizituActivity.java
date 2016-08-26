@@ -21,6 +21,9 @@ import com.xiaozhejun.meitu.ui.fragment.meizitu.MeizituSearchFragment;
 import com.xiaozhejun.meitu.util.Logcat;
 import com.xiaozhejun.meitu.util.provider.MeituSuggestionProvider;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 public class SearchMeizituActivity extends AppCompatActivity {
 
     private MeizituSearchFragment meizituSearchFragment;
@@ -110,8 +113,14 @@ public class SearchMeizituActivity extends AppCompatActivity {
         SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
                 MeituSuggestionProvider.AUTHORITY,MeituSuggestionProvider.MODE);
         suggestions.saveRecentQuery(query,null);           // 保存这次搜索所用的关键字
-        meizituSearchFragment.setSearchKeyword(query);
-        meizituSearchFragment.refreshMeizituGalleryData();
+        try {
+            String URLEncoderQuery = URLEncoder.encode(query,"UTF-8"); // 对查询关键字进行URL编码
+            Logcat.showLog("URLEncoderQuery",URLEncoderQuery);
+            meizituSearchFragment.setSearchKeyword(query,URLEncoderQuery);
+            meizituSearchFragment.refreshMeizituGalleryData();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

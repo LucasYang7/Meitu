@@ -13,7 +13,7 @@ public interface Constants {
     /**
      * 用于控制是否显示自己定义的Log
      * */
-    boolean SHOW_LOG = false;
+    boolean SHOW_LOG = true;
 
     /**
      * 妹子图网站对应的妹子分类标题

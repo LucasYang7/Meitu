@@ -51,12 +51,12 @@ public interface MeizituService {
     // @GET("search/{search}")
     // Observable<ResponseBody> getSearchResult(@Path("search") String search);
 
-    // 搜索妹子图网站中的相册
+    // 搜索妹子图网站中的相册 因为传入的参数已经进行了URL编码，所以Retrofit不需要再进行URL编码
     @GET("/")
-    Observable<ResponseBody> getSearchResult(@Query("s") String search);
+    Observable<ResponseBody> getSearchResult(@Query(value="s", encoded=true) String search);
 
-    // 展示妹子网站的搜索结果
+    // 展示妹子网站的搜索结果 因为传入的参数已经进行了URL编码，所以Retrofit不需要再进行URL编码
     @GET("search/{search}/page/{page}")
-    Observable<ResponseBody> getSearchResultInPages(@Path("search") String search,
+    Observable<ResponseBody> getSearchResultInPages(@Path(value="search", encoded=true) String search,
                                                     @Path("page") int page);
 }
