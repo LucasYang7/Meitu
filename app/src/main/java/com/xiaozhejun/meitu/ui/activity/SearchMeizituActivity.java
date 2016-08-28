@@ -101,6 +101,7 @@ public class SearchMeizituActivity extends AppCompatActivity {
      * */
     public void handleIntent(Intent intent){
         if(Intent.ACTION_SEARCH.equals(intent.getAction())){
+            mSearchView.clearFocus();                // 搜索后取消SearchView中的焦点
             String query = intent.getStringExtra(SearchManager.QUERY);
             searchMeizitu(query);
         }
