@@ -48,7 +48,7 @@ public class MeizituSearchFragment extends BaseFragment implements SwipeRefreshL
     private int mTotalPages = 1; //表示妹子图某类相册所对应的网页总页数，总页数初始值为整型数的最大值
     private String mSearchKeyword = ""; // 搜索妹子图网站所用的关键字
     private String mURLEncoderSearchKeyword = "";  // 经过URL编码后的搜索关键字
-    private Context mContext;       // 测试用
+    private Context mContext;
 
     public MeizituSearchFragment(){
     }
@@ -152,14 +152,14 @@ public class MeizituSearchFragment extends BaseFragment implements SwipeRefreshL
             mNotFoundHintTextView.setText("对不起,没有找到与" + mSearchKeyword + "相关的妹子,发生了错误:" + e.toString());
             mNotFoundHintTextView.setVisibility(View.VISIBLE);
             meizituRecyclerViewAdapter.updateMeizituGalleryList(null,mPage);
-            ShowToast.showShortToast(getActivity(),"无法连接到妹子图的服务器... 妹子图 " + mSearchKeyword
+            ShowToast.showShortToast(mContext,"无法连接到妹子图的服务器... 妹子图 " + mSearchKeyword
                     + " 的获取网页总数信息失败! " + e.toString());
         }
 
         @Override
         public void onNext(Integer totalPages) {
             if(totalPages == null){
-                ShowToast.showShortToast(getActivity(),"无法连接到妹子图的服务器... 妹子图 " + mSearchKeyword
+                ShowToast.showShortToast(mContext,"无法连接到妹子图的服务器... 妹子图 " + mSearchKeyword
                         + " 的获取网页总数信息失败!");
             }else{
                 if(totalPages.intValue() != Integer.MAX_VALUE){
@@ -189,14 +189,14 @@ public class MeizituSearchFragment extends BaseFragment implements SwipeRefreshL
         public void onError(Throwable e) {
             meizituSwipeRefreshLayout.setRefreshing(false);
             mIsLoadingData = false;
-            ShowToast.showShortToast(getActivity(),"无法连接到妹子图的服务器..."
+            ShowToast.showShortToast(mContext,"无法连接到妹子图的服务器..."
                     + mSearchKeyword + " load page " + mPage + " onError()! " + e.toString());
         }
 
         @Override
         public void onNext(List<MeizituGallery> meizituGalleryList) {
             if(meizituGalleryList == null){
-                ShowToast.showShortToast(getActivity(),"无法连接到妹子图的服务器...");
+                ShowToast.showShortToast(mContext,"无法连接到妹子图的服务器...");
             }else{
                 if(meizituGalleryList.size() == 0){
                     //ShowToast.showShortToast(getActivity(),"对不起,没有找到与" + mSearchKeyword + "相关的妹子!");
@@ -275,7 +275,7 @@ public class MeizituSearchFragment extends BaseFragment implements SwipeRefreshL
                     .observeOn(AndroidSchedulers.mainThread()) //指定消费事件的线程
                     .subscribe(observerGalleries);
         }else{
-            ShowToast.showShortToast(getActivity(),"妹子被你看完啦 O(∩_∩)O哈哈~");
+            ShowToast.showShortToast(mContext,"妹子被你看完啦 O(∩_∩)O哈哈~");
         }
     }
 

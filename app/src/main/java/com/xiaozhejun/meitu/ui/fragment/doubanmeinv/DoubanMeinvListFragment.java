@@ -5,6 +5,7 @@ import com.xiaozhejun.meitu.network.Network;
 import com.xiaozhejun.meitu.network.parser.HtmlParser;
 import com.xiaozhejun.meitu.ui.fragment.MeituPictureListFragment;
 import com.xiaozhejun.meitu.util.Constants;
+import com.xiaozhejun.meitu.util.Logcat;
 import com.xiaozhejun.meitu.util.ShowToast;
 
 import java.io.IOException;
@@ -54,7 +55,8 @@ public class DoubanMeinvListFragment extends MeituPictureListFragment {
         @Override
         public void onError(Throwable e) {
             ShowToast.showTestLongToast(mContext,mCid + " load page " + mPage + " onError()! " + e.toString());
-            ShowToast.showShortToast(getActivity(),"无法连接到豆瓣美女的服务器...出现了错误:" + e.toString());
+            ShowToast.showShortToast(mContext,"无法连接到豆瓣美女的服务器...出现了错误:" + e.toString());
+            Logcat.showLog("DoubanMeinv",mCid + " load page " + mPage + " onError()! " + e.toString());
             mMeituPictureListSwipeRefreshLayout.setRefreshing(false);
             mIsLoadingData = false;
         }
@@ -62,7 +64,7 @@ public class DoubanMeinvListFragment extends MeituPictureListFragment {
         @Override
         public void onNext(ArrayList<MeituPicture> meituPictures) {
             if(meituPictures == null){
-                ShowToast.showShortToast(getActivity(),"无法连接到豆瓣美女的服务器...");
+                ShowToast.showShortToast(mContext,"无法连接到豆瓣美女的服务器...");
             }else{
                 if(meituPictures.size() > 0){
                     meituPictureListRecyclerViewAdapter.updateMeituPictureList(meituPictures,mIsResetData);
@@ -70,7 +72,7 @@ public class DoubanMeinvListFragment extends MeituPictureListFragment {
                         mIsResetData = false;
                     }
                 }else{
-                    ShowToast.showShortToast(getActivity(),"妹子被你看完啦 O(∩_∩)O哈哈~");
+                    ShowToast.showShortToast(mContext,"妹子被你看完啦 O(∩_∩)O哈哈~");
                 }
 
             }

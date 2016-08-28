@@ -44,14 +44,14 @@ public class ShareFragment extends MeituPictureListFragment {
                 // 开始下载"美女自拍"的第一个相册
                 loadMoreMeituPicture(mPage);
             }else{
-                ShowToast.showShortToast(getActivity(),"无法连接到妹子图服务器，妹子自拍获取网页页数操作失败");
+                ShowToast.showShortToast(mContext,"无法连接到妹子图服务器，妹子自拍获取网页页数操作失败");
             }
         }
 
         @Override
         public void onError(Throwable e) {
             mMeituPictureListSwipeRefreshLayout.setRefreshing(false);
-            ShowToast.showShortToast(getActivity(),"无法连接到妹子图服务器，妹子自拍获取网页页数操作失败"
+            ShowToast.showShortToast(mContext,"无法连接到妹子图服务器，妹子自拍获取网页页数操作失败"
                     + e.toString());
         }
 
@@ -83,7 +83,7 @@ public class ShareFragment extends MeituPictureListFragment {
         @Override
         public void onError(Throwable e) {
             ShowToast.showTestLongToast(mContext,"load page " + mPage + " onError()! " + e.toString());
-            ShowToast.showShortToast(getActivity(),"出现了错误:" + e.toString() + " 无法连接到妹子图服务器，获取妹子图片失败...");
+            ShowToast.showShortToast(mContext,"出现了错误:" + e.toString() + " 无法连接到妹子图服务器，获取妹子图片失败...");
             mMeituPictureListSwipeRefreshLayout.setRefreshing(false);
             mIsLoadingData = false;
         }
@@ -91,7 +91,7 @@ public class ShareFragment extends MeituPictureListFragment {
         @Override
         public void onNext(ArrayList<MeituPicture> meituPictures) {
             if(meituPictures == null){
-                ShowToast.showShortToast(getActivity(),"无法连接到妹子图服务器，获取妹子图片失败...");
+                ShowToast.showShortToast(mContext,"无法连接到妹子图服务器，获取妹子图片失败...");
             }else{
                 meituPictureListRecyclerViewAdapter.updateMeituPictureList(meituPictures,isResetData);
                 if(isResetData == true)
@@ -160,7 +160,7 @@ public class ShareFragment extends MeituPictureListFragment {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(observerPictures);
         }else{
-            ShowToast.showShortToast(getActivity(),"妹子被你看完啦 O(∩_∩)O哈哈~");
+            ShowToast.showShortToast(mContext,"妹子被你看完啦 O(∩_∩)O哈哈~");
         }
 
     }

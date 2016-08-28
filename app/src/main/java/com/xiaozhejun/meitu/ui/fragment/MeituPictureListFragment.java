@@ -28,7 +28,7 @@ public abstract class MeituPictureListFragment extends BaseFragment implements S
     protected boolean mIsLoadingData;    // 判断是否正在加载新的数据
     protected int mPage;      //表示妹子图片所在网页的分页
     protected String mType;   //表示妹子图片所属的类型
-    protected Context mContext;  // 测试用
+    protected Context mContext;
 
     public MeituPictureListFragment() {
         // Required empty public constructor

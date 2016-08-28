@@ -47,7 +47,7 @@ public class MeizituGalleryListFragment extends BaseFragment implements SwipeRef
     private int mPage;       //表示妹子图片相册链接后面的分页
     private int mTotalPages = Integer.MAX_VALUE; //表示妹子图某类相册所对应的网页总页数，总页数初始值为整型数的最大值
     private String mType;    //表示妹子图片所属的类型，例如：日本妹子，性感妹子等
-    private Context mContext;       // 测试用
+    private Context mContext;
 
     public MeizituGalleryListFragment() {
         // Required empty public constructor
@@ -147,14 +147,14 @@ public class MeizituGalleryListFragment extends BaseFragment implements SwipeRef
         public void onError(Throwable e) {
             meizituSwipeRefreshLayout.setRefreshing(false);
             mIsLoadingData = false;
-            ShowToast.showShortToast(getActivity(),"无法连接到妹子图的服务器... 妹子图 " + mType
+            ShowToast.showShortToast(mContext,"无法连接到妹子图的服务器... 妹子图 " + mType
                     + " 的获取网页总数信息失败!");
         }
 
         @Override
         public void onNext(Integer totalPages) {
             if(totalPages == null){
-                ShowToast.showShortToast(getActivity(),"无法连接到妹子图的服务器... 妹子图 " + mType
+                ShowToast.showShortToast(mContext,"无法连接到妹子图的服务器... 妹子图 " + mType
                         + " 的获取网页总数信息失败!");
             }else{
                 mTotalPages = totalPages.intValue();
@@ -180,17 +180,17 @@ public class MeizituGalleryListFragment extends BaseFragment implements SwipeRef
         public void onError(Throwable e) {
             meizituSwipeRefreshLayout.setRefreshing(false);
             mIsLoadingData = false;
-            ShowToast.showShortToast(getActivity(),"无法连接到妹子图的服务器..."
+            ShowToast.showShortToast(mContext,"无法连接到妹子图的服务器..."
                     + mType + " load page " + mPage + " onError()! " + e.toString());
         }
 
         @Override
         public void onNext(List<MeizituGallery> meizituGalleryList) {
             if(meizituGalleryList == null){
-                ShowToast.showShortToast(getActivity(),"无法连接到妹子图的服务器...");
+                ShowToast.showShortToast(mContext,"无法连接到妹子图的服务器...");
             }else{
                 if(meizituGalleryList.size() == 0){
-                    ShowToast.showShortToast(getActivity(),"获取到了妹子图相册，但是里面没有图片...");
+                    ShowToast.showShortToast(mContext,"获取到了妹子图相册，但是里面没有图片...");
                 }else{
                     meizituRecyclerViewAdapter.updateMeizituGalleryList(meizituGalleryList,mPage);
                     // test meizituGalleryList start
@@ -268,7 +268,7 @@ public class MeizituGalleryListFragment extends BaseFragment implements SwipeRef
                     .observeOn(AndroidSchedulers.mainThread()) //指定消费事件的线程
                     .subscribe(observerGalleries);
         }else{
-            ShowToast.showShortToast(getActivity(),"妹子被你看完啦 O(∩_∩)O哈哈~");
+            ShowToast.showShortToast(mContext,"妹子被你看完啦 O(∩_∩)O哈哈~");
         }
     }
 }
