@@ -20,6 +20,7 @@ import com.xiaozhejun.meitu.ui.fragment.gankmeizi.GankMeiziFragment;
 import com.xiaozhejun.meitu.ui.fragment.huabanmeinv.HuabanMeinvFragment;
 import com.xiaozhejun.meitu.ui.fragment.meizitu.MeizituTabFragment;
 import com.xiaozhejun.meitu.util.ShowToast;
+import com.xiaozhejun.meitu.util.task.InitRetrofitClientTask;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -48,6 +49,9 @@ public class MainActivity extends AppCompatActivity
         // 使用妹子图网站作为初始化页面
         MeizituTabFragment meizituTabFragment = new MeizituTabFragment();
         replaceFragment(meizituTabFragment);
+
+        // 初始化Retrofit客户端
+        new InitRetrofitClientTask().execute();
     }
 
     @Override
