@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity
         replaceFragment(meizituTabFragment);
 
         // 初始化Retrofit客户端
-        new InitRetrofitClientTask().execute();
+        // new InitRetrofitClientTask().execute();
     }
 
     @Override
