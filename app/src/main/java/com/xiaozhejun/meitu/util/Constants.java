@@ -64,4 +64,9 @@ public interface Constants {
      * 每请求一次花瓣美女API所返回的妹子图片数目
      * */
     int HUABAN_MEINV_NUMBER = 15;
+
+    /**
+     * sharedPreferences所对应的名字
+     * */
+    String MEITU_PREFS_NAME = "MeituPrefsFile";
 }
