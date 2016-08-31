@@ -37,10 +37,10 @@ public class SplashActivity extends AppCompatActivity {
         boolean isFirstStart = settings.getBoolean("isFirstStart",true);
         if(isFirstStart){
             saveSettings();
-            enterGuideActivity();
+            enterGuideActivity(); //这里不经过onStart(),onResume(),onPause(),onStop()等回调函数，直接进入onDestroy()函数
         }else{
-            // 初始化Retrofit客户端
-            new InitRetrofitClientTask().execute();
+            // 暂时不初始化Retrofit客户端
+            // new InitRetrofitClientTask().execute();
             // 延迟2秒后进入MainActivity
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -66,7 +66,7 @@ public class SplashActivity extends AppCompatActivity {
     public void saveSettings(){
         SharedPreferences settings = getSharedPreferences(Constants.MEITU_PREFS_NAME,0);
         SharedPreferences.Editor editor = settings.edit();
-        editor.putBoolean("isFirstStart",true);    // test
+        editor.putBoolean("isFirstStart",false);
         editor.commit();
     }
 }
