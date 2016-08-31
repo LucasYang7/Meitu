@@ -66,7 +66,7 @@ public class SplashActivity extends AppCompatActivity {
     public void saveSettings(){
         SharedPreferences settings = getSharedPreferences(Constants.MEITU_PREFS_NAME,0);
         SharedPreferences.Editor editor = settings.edit();
-        editor.putBoolean("isFirstStart",false);
+        editor.putBoolean("isFirstStart",true);    // test
         editor.commit();
     }
 }

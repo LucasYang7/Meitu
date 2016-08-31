@@ -1,5 +1,7 @@
 package com.xiaozhejun.meitu.util;
 
+import com.xiaozhejun.meitu.R;
+
 /**
  * Created by yangzhe on 16-7-26.
  */
@@ -69,4 +71,26 @@ public interface Constants {
      * sharedPreferences所对应的名字
      * */
     String MEITU_PREFS_NAME = "MeituPrefsFile";
+
+    /**
+     * 引导页面的标题
+     * */
+    String[] INTRO_TITLES = {"欢迎来到妹图","搜妹子","看妹子","收妹子","藏妹子"};
+
+    /**
+     * 引导页颜色
+     * */
+    String[] INTRO_COLORS = {"#fb7299","#00bcd4","#bb8930","#4a82ae","#4caf50"};
+
+    /**
+     * 引导页介绍内容
+     * */
+    int[] INTRO_DESCRIPTIONS = {R.string.guide_view_introduce_1,R.string.guide_view_introduce_2
+            ,R.string.guide_view_introduce_3,R.string.guide_view_introduce_4,R.string.guide_view_introduce_5};
+
+    /**
+     * 引导页的背景图片
+     * */
+    int[] INTRO_IMAGES = {R.drawable.guide_view_1,R.drawable.guide_view_2,
+            R.drawable.guide_view_3, R.drawable.guide_view_4,R.drawable.guide_view_5};
 }

@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import com.github.paolorotolo.appintro.AppIntro2;
 import com.github.paolorotolo.appintro.AppIntroFragment;
 import com.xiaozhejun.meitu.R;
+import com.xiaozhejun.meitu.util.Constants;
 
 /**
  * Created by yangzhe on 16-8-31.
@@ -18,12 +19,14 @@ public class GuideActivity extends AppIntro2 {
         super.onCreate(savedInstanceState);
         showStatusBar(false);     //隐藏标题栏
         // 添加Fragment
-        int backgroundColor = Color.parseColor("#FB7299");
-        addSlide(AppIntroFragment.newInstance("妹子图","妹子图", R.drawable.guide_view_1,backgroundColor));
-        addSlide(AppIntroFragment.newInstance("妹子图","妹子图", R.drawable.guide_view_2,backgroundColor));
-        addSlide(AppIntroFragment.newInstance("妹子图","妹子图", R.drawable.guide_view_3,backgroundColor));
-        addSlide(AppIntroFragment.newInstance("妹子图","妹子图", R.drawable.guide_view_4,backgroundColor));
-        addSlide(AppIntroFragment.newInstance("妹子图","妹子图", R.drawable.guide_view_5,backgroundColor));
+        String[] introColors = Constants.INTRO_COLORS;
+        String[] introTitles = Constants.INTRO_TITLES;
+        int[] introDescriptions = Constants.INTRO_DESCRIPTIONS;
+        int[] introImages = Constants.INTRO_IMAGES;
+        for(int i = 0;i < Constants.INTRO_TITLES.length;i++){
+            addSlide(AppIntroFragment.newInstance(introTitles[i], getString(introDescriptions[i]),
+                    introImages[i],Color.parseColor(introColors[i])));
+        }
         showSkipButton(false);   // 隐藏"跳过"按钮
         setFlowAnimation();      // 设置动画
     }

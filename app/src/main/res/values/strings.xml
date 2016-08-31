@@ -55,4 +55,10 @@
 
     <string name="search_hint">"搜你想看的妹子图..."</string>
     <string name="not_found_hint">"对不起，没有找到妹子..."</string>
+
+    <string name="guide_view_introduce_1">我们提供多种类型的妹子图片。萝莉、御姐、性感、清纯、真实的美女自拍，您想要的这里都有。O(∩_∩)O~</string>
+    <string name="guide_view_introduce_2">可以在线搜索妹子图网站的图片，这样您可以尽情寻找自己心仪的妹子图片。</string>
+    <string name="guide_view_introduce_3">左右滑动浏览相册中的妹子图片，支持一键分享到朋友圈和微博,同时也可以通过微信和QQ等发送给好朋友。</string>
+    <string name="guide_view_introduce_4">碰到自己喜欢的妹子图片，可以将其保存到手机相册中。</string>
+    <string name="guide_view_introduce_5">支持收藏图片，这样无需下载图片，也可以随时在线浏览自己喜欢的妹子图片。</string>
 </resources>
