@@ -59,4 +59,29 @@ public class MeituPicture implements Parcelable {
         dest.writeString(title);
         dest.writeString(pictureUrl);
     }
+
+    // 因为LinkedHashSet判断两个对象是否相等时用到了equals方法和hashCode方法
+    // 所以这里要重写MeituPicture类中的equals方法和hashCode方法
+    @Override
+    public boolean equals(Object obj) {
+        if(this == obj){
+            return true;
+        }else{
+            if(obj instanceof MeituPicture){
+                if(this.getPictureUrl().equals(((MeituPicture) obj).getPictureUrl())){
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+            return false;
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        String pictureUrl = this.getPictureUrl();
+        int hashCodeValue = pictureUrl.hashCode();
+        return hashCodeValue;
+    }
 }

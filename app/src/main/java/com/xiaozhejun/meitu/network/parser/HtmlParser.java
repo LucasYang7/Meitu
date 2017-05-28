@@ -2,6 +2,7 @@ package com.xiaozhejun.meitu.network.parser;
 
 import com.xiaozhejun.meitu.model.MeituPicture;
 import com.xiaozhejun.meitu.model.MeizituGallery;
+import com.xiaozhejun.meitu.model.MeizituPicturePage;
 import com.xiaozhejun.meitu.util.Logcat;
 
 import org.jsoup.Jsoup;
@@ -112,19 +113,42 @@ public class HtmlParser {
 
     /**
      * 解析显示妹子图照片的网页，得到该网页中所有显示的妹子图片的标题和图片链接等信息
-     * */
-    public static ArrayList<MeituPicture> parseMeizituGalleryHtmlContent(String htmlContent){
+     */
+    public static MeizituPicturePage parseMeizituGalleryHtmlContent(String htmlContent) {
+        MeizituPicturePage meizituPicturePage = new MeizituPicturePage();
+        int page = 1;
         ArrayList<MeituPicture> meizituPictureList = new ArrayList<MeituPicture>();
         Document document = Jsoup.parse(htmlContent);
+        // 获取名为description的meta节点中的内容，也就是妹子图相册中某张网页的描述信息
+        Element descriptionMeta = document.select("meta[name=description]").first();
+        String descriptionContent = descriptionMeta.attr("content");
+        Logcat.showLog("parseMeizituGalleryHtmlContent", descriptionContent);
+        // 通过正则表达式解析出网页的页数数字
+        Pattern pattern = Pattern.compile("第.*页");    //匹配"第X页"的正则表达式
+        Matcher matcher = pattern.matcher(descriptionContent);
+        while (matcher.find()) {
+            String pageString = matcher.group();
+            Logcat.showLog("parseMeizituGalleryHtmlContent", "字符串 = " + pageString);
+            Pattern pageNumberPattern = Pattern.compile("\\d+");
+            Matcher pageNumberMatcher = pageNumberPattern.matcher(pageString);
+            while (pageNumberMatcher.find()) {
+                String pageNumberString = pageNumberMatcher.group();
+                page = Integer.parseInt(pageNumberString);
+                Logcat.showLog("parseMeizituGalleryHtmlContent", "数字 = " + page);
+            }
+        }
+        // 获取妹子图相册中某张网页中所包含的图片链接信息，注意一张网页可能包含多张图片
         Element MainImageDiv = document.select("div.main-image").first();
         Elements pictureInfoElements = MainImageDiv.select("img");
-        for(Element pictureInfoElement:pictureInfoElements){
+        for (Element pictureInfoElement : pictureInfoElements) {
             MeituPicture meituPicture = new MeituPicture();
             meituPicture.setTitle(pictureInfoElement.attr("alt"));
             meituPicture.setPictureUrl(pictureInfoElement.attr("src"));
             meizituPictureList.add(meituPicture);
         }
-        return meizituPictureList;
+        meizituPicturePage.setPage(page);
+        meizituPicturePage.setMeizituPictureList(meizituPictureList);
+        return meizituPicturePage;
     }
 
     /**

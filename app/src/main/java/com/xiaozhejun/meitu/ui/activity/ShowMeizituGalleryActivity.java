@@ -11,6 +11,7 @@ import android.widget.ProgressBar;
 import com.xiaozhejun.meitu.R;
 import com.xiaozhejun.meitu.adapter.MeituPictureListRecyclerViewAdapter;
 import com.xiaozhejun.meitu.model.MeituPicture;
+import com.xiaozhejun.meitu.model.MeizituPicturePage;
 import com.xiaozhejun.meitu.network.Network;
 import com.xiaozhejun.meitu.network.parser.HtmlParser;
 import com.xiaozhejun.meitu.ui.widget.MeituRecyclerView;
@@ -19,6 +20,10 @@ import com.xiaozhejun.meitu.util.Logcat;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
 
 import okhttp3.ResponseBody;
 import rx.Observable;
@@ -35,8 +40,10 @@ public class ShowMeizituGalleryActivity extends AppCompatActivity {
     private MeituPictureListRecyclerViewAdapter mPictureRecyclerViewAdapter;
     protected Subscription mSubscription;   // 用于解除Obserable与Observer之间的订阅关系，防止内存泄露
     private ArrayList<Integer> meituPageList = new ArrayList<Integer>();  //妹子图相册对应的网页页数
+    private ArrayList<Integer> mAlreadyDownloadPageList = new ArrayList<>(); //已经下载好的妹子图所对应的网页
     private String groupId;
     private String title;
+    private int mCurrentPage;
     // 测试用。。。
     private final String TAG = "ShowMeizituGalleryActivity";
     private ArrayList<MeituPicture> meituPictureList = new ArrayList<MeituPicture>();
@@ -130,11 +137,43 @@ public class ShowMeizituGalleryActivity extends AppCompatActivity {
     };
 
     // 负责处理接收妹子图照片信息的事件
-    Observer<ArrayList<MeituPicture>> observerMeituPictures = new Observer<ArrayList<MeituPicture>>() {
+    Observer<MeizituPicturePage> observerMeituPictures = new Observer<MeizituPicturePage>() {
         @Override
         public void onCompleted() {
-            mProgressBar.setVisibility(View.INVISIBLE);
-            mPictureRecyclerViewAdapter.updateMeituPictureList(meituPictureList,1);
+//            mProgressBar.setVisibility(View.INVISIBLE);
+//            mPictureRecyclerViewAdapter.updateMeituPictureList(meituPictureList,1);
+            Logcat.showLog("observerMeituPictures", "onCompleted mAlreadyDownloadPageList = "
+                    + mAlreadyDownloadPageList.toString());
+            meituPageList.removeAll(mAlreadyDownloadPageList);  // 刪除所有已经下载好的网页
+            Logcat.showLog("observerMeituPictures", "onCompleted After removeAll mAlreadyDownloadPageList"
+                    + " meituPageList = " + meituPageList.toString());
+            mAlreadyDownloadPageList.clear();
+            if (meituPageList.isEmpty()) {
+                //按照图片url从小到大进行排序
+                Collections.sort(meituPictureList, new Comparator<MeituPicture>() {
+                    @Override
+                    public int compare(MeituPicture meituPicture1, MeituPicture meituPicture2) {
+                        return meituPicture1.getPictureUrl()
+                                .compareToIgnoreCase(meituPicture2.getPictureUrl());
+                    }
+                });
+                //删除meituPictureList中的重复元素
+                LinkedHashSet<MeituPicture> meituPictureLinkedHashSet = new LinkedHashSet<>(meituPictureList);
+                // test start
+                Iterator<MeituPicture> iterator = meituPictureLinkedHashSet.iterator();
+                while (iterator.hasNext()) {
+                    Logcat.showLog("observerMeituPictures", "meituPictureLinkedHashSet = "
+                            + iterator.next().getPictureUrl());
+                }
+                // test end
+                meituPictureList.clear();
+                meituPictureList = new ArrayList<>(meituPictureLinkedHashSet);
+
+                mProgressBar.setVisibility(View.INVISIBLE);
+                mPictureRecyclerViewAdapter.updateMeituPictureList(meituPictureList, 1);
+            } else {
+                downLoadingPicture(groupId);  // 继续下载相册中剩余妹子的图片
+            }
             // test start
             ShowToast.showTestShortToast(ShowMeizituGalleryActivity.this,"完成获取相册信息的操作");
             StringBuilder information = new StringBuilder();
@@ -147,14 +186,41 @@ public class ShowMeizituGalleryActivity extends AppCompatActivity {
 
         @Override
         public void onError(Throwable e) {
-            mProgressBar.setVisibility(View.INVISIBLE);
-            ShowToast.showShortToast(ShowMeizituGalleryActivity.this,"获取相册信息操作失败,发生了错误:" +
-                    e.toString());
+            Logcat.showLog("observerMeituPictures",e.toString() + "onError mCurrentPage = " + mCurrentPage);
+            if (e.toString().contains("HTTP 514")) { // 针对 HTTP 514 错误进行特殊处理
+                Logcat.showLog("observerMeituPictures", "onError mAlreadyDownloadPageList = "
+                        + mAlreadyDownloadPageList.toString());
+                meituPageList.removeAll(mAlreadyDownloadPageList);  // 刪除所有已经下载好的网页
+                Logcat.showLog("observerMeituPictures","onError After removeAll mAlreadyDownloadPageList"
+                        + " meituPageList = " + meituPageList.toString());
+                mAlreadyDownloadPageList.clear();
+                // 获取HTTP 514所对应的url，然后根据url的最后一个字段确定出现514错误的相册页面，
+                // 然后将该页面重新添加到meituPageList中!!!
+                if(meituPageList.contains(mCurrentPage) == false){
+                    meituPageList.add(mCurrentPage);
+                }
+                Logcat.showLog("observerMeituPictures","onError After add(mCurrentPage)"
+                        + " meituPageList = " + meituPageList.toString());
+                if (meituPageList.isEmpty()) {         // todo:这里的if语句可以去掉
+                    mProgressBar.setVisibility(View.INVISIBLE);
+                    mPictureRecyclerViewAdapter.updateMeituPictureList(meituPictureList, 1);
+                } else {
+                    downLoadingPicture(groupId);  // 继续下载相册中剩余妹子的图片
+                }
+            }else{
+                ShowToast.showShortToast(ShowMeizituGalleryActivity.this,"获取相册信息操作失败,发生了错误:" +
+                        e.toString());
+                mProgressBar.setVisibility(View.INVISIBLE);
+            }
         }
 
         @Override
-        public void onNext(ArrayList<MeituPicture> meituPictures) {
-            meituPictureList.addAll(meituPictures);
+        public void onNext(MeizituPicturePage meizituPicturePage) {
+            meituPictureList.addAll(meizituPicturePage.getMeizituPictureList());
+            mAlreadyDownloadPageList.add(meizituPicturePage.getPage());
+            int tempPage = meizituPicturePage.getPage();
+            Logcat.showLog("observerMeituPictures", "onNext mCurrentPage = " + mCurrentPage
+                    + " meizituPicturePage.getPage() = " + tempPage);
         }
     };
 
@@ -193,24 +259,26 @@ public class ShowMeizituGalleryActivity extends AppCompatActivity {
         final String groupId2 = groupId;
         unsubscribe();
         Observable.from(meituPageList)
-                .flatMap(new Func1<Integer, Observable<ArrayList<MeituPicture>>>() {
+                .flatMap(new Func1<Integer, Observable<MeizituPicturePage>>() {
                     @Override
-                    public Observable<ArrayList<MeituPicture>> call(Integer page) {
-                        Observable<ArrayList<MeituPicture>> observable = Network.getMeizituService()
+                    public Observable<MeizituPicturePage> call(Integer page) {
+                        Observable<MeizituPicturePage> observable = Network.getMeizituService()
                                 .getPictureWithGroupIdInPage(groupId2,page)
-                                .map(new Func1<ResponseBody, ArrayList<MeituPicture>>() {
+                                .map(new Func1<ResponseBody, MeizituPicturePage>() {
                                     @Override
-                                    public ArrayList<MeituPicture> call(ResponseBody responseBody) {
-                                        ArrayList<MeituPicture> meituPictures = new ArrayList<MeituPicture>();
+                                    public MeizituPicturePage call(ResponseBody responseBody) {
+                                        MeizituPicturePage meizituPicturePage = new MeizituPicturePage();
                                         try {
                                             String responseBodyContent = responseBody.string();
-                                            meituPictures = HtmlParser.parseMeizituGalleryHtmlContent(responseBodyContent);
+                                            meizituPicturePage = HtmlParser
+                                                    .parseMeizituGalleryHtmlContent(responseBodyContent);
                                         } catch (IOException e) {
                                             e.printStackTrace();
                                         }
-                                        return meituPictures;
+                                        return meizituPicturePage;
                                     }
                                 });
+                        mCurrentPage = page;//标记当前正在处理的网页，需要用到这个变量来标记onError()的网页
                         return observable;
                     }
                 })
