@@ -41,12 +41,12 @@ public class ShowMeizituGalleryActivity extends AppCompatActivity {
     protected Subscription mSubscription;   // 用于解除Obserable与Observer之间的订阅关系，防止内存泄露
     private ArrayList<Integer> meituPageList = new ArrayList<Integer>();  //妹子图相册对应的网页页数
     private ArrayList<Integer> mAlreadyDownloadPageList = new ArrayList<>(); //已经下载好的妹子图所对应的网页
+    private ArrayList<MeituPicture> meituPictureList = new ArrayList<MeituPicture>(); //已经下载好的妹子图片信息
+    private int mCurrentPage;    // 当前正在解析的妹子图片网页的页数
     private String groupId;
     private String title;
-    private int mCurrentPage;
     // 测试用。。。
     private final String TAG = "ShowMeizituGalleryActivity";
-    private ArrayList<MeituPicture> meituPictureList = new ArrayList<MeituPicture>();
     // 测试用。。。
 
     @Override
@@ -140,8 +140,6 @@ public class ShowMeizituGalleryActivity extends AppCompatActivity {
     Observer<MeizituPicturePage> observerMeituPictures = new Observer<MeizituPicturePage>() {
         @Override
         public void onCompleted() {
-//            mProgressBar.setVisibility(View.INVISIBLE);
-//            mPictureRecyclerViewAdapter.updateMeituPictureList(meituPictureList,1);
             Logcat.showLog("observerMeituPictures", "onCompleted mAlreadyDownloadPageList = "
                     + mAlreadyDownloadPageList.toString());
             meituPageList.removeAll(mAlreadyDownloadPageList);  // 刪除所有已经下载好的网页
@@ -159,16 +157,9 @@ public class ShowMeizituGalleryActivity extends AppCompatActivity {
                 });
                 //删除meituPictureList中的重复元素
                 LinkedHashSet<MeituPicture> meituPictureLinkedHashSet = new LinkedHashSet<>(meituPictureList);
-                // test start
-                Iterator<MeituPicture> iterator = meituPictureLinkedHashSet.iterator();
-                while (iterator.hasNext()) {
-                    Logcat.showLog("observerMeituPictures", "meituPictureLinkedHashSet = "
-                            + iterator.next().getPictureUrl());
-                }
-                // test end
                 meituPictureList.clear();
                 meituPictureList = new ArrayList<>(meituPictureLinkedHashSet);
-
+                //隐藏进度条，更新妹子图适配器中的数据
                 mProgressBar.setVisibility(View.INVISIBLE);
                 mPictureRecyclerViewAdapter.updateMeituPictureList(meituPictureList, 1);
             } else {
@@ -218,9 +209,8 @@ public class ShowMeizituGalleryActivity extends AppCompatActivity {
         public void onNext(MeizituPicturePage meizituPicturePage) {
             meituPictureList.addAll(meizituPicturePage.getMeizituPictureList());
             mAlreadyDownloadPageList.add(meizituPicturePage.getPage());
-            int tempPage = meizituPicturePage.getPage();
             Logcat.showLog("observerMeituPictures", "onNext mCurrentPage = " + mCurrentPage
-                    + " meizituPicturePage.getPage() = " + tempPage);
+                    + " meizituPicturePage.getPage() = " + meizituPicturePage.getPage());
         }
     };
 
