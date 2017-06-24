@@ -12,23 +12,23 @@ public class MeituPicture implements Parcelable {
     public String title;
     public String pictureUrl;
 
-    public MeituPicture(){
+    public MeituPicture() {
 
     }
 
-    public void setTitle(String title){
+    public void setTitle(String title) {
         this.title = title;
     }
 
-    public void setPictureUrl(String pictureUrl){
+    public void setPictureUrl(String pictureUrl) {
         this.pictureUrl = pictureUrl;
     }
 
-    public String getTitle(){
+    public String getTitle() {
         return title;
     }
 
-    public String getPictureUrl(){
+    public String getPictureUrl() {
         return pictureUrl;
     }
 
@@ -63,25 +63,22 @@ public class MeituPicture implements Parcelable {
     // 因为LinkedHashSet判断两个对象是否相等时用到了equals方法和hashCode方法
     // 所以这里要重写MeituPicture类中的equals方法和hashCode方法
     @Override
-    public boolean equals(Object obj) {
-        if(this == obj){
-            return true;
-        }else{
-            if(obj instanceof MeituPicture){
-                if(this.getPictureUrl().equals(((MeituPicture) obj).getPictureUrl())){
-                    return true;
-                }else{
-                    return false;
-                }
-            }
-            return false;
-        }
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        MeituPicture that = (MeituPicture) o;
+
+        if (!title.equals(that.title)) return false;
+        return pictureUrl.equals(that.pictureUrl);
+
     }
 
     @Override
     public int hashCode() {
-        String pictureUrl = this.getPictureUrl();
-        int hashCodeValue = pictureUrl.hashCode();
-        return hashCodeValue;
+        int result = title.hashCode();
+        result = 31 * result + pictureUrl.hashCode();
+        return result;
     }
+
 }
