@@ -40,11 +40,12 @@ public interface MeizituService {
                                                          @Path("page") int page);
 
     // 访问"妹子自拍"的首页信息
-    @GET("share")
+    @GET("zipai")
     Observable<ResponseBody> getPictureInSelfiePage();
 
-    // 访问“妹子自拍”其余页面的信息
-    @GET("share/comment-page-{page}#comments")
+    // 访问“妹子自拍”其余页面的信息 可以去掉#comments
+    // 因为#是浏览器的位置标识符，对服务端完全无用，所以HTTP请求中不包含#后面的内容
+    @GET("zipai/comment-page-{page}")
     Observable<ResponseBody> getPictureInSelfiePages(@Path("page") int page);
 
     // 搜索妹子图网站中的相册
