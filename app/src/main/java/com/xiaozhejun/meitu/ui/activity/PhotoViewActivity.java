@@ -62,19 +62,19 @@ public class PhotoViewActivity extends AppCompatActivity {
         mCanDownloadPicture = new boolean[meituPictureArrayList.size()];
         // 创建数据库
         meituDatabaseHelper = new MeituDatabaseHelper(PhotoViewActivity.this,
-                "Meitu.db",null,1);
+                "Meitu.db", null, 1);
         mSQLiteDatabase = meituDatabaseHelper.getReadableDatabase();
         // 查看PhotoViewActivity初始化后所展示的第一张图片是否已经被收藏
         mIsFavorited = queryDatabase(meituPictureArrayList.get(mPosition).getPictureUrl());
 
-        mTextView = (TextView)findViewById(R.id.textViewInPhotoViewActivity);
+        mTextView = (TextView) findViewById(R.id.textViewInPhotoViewActivity);
         String pictureDescription = getPictureDescription(mPosition);
         mTextView.setText(pictureDescription);
 
-        mViewPager = (ViewPager)findViewById(R.id.hackyViewPager);
+        mViewPager = (ViewPager) findViewById(R.id.hackyViewPager);
         mViewPager.setAdapter(new PhotoViewPagerAdapter(meituPictureArrayList));
         mViewPager.setCurrentItem(mPosition);
-        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener(){
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
             @Override
             public void onPageSelected(int position) {
@@ -83,7 +83,7 @@ public class PhotoViewActivity extends AppCompatActivity {
                 boolean isFavorited = queryDatabase(pictureUrl);
                 mTextView.setText(pictureDescription);
                 mPosition = position;
-                if(mIsDownloadPicture == false){ //如果不是本地下载图片，则显示toolbar上的收藏菜单按钮
+                if (mIsDownloadPicture == false) { //如果不是本地下载图片，则显示toolbar上的收藏菜单按钮
                     changeMenuItemState(isFavorited);
                 }
             }
@@ -103,7 +103,7 @@ public class PhotoViewActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.photo_view,menu);
+        getMenuInflater().inflate(R.menu.photo_view, menu);
         mDownloadMenuItem = menu.findItem(R.id.action_download);
         mFavorMenuItem = menu.findItem(R.id.action_favor);
         mUnFavorMenuItem = menu.findItem(R.id.action_unfavor);
@@ -113,11 +113,11 @@ public class PhotoViewActivity extends AppCompatActivity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        if(mIsDownloadPicture == true){   // 如果是存放在手机中的已经下载好的妹子图片，就只显示分享菜单按钮
+        if (mIsDownloadPicture == true) {   // 如果是存放在手机中的已经下载好的妹子图片，就只显示分享菜单按钮
             mDownloadMenuItem.setVisible(false);
             mFavorMenuItem.setVisible(false);
             mUnFavorMenuItem.setVisible(false);
-        }else{
+        } else {
             changeMenuItemState(mIsFavorited);
         }
         return true;
@@ -126,48 +126,49 @@ public class PhotoViewActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        switch (id){
+        switch (id) {
             case R.id.action_share:
                 //ShowToast.showTestShortToast(PhotoViewActivity.this,"分享功能");
-                if(mIsFinishLoadingPicture[mPosition] == true){
-                    if(mCanDownloadPicture[mPosition] == true){
+                if (mIsFinishLoadingPicture[mPosition] == true) {
+                    if (mCanDownloadPicture[mPosition] == true) {
                         sharePicture(mPosition);
-                    }else{
-                        ShowToast.showShortToast(PhotoViewActivity.this,"图片加载失败，无法分享...");
+                    } else {
+                        ShowToast.showShortToast(PhotoViewActivity.this, "图片加载失败，无法分享...");
                     }
-                }else{
-                    ShowToast.showShortToast(PhotoViewActivity.this,"正在加载图片，暂时无法分享...");
+                } else {
+                    ShowToast.showShortToast(PhotoViewActivity.this, "正在加载图片，暂时无法分享...");
                 }
                 return true;
 
             case R.id.action_download:
                 //ShowToast.showTestShortToast(PhotoViewActivity.this,"下载功能");
-                if(mIsFinishLoadingPicture[mPosition] == true){
-                    if(mCanDownloadPicture[mPosition] == true){
+                if (mIsFinishLoadingPicture[mPosition] == true) {
+                    if (mCanDownloadPicture[mPosition] == true) {
                         downloadPicture(mPosition);
-                    }else{
-                        ShowToast.showShortToast(PhotoViewActivity.this,"图片加载失败，无法下载...");
+                    } else {
+                        ShowToast.showShortToast(PhotoViewActivity.this, "图片加载失败，无法下载...");
                     }
-                }else {
+                } else {
                     ShowToast.showShortToast(PhotoViewActivity.this, "正在加载图片，暂时无法下载...");
                 }
                 return true;
 
             case R.id.action_favor:
-                ShowToast.showShortToast(PhotoViewActivity.this,"收藏成功!");
+                ShowToast.showShortToast(PhotoViewActivity.this, "收藏成功!");
                 //将收藏的图片信息插入到数据库中
                 ContentValues values = new ContentValues();
-                values.put("pictureUrl",meituPictureArrayList.get(mPosition).getPictureUrl());
-                values.put("title",meituPictureArrayList.get(mPosition).getTitle());
-                mSQLiteDatabase.insert("Favorites",null,values);
+                values.put("pictureUrl", meituPictureArrayList.get(mPosition).getPictureUrl());
+                values.put("title", meituPictureArrayList.get(mPosition).getTitle());
+                values.put("referer", meituPictureArrayList.get(mPosition).getReferer());
+                mSQLiteDatabase.insert("Favorites", null, values);
                 mIsFavorited = true;
                 changeMenuItemState(mIsFavorited);
                 return true;
 
             case R.id.action_unfavor:
-                ShowToast.showShortToast(PhotoViewActivity.this,"取消收藏!");
+                ShowToast.showShortToast(PhotoViewActivity.this, "取消收藏!");
                 //将选定的图片从数据库中删除
-                mSQLiteDatabase.delete("Favorites","pictureUrl = ?",new String[]{
+                mSQLiteDatabase.delete("Favorites", "pictureUrl = ?", new String[]{
                         meituPictureArrayList.get(mPosition).getPictureUrl()});
                 mIsFavorited = false;
                 changeMenuItemState(mIsFavorited);
@@ -184,58 +185,65 @@ public class PhotoViewActivity extends AppCompatActivity {
 
     /**
      * 改变Menu中的MenuItem的状态
-     * */
-    public void changeMenuItemState(boolean isFavorited){
+     */
+    public void changeMenuItemState(boolean isFavorited) {
         mFavorMenuItem.setVisible(!isFavorited);
         mUnFavorMenuItem.setVisible(isFavorited);
     }
 
     /**
      * 获取相册中第position张图片的详细描述信息
+     *
      * @param position 图片在相册中的位置
-     * */
-    public String getPictureDescription(int position){
+     */
+    public String getPictureDescription(int position) {
         int index = position + 1;
         int total = meituPictureArrayList.size();
         String title = meituPictureArrayList.get(position).getTitle();
         //String pictureDescription = index + "/" + total + "\t" + title;
         Resources resources = getResources();
         String pictureDescription = String.format(resources.getString(R.string.photo_view_description),
-                index,total,title);
+                index, total, title);
         return pictureDescription;
     }
 
     /**
      * 分享图片
+     *
      * @param position 图片在相册中的位置
-     * */
-    public void sharePicture(int position){
+     */
+    public void sharePicture(int position) {
         String pictureUrl = meituPictureArrayList.get(mPosition).getPictureUrl();
         String title = meituPictureArrayList.get(mPosition).getTitle();
-        String[] pictureUrls = new String[1];
+        String referer = meituPictureArrayList.get(mPosition).getReferer();
+        String[] pictureUrls = new String[2];
         pictureUrls[0] = pictureUrl;
-        new DownloadTask(this,"share",title,mPosition).execute(pictureUrls);
+        pictureUrls[1] = referer;
+        new DownloadTask(this, "share", title, mPosition).execute(pictureUrls);
     }
 
     /**
      * 下载图片
+     *
      * @param position 图片在相册中的位置
-     * */
-    public void downloadPicture(int position){
+     */
+    public void downloadPicture(int position) {
         String pictureUrl = meituPictureArrayList.get(mPosition).getPictureUrl();
         String title = meituPictureArrayList.get(mPosition).getTitle();
-        String[] pictureUrls = new String[1];
+        String referer = meituPictureArrayList.get(mPosition).getReferer();
+        String[] pictureUrls = new String[2];
         pictureUrls[0] = pictureUrl;
-        new DownloadTask(this,"download",title,position).execute(pictureUrls);
+        pictureUrls[1] = referer;
+        new DownloadTask(this, "download", title, position).execute(pictureUrls);
     }
 
 
     /**
      * 删除共享图片后所产生的临时图片
-     * */
-    public void deleteTempPicture(){
+     */
+    public void deleteTempPicture() {
         // 使用ContentResolver中的delete方法进行删除，使用这种方式在删除照片后能够及时清除相册中的信息
-        File tempMeituDir = new File(Environment.getExternalStorageDirectory(),"TempMeitu");
+        File tempMeituDir = new File(Environment.getExternalStorageDirectory(), "TempMeitu");
         String tempMeituFolderPath = tempMeituDir.getPath();
         new DeleteTempPicturesTask(PhotoViewActivity.this).execute(new String[]{tempMeituFolderPath});
 
@@ -268,19 +276,19 @@ public class PhotoViewActivity extends AppCompatActivity {
 
     /**
      * 查询某张图片是否已经被收藏
-     * */
-    public boolean queryDatabase(String pictureUrl){
-        Cursor cursor = mSQLiteDatabase.query("Favorites",null,null,null,null,null,null);
+     */
+    public boolean queryDatabase(String pictureUrl) {
+        Cursor cursor = mSQLiteDatabase.query("Favorites", null, null, null, null, null, null);
         String queryUrl = "";
         boolean isFavorited = false;
-        if(cursor.moveToFirst()){
-            do{
+        if (cursor.moveToFirst()) {
+            do {
                 queryUrl = cursor.getString(cursor.getColumnIndex("pictureUrl"));
-                if(queryUrl.equals(pictureUrl)){
+                if (queryUrl.equals(pictureUrl)) {
                     isFavorited = true;
                     break;
                 }
-            }while(cursor.moveToNext());
+            } while (cursor.moveToNext());
         }
         cursor.close();
         return isFavorited;

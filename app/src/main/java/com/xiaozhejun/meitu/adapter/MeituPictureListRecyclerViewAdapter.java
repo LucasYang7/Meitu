@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import com.squareup.picasso.Picasso;
 import com.xiaozhejun.meitu.R;
 import com.xiaozhejun.meitu.model.MeituPicture;
+import com.xiaozhejun.meitu.network.picasso.CustomPicasso;
 import com.xiaozhejun.meitu.ui.widget.MeituRecyclerView;
 
 import java.lang.reflect.Array;
@@ -23,42 +24,42 @@ public class MeituPictureListRecyclerViewAdapter extends RecyclerView.Adapter<Me
     private MeituRecyclerView meituRecyclerView;   //与该MeituPictureListRecyclerViewAdapter绑定的MeituRecyclerView
     private boolean mShowIndex;         // 是否在图片名字中显示下标信息
 
-    public MeituPictureListRecyclerViewAdapter(MeituRecyclerView recyclerView,boolean showIndex){
+    public MeituPictureListRecyclerViewAdapter(MeituRecyclerView recyclerView, boolean showIndex) {
         meituRecyclerView = recyclerView;
         mShowIndex = showIndex;
     }
 
-    public void initMeituPictureList(ArrayList<MeituPicture> meituPictureList){
+    public void initMeituPictureList(ArrayList<MeituPicture> meituPictureList) {
         mMeituPictureList = meituPictureList;
     }
 
-    public void updateMeituPictureList(ArrayList<MeituPicture> meituPictureList,int page){
-        if(page == 1){
+    public void updateMeituPictureList(ArrayList<MeituPicture> meituPictureList, int page) {
+        if (page == 1) {
             initMeituPictureList(meituPictureList);
-        }else{
+        } else {
             mMeituPictureList.addAll(meituPictureList);
         }
         notifyDataSetChanged();          // 通知注册了该Adapter的RecyclerView更新视图
     }
 
-    public void updateMeituPictureList(ArrayList<MeituPicture> meituPictureList,boolean isResetData){
-        if(isResetData == true){
+    public void updateMeituPictureList(ArrayList<MeituPicture> meituPictureList, boolean isResetData) {
+        if (isResetData == true) {
             initMeituPictureList(meituPictureList);
-        }else{
+        } else {
             mMeituPictureList.addAll(meituPictureList);
         }
         notifyDataSetChanged();          // 通知注册了该Adapter的RecyclerView更新视图
     }
 
-    public ArrayList<MeituPicture> getmMeituPictureList(){
+    public ArrayList<MeituPicture> getmMeituPictureList() {
         return mMeituPictureList;
     }
 
     @Override
     public MeituRecyclerView.PictureViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView  = LayoutInflater.from(parent.getContext()).inflate(R.layout.picture_viewholder,
-                parent,false);
-        return new MeituRecyclerView.PictureViewHolder(itemView,meituRecyclerView);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.picture_viewholder,
+                parent, false);
+        return new MeituRecyclerView.PictureViewHolder(itemView, meituRecyclerView);
     }
 
     @Override
@@ -67,12 +68,19 @@ public class MeituPictureListRecyclerViewAdapter extends RecyclerView.Adapter<Me
         String title = meituPicture.getTitle();
         String pictureUrl = meituPicture.getPictureUrl();
         String pictureDescription = title;
-        if(mShowIndex == true){
-            pictureDescription = title+ " (" + (position+1) + ")";
+        if (mShowIndex == true) {
+            pictureDescription = title + " (" + (position + 1) + ")";
         }
         holder.textViewInViewholder.setText(pictureDescription);
-        Picasso.with(holder.imageViewInViewholder.getContext())
-                .load(pictureUrl)
+        Picasso picasso;
+        // 如果妹子图片中的referer字段不为空值，则在Picasso的HTTP请求头部中添加referer信息；
+        // 否则直接使用默认的Picasso对象
+        if (meituPicture.getReferer() == null || meituPicture.getReferer().isEmpty()) {
+            picasso = Picasso.with(holder.imageViewInViewholder.getContext());
+        } else {
+            picasso = CustomPicasso.getCustomePicasso(holder.imageViewInViewholder.getContext(), meituPicture.getReferer());
+        }
+        picasso.load(pictureUrl)
                 .placeholder(R.drawable.place_holder)
                 .error(R.drawable.meizitu)
                 .into(holder.imageViewInViewholder);

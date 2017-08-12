@@ -11,6 +11,7 @@ public class MeituPicture implements Parcelable {
 
     public String title;
     public String pictureUrl;
+    public String referer;         // 标记图片的来源地址
 
     public MeituPicture() {
 
@@ -24,6 +25,10 @@ public class MeituPicture implements Parcelable {
         this.pictureUrl = pictureUrl;
     }
 
+    public void setReferer(String referer) {
+        this.referer = referer;
+    }
+
     public String getTitle() {
         return title;
     }
@@ -32,9 +37,14 @@ public class MeituPicture implements Parcelable {
         return pictureUrl;
     }
 
+    public String getReferer() {
+        return referer;
+    }
+
     protected MeituPicture(Parcel in) {
         title = in.readString();
         pictureUrl = in.readString();
+        referer = in.readString();
     }
 
     public static final Creator<MeituPicture> CREATOR = new Creator<MeituPicture>() {
@@ -58,10 +68,12 @@ public class MeituPicture implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(title);
         dest.writeString(pictureUrl);
+        dest.writeString(referer);
     }
 
     // 因为LinkedHashSet判断两个对象是否相等时用到了equals方法和hashCode方法
     // 所以这里要重写MeituPicture类中的equals方法和hashCode方法
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -69,16 +81,18 @@ public class MeituPicture implements Parcelable {
 
         MeituPicture that = (MeituPicture) o;
 
-        if (!title.equals(that.title)) return false;
-        return pictureUrl.equals(that.pictureUrl);
+        if (title != null ? !title.equals(that.title) : that.title != null) return false;
+        if (pictureUrl != null ? !pictureUrl.equals(that.pictureUrl) : that.pictureUrl != null)
+            return false;
+        return referer != null ? referer.equals(that.referer) : that.referer == null;
 
     }
 
     @Override
     public int hashCode() {
-        int result = title.hashCode();
-        result = 31 * result + pictureUrl.hashCode();
+        int result = title != null ? title.hashCode() : 0;
+        result = 31 * result + (pictureUrl != null ? pictureUrl.hashCode() : 0);
+        result = 31 * result + (referer != null ? referer.hashCode() : 0);
         return result;
     }
-
 }

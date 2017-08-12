@@ -13,10 +13,11 @@ public class MeituDatabaseHelper extends SQLiteOpenHelper {
 
     /**
      * 创建Favorites表的Sql语句
-     * */
+     */
     public static final String CREATE_MEITU_FAVORITES = "create table Favorites(" +
             "pictureUrl text primary key," +
             "title text," +
+            "referer text," +
             "addTime text)";
 
     private Context mContext;
@@ -29,7 +30,7 @@ public class MeituDatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_MEITU_FAVORITES);
-        ShowToast.showTestShortToast(mContext,"Create Favorites table succeeded!");
+        ShowToast.showTestShortToast(mContext, "Create Favorites table succeeded!");
     }
 
     @Override

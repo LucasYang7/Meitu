@@ -32,7 +32,7 @@ public class ShowFavoritesActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("我的收藏");
-        toolbar.setNavigationOnClickListener(new View.OnClickListener(){
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -53,36 +53,36 @@ public class ShowFavoritesActivity extends AppCompatActivity {
         // 从数据库中查询所收藏的图片信息
         queryFavoritesFromDatabase();
         // 更新MeituPictureListRecyclerViewAdapter中的数据
-        mFavoritesRecyclerViewAdapter.updateMeituPictureList(mFavoritesPictureList,true);
+        mFavoritesRecyclerViewAdapter.updateMeituPictureList(mFavoritesPictureList, true);
     }
 
-    public void setupRecyclerView(){
-        mFavoritesRecyclerView = (MeituRecyclerView)findViewById(R.id.favoritesRecyclerView);
+    public void setupRecyclerView() {
+        mFavoritesRecyclerView = (MeituRecyclerView) findViewById(R.id.favoritesRecyclerView);
         StaggeredGridLayoutManager staggeredGridLayoutManager =
-                new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
+                new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         mFavoritesRecyclerViewAdapter = new MeituPictureListRecyclerViewAdapter(
-                mFavoritesRecyclerView,false);
+                mFavoritesRecyclerView, false);
         mFavoritesRecyclerViewAdapter.initMeituPictureList(null);
         mFavoritesRecyclerView.setHasFixedSize(true);
         mFavoritesRecyclerView.setLayoutManager(staggeredGridLayoutManager);
         mFavoritesRecyclerView.setAdapter(mFavoritesRecyclerViewAdapter);
-        mFavoritesRecyclerView.addOnScrollListener(new OnVerticalScrollListener(){
+        mFavoritesRecyclerView.addOnScrollListener(new OnVerticalScrollListener() {
 
             @Override
             public void onBottom() {
-                ShowToast.showShortToast(ShowFavoritesActivity.this,"已经没有照片啦");
+                ShowToast.showShortToast(ShowFavoritesActivity.this, "已经没有照片啦");
             }
         });
 
-        mFavoritesRecyclerView.setOnItemClickListener(new MeituRecyclerView.OnItemClickListener(){
+        mFavoritesRecyclerView.setOnItemClickListener(new MeituRecyclerView.OnItemClickListener() {
 
             @Override
             public void onItemClick(View view, int postion) {
                 Bundle bundle = new Bundle();
-                bundle.putInt("position",postion);
-                bundle.putBoolean("isDownload",false);
-                bundle.putParcelableArrayList("meituPictureList",mFavoritesPictureList);
-                Intent intent = new Intent(ShowFavoritesActivity.this,PhotoViewActivity.class);
+                bundle.putInt("position", postion);
+                bundle.putBoolean("isDownload", false);
+                bundle.putParcelableArrayList("meituPictureList", mFavoritesPictureList);
+                Intent intent = new Intent(ShowFavoritesActivity.this, PhotoViewActivity.class);
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
@@ -92,22 +92,24 @@ public class ShowFavoritesActivity extends AppCompatActivity {
 
     /**
      * 从数据库中下载已经收藏的妹子图片信息
-     * */
-    public void queryFavoritesFromDatabase(){
+     */
+    public void queryFavoritesFromDatabase() {
         // 创建数据库
         MeituDatabaseHelper meituDatabaseHelper = new MeituDatabaseHelper(ShowFavoritesActivity.this,
-                "Meitu.db",null,1);
+                "Meitu.db", null, 1);
         SQLiteDatabase sqLiteDatabase = meituDatabaseHelper.getReadableDatabase();
-        Cursor cursor = sqLiteDatabase.query("Favorites",null,null,null,null,null,null);
-        if(cursor.moveToFirst()){
-            do{
+        Cursor cursor = sqLiteDatabase.query("Favorites", null, null, null, null, null, null);
+        if (cursor.moveToFirst()) {
+            do {
                 String title = cursor.getString(cursor.getColumnIndex("title"));
                 String pictureUrl = cursor.getString(cursor.getColumnIndex("pictureUrl"));
+                String referer = cursor.getString(cursor.getColumnIndex("referer"));
                 MeituPicture meituPicture = new MeituPicture();
                 meituPicture.setTitle(title);
                 meituPicture.setPictureUrl(pictureUrl);
+                meituPicture.setReferer(referer);
                 mFavoritesPictureList.add(meituPicture);
-            }while(cursor.moveToNext());
+            } while (cursor.moveToNext());
         }
         cursor.close();
     }

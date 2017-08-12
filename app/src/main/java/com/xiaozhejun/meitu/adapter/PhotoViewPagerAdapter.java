@@ -13,6 +13,7 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Callback;
 import com.xiaozhejun.meitu.R;
 import com.xiaozhejun.meitu.model.MeituPicture;
+import com.xiaozhejun.meitu.network.picasso.CustomPicasso;
 import com.xiaozhejun.meitu.ui.activity.PhotoViewActivity;
 import com.xiaozhejun.meitu.util.Logcat;
 
@@ -28,7 +29,7 @@ public class PhotoViewPagerAdapter extends PagerAdapter {
 
     private ArrayList<MeituPicture> meituPictureArrayList;
 
-    public PhotoViewPagerAdapter(ArrayList<MeituPicture> meituPictureArrayList){
+    public PhotoViewPagerAdapter(ArrayList<MeituPicture> meituPictureArrayList) {
         this.meituPictureArrayList = meituPictureArrayList;
     }
 
@@ -39,16 +40,22 @@ public class PhotoViewPagerAdapter extends PagerAdapter {
         Context context = container.getContext();
         //从photo_view.xml加载PhotoView
         LayoutInflater layoutInflater = LayoutInflater.from(context);
-        View view = layoutInflater.inflate(R.layout.photo_view,container,false);
-        PhotoView photoView = (PhotoView)view.findViewById(R.id.photoViewInXml);
-        final ProgressBar progressBar = (ProgressBar)view.findViewById(R.id.progressBarInPhotoView);
-        final TextView textView = (TextView)view.findViewById(R.id.textViewInPhotoView);
+        View view = layoutInflater.inflate(R.layout.photo_view, container, false);
+        PhotoView photoView = (PhotoView) view.findViewById(R.id.photoViewInXml);
+        final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressBarInPhotoView);
+        final TextView textView = (TextView) view.findViewById(R.id.textViewInPhotoView);
         final PhotoViewAttacher photoViewAttacher = new PhotoViewAttacher(photoView);
         container.addView(view, ViewPager.LayoutParams.MATCH_PARENT,
                 ViewPager.LayoutParams.MATCH_PARENT);
-        Picasso.with(context)
-                .load(meituPictureArrayList.get(picturePosition).getPictureUrl())
-                .into(photoView,new Callback(){
+        Picasso picasso;
+        MeituPicture meituPicture = meituPictureArrayList.get(picturePosition);
+        if (meituPicture.getReferer() == null || meituPicture.getReferer().isEmpty()) {
+            picasso = Picasso.with(context);
+        } else {
+            picasso = CustomPicasso.getCustomePicasso(context, meituPicture.getReferer());
+        }
+        picasso.load(meituPicture.getPictureUrl())
+                .into(photoView, new Callback() {
 
                     @Override
                     public void onSuccess() {
@@ -56,7 +63,7 @@ public class PhotoViewPagerAdapter extends PagerAdapter {
                         PhotoViewActivity.mCanDownloadPicture[picturePosition] = true;
                         progressBar.setVisibility(View.GONE);
                         photoViewAttacher.update();
-                        Logcat.showLog("viewpagerPosition","onSuccess()" + picturePosition);
+                        Logcat.showLog("viewpagerPosition", "onSuccess()" + picturePosition);
                     }
 
                     @Override
@@ -65,7 +72,7 @@ public class PhotoViewPagerAdapter extends PagerAdapter {
                         PhotoViewActivity.mCanDownloadPicture[picturePosition] = false;
                         progressBar.setVisibility(View.GONE);
                         textView.setVisibility(View.VISIBLE);
-                        Logcat.showLog("viewpagerPosition","onError()" + picturePosition);
+                        Logcat.showLog("viewpagerPosition", "onError()" + picturePosition);
                     }
                 });
         return view; // 这里返回ViewPager中一个item所对应的View
@@ -74,7 +81,7 @@ public class PhotoViewPagerAdapter extends PagerAdapter {
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
         //super.destroyItem(container, position, object);
-        container.removeView((View)object);
+        container.removeView((View) object);
     }
 
     @Override

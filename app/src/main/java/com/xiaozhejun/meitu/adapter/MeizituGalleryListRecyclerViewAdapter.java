@@ -8,9 +8,11 @@ import android.view.ViewGroup;
 import com.squareup.picasso.Picasso;
 import com.xiaozhejun.meitu.R;
 import com.xiaozhejun.meitu.model.MeizituGallery;
+import com.xiaozhejun.meitu.network.picasso.CustomPicasso;
 import com.xiaozhejun.meitu.ui.widget.MeituRecyclerView;
 
 import java.util.List;
+
 
 /**
  * Created by yangzhe on 16-7-29.
@@ -20,26 +22,27 @@ public class MeizituGalleryListRecyclerViewAdapter extends RecyclerView.Adapter<
     private List<MeizituGallery> mMeizituGalleryList;
     private MeituRecyclerView meituRecyclerView;   //与该MeizituGalleryListRecyclerViewAdapter绑定的MeituRecyclerView
 
-    public MeizituGalleryListRecyclerViewAdapter(MeituRecyclerView recyclerView){
+    public MeizituGalleryListRecyclerViewAdapter(MeituRecyclerView recyclerView) {
         meituRecyclerView = recyclerView;
     }
 
     /**
      * 初始化妹子图相册的数据
-     * */
-    public void initMeizituGalleryList(List<MeizituGallery> meizituGalleryList){
+     */
+    public void initMeizituGalleryList(List<MeizituGallery> meizituGalleryList) {
         mMeizituGalleryList = meizituGalleryList;
     }
 
     /**
      * 更新妹子图相册的数据
+     *
      * @param meizituGalleryList 从妹子图网站上下载的数据
-     * @param page 表示请求是妹子图网站的第page页数据
-     * */
-    public void updateMeizituGalleryList(List<MeizituGallery> meizituGalleryList,int page){
-        if(page == 1){
+     * @param page               表示请求是妹子图网站的第page页数据
+     */
+    public void updateMeizituGalleryList(List<MeizituGallery> meizituGalleryList, int page) {
+        if (page == 1) {
             initMeizituGalleryList(meizituGalleryList);
-        }else{
+        } else {
             mMeizituGalleryList.addAll(meizituGalleryList);
         }
         notifyDataSetChanged();          // 通知注册了该Adapter的RecyclerView更新视图
@@ -47,17 +50,18 @@ public class MeizituGalleryListRecyclerViewAdapter extends RecyclerView.Adapter<
 
     /**
      * 获取相应位置的妹子图的相册数据
+     *
      * @param position 某个ViewHolder在Adapter中的位置
-     * */
-    public MeizituGallery getMeizituGallery(int position){
+     */
+    public MeizituGallery getMeizituGallery(int position) {
         return mMeizituGalleryList.get(position);
     }
 
     @Override
     public MeituRecyclerView.MeizituViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.meizitu_viewholder,
-                parent,false);
-        return new MeituRecyclerView.MeizituViewHolder(itemView,meituRecyclerView);
+                parent, false);
+        return new MeituRecyclerView.MeizituViewHolder(itemView, meituRecyclerView);
     }
 
     @Override
@@ -66,8 +70,8 @@ public class MeizituGalleryListRecyclerViewAdapter extends RecyclerView.Adapter<
         String title = meizituGallery.getTitle();
         String pictureUrl = meizituGallery.getPictureUrl();
         holder.textViewInViewholder.setText(title);
-        Picasso.with(holder.imageViewInViewholder.getContext())
-                .load(pictureUrl)
+        Picasso picasso = CustomPicasso.getCustomePicasso(holder.imageViewInViewholder.getContext(), meizituGallery.getReferer());
+        picasso.load(pictureUrl)
                 .placeholder(R.drawable.place_holder)
                 .error(R.drawable.meizitu)
                 .into(holder.imageViewInViewholder);
@@ -75,7 +79,7 @@ public class MeizituGalleryListRecyclerViewAdapter extends RecyclerView.Adapter<
 
     @Override
     public int getItemCount() {
-        return mMeizituGalleryList == null ? 0: mMeizituGalleryList.size();
+        return mMeizituGalleryList == null ? 0 : mMeizituGalleryList.size();
     }
 
 }

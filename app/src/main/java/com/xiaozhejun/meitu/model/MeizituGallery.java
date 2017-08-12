@@ -13,6 +13,7 @@ public class MeizituGallery {
     public String viewTimes;       // 相册查看的次数 对应html文档中的alt
     public String pictureUrl;      // 相册显示照片的URL地址 对应html文档中的data-original
     public String groupId;         // 相册所对应的id
+    public String referer;         // 标记图片的来源地址
 
     public void setGalleryUrl(String galleryUrl) {
         this.galleryUrl = galleryUrl;
@@ -39,6 +40,9 @@ public class MeizituGallery {
         this.groupId = uri.getLastPathSegment();
     }
 
+    public void setReferer(String referer) {
+        this.referer = referer;
+    }
 
     public String getGalleryUrl(){
         return this.galleryUrl;
@@ -64,9 +68,13 @@ public class MeizituGallery {
         return this.groupId;
     }
 
+    public String getReferer() {
+        return referer;
+    }
+
     public String getObjectInformation(){
         String information = "";
-        information = title + " " + galleryUrl + " " + groupId + " " +  time + " " + viewTimes + "\n";
+        information = title + " " + galleryUrl + " " + groupId + " " +  time + " " + viewTimes + " "+ referer + "\n";
         return information;
     }
 }

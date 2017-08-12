@@ -10,6 +10,7 @@ import android.os.Environment;
 
 import com.squareup.picasso.Picasso;
 import com.xiaozhejun.meitu.R;
+import com.xiaozhejun.meitu.network.picasso.CustomPicasso;
 import com.xiaozhejun.meitu.util.ShowToast;
 
 import java.io.File;
@@ -23,7 +24,7 @@ import java.util.Date;
  * 用于下载图片的AsyncTask
  * Created by yangzhe on 16-8-8.
  */
-public class DownloadTask extends AsyncTask<String,Void,Uri> {
+public class DownloadTask extends AsyncTask<String, Void, Uri> {
     private Context mContext;
     private String mTitle;
     private int mPosition;
@@ -31,14 +32,14 @@ public class DownloadTask extends AsyncTask<String,Void,Uri> {
     private String mAction;                 // 用于标记是下载图片还是共享图片
     private String downloadPictureFolder;   // 用于保存下载图片的文件夹
 
-    public DownloadTask(Context context,String action,String title,int position){
+    public DownloadTask(Context context, String action, String title, int position) {
         mContext = context;
         mAction = action;
         mTitle = title;
         mPosition = position;
-        if(action.equalsIgnoreCase("download")){
+        if (action.equalsIgnoreCase("download")) {
             downloadPictureFolder = "Meitu";
-        }else{
+        } else {
             downloadPictureFolder = "TempMeitu";
         }
     }
@@ -48,37 +49,41 @@ public class DownloadTask extends AsyncTask<String,Void,Uri> {
         Uri pictureUri = null;
         Bitmap bitmap = null;
         try {
-            bitmap = Picasso.with(mContext).load(url[0]).get();
+            if (url[1] == null || url[1].isEmpty()) { // url[1]是HTTP HEADER中的referer字段
+                bitmap = Picasso.with(mContext).load(url[0]).get();
+            } else {
+                bitmap = CustomPicasso.getCustomePicasso(mContext, url[1]).load(url[0]).get();
+            }
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (OutOfMemoryError outOfMemoryError){
+        } catch (OutOfMemoryError outOfMemoryError) {
             //doInBackground在工作线程中执行，而显示Toast需要在UI线程中执行
             //ShowToast.showShortToast(mContext, "图片太大，下载失败...");
             outOfMemoryError.printStackTrace();
             return pictureUri;
         }
 
-        if(bitmap == null){
+        if (bitmap == null) {
             //doInBackground在工作线程中执行，而显示Toast需要在UI线程中执行
             //ShowToast.showShortToast(mContext,"无法获取图片...");
-        }else{
-            File meituDir = new File(Environment.getExternalStorageDirectory(),downloadPictureFolder);
-            if(meituDir.exists() == false){
+        } else {
+            File meituDir = new File(Environment.getExternalStorageDirectory(), downloadPictureFolder);
+            if (meituDir.exists() == false) {
                 meituDir.mkdir();
             }
             //String pictureName = mTitle.replace('/','_') + "(" + mPosition + ")" +  mExtensions;  //保存到手机中的图片名字
             Resources resources = mContext.getResources();
-            mTitle = mTitle.replace('/','_');       // 替换掉标题中的'/'
+            mTitle = mTitle.replace('/', '_');       // 替换掉标题中的'/'
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd_HHmmss");
             String currentDateAndTime = simpleDateFormat.format(new Date());
-            String pictureName = String.format(resources.getString(R.string.picture_name),mTitle,
-                    currentDateAndTime,mExtensions);
-            pictureName = pictureName.replaceAll("[~!@#$%^&]","_");        // 替换图片名字中的特殊字符
-            File picture = new File(meituDir,pictureName);
+            String pictureName = String.format(resources.getString(R.string.picture_name), mTitle,
+                    currentDateAndTime, mExtensions);
+            pictureName = pictureName.replaceAll("[~!@#$%^&]", "_");        // 替换图片名字中的特殊字符
+            File picture = new File(meituDir, pictureName);
 
             try {
                 FileOutputStream outputStream = new FileOutputStream(picture);
-                bitmap.compress(Bitmap.CompressFormat.JPEG,100,outputStream);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
                 outputStream.flush();
                 outputStream.close();
             } catch (FileNotFoundException e) {
@@ -88,7 +93,7 @@ public class DownloadTask extends AsyncTask<String,Void,Uri> {
             }
             pictureUri = Uri.fromFile(picture);
             //通知图库更新
-            Intent scannerIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,pictureUri);
+            Intent scannerIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, pictureUri);
             mContext.sendBroadcast(scannerIntent);
         }
         return pictureUri;
@@ -97,23 +102,23 @@ public class DownloadTask extends AsyncTask<String,Void,Uri> {
     @Override
     protected void onPostExecute(Uri uri) {
         super.onPostExecute(uri);
-        if(uri == null){
+        if (uri == null) {
             //onPostExecute在UI线程中执行
             //显示Toast需要在UI线程中执行
-            ShowToast.showShortToast(mContext,"无法获取图片.也有可能是图片太大了，无法保存到手机中...");
-        }else{
-            if(mAction.equals("download")){
-                String meituDir=uri.getPath();
+            ShowToast.showShortToast(mContext, "无法获取图片.也有可能是图片太大了，无法保存到手机中...");
+        } else {
+            if (mAction.equals("download")) {
+                String meituDir = uri.getPath();
                 Resources resources = mContext.getResources();
-                String downloadMsg = String.format(resources.getString(R.string.picture_has_save_to),meituDir);
-                ShowToast.showShortToast(mContext,downloadMsg);
-            }else {
+                String downloadMsg = String.format(resources.getString(R.string.picture_has_save_to), meituDir);
+                ShowToast.showShortToast(mContext, downloadMsg);
+            } else {
                 String shareTitle = "分享妹子图片到...";
                 Intent shareIntent = new Intent();
                 shareIntent.setAction(Intent.ACTION_SEND);
-                shareIntent.putExtra(Intent.EXTRA_STREAM,uri);
+                shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
                 shareIntent.setType("image/*");
-                mContext.startActivity(Intent.createChooser(shareIntent,shareTitle));
+                mContext.startActivity(Intent.createChooser(shareIntent, shareTitle));
             }
         }
 
