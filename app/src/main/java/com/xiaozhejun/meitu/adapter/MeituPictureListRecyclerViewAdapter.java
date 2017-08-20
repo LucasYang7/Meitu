@@ -5,15 +5,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 import com.xiaozhejun.meitu.R;
 import com.xiaozhejun.meitu.model.MeituPicture;
 import com.xiaozhejun.meitu.network.picasso.CustomPicasso;
 import com.xiaozhejun.meitu.ui.widget.MeituRecyclerView;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by yangzhe on 16-8-5.
@@ -81,6 +80,7 @@ public class MeituPictureListRecyclerViewAdapter extends RecyclerView.Adapter<Me
             picasso = CustomPicasso.getCustomePicasso(holder.imageViewInViewholder.getContext(), meituPicture.getReferer());
         }
         picasso.load(pictureUrl)
+                .memoryPolicy(MemoryPolicy.NO_STORE, MemoryPolicy.NO_CACHE) // 不缓存妹子图某个相册中的图片，以免出现OutOfMemoryError
                 .placeholder(R.drawable.place_holder)
                 .error(R.drawable.meizitu)
                 .into(holder.imageViewInViewholder);

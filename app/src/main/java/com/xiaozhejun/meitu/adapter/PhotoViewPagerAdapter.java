@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Callback;
 import com.xiaozhejun.meitu.R;
@@ -55,6 +56,7 @@ public class PhotoViewPagerAdapter extends PagerAdapter {
             picasso = CustomPicasso.getCustomePicasso(context, meituPicture.getReferer());
         }
         picasso.load(meituPicture.getPictureUrl())
+                .memoryPolicy(MemoryPolicy.NO_STORE, MemoryPolicy.NO_CACHE) // 不缓存PhotoViewPager中的图片，以免出现OutOfMemoryError
                 .into(photoView, new Callback() {
 
                     @Override
