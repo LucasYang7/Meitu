@@ -5,13 +5,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.model.GlideUrl;
+import com.bumptech.glide.load.model.Headers;
 import com.xiaozhejun.meitu.R;
 import com.xiaozhejun.meitu.model.MeizituGallery;
-import com.xiaozhejun.meitu.network.picasso.CustomPicasso;
 import com.xiaozhejun.meitu.ui.widget.MeituRecyclerView;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -66,12 +69,21 @@ public class MeizituGalleryListRecyclerViewAdapter extends RecyclerView.Adapter<
 
     @Override
     public void onBindViewHolder(MeituRecyclerView.MeizituViewHolder holder, int position) {
-        MeizituGallery meizituGallery = mMeizituGalleryList.get(position);
+        final MeizituGallery meizituGallery = mMeizituGalleryList.get(position);
         String title = meizituGallery.getTitle();
         String pictureUrl = meizituGallery.getPictureUrl();
         holder.textViewInViewholder.setText(title);
-        Picasso picasso = CustomPicasso.getCustomePicasso(holder.imageViewInViewholder.getContext(), meizituGallery.getReferer());
-        picasso.load(pictureUrl)
+        Headers headers = new Headers() {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> header = new HashMap<>();
+                header.put("Referer", meizituGallery.getReferer());
+                return header;
+            }
+        };
+        GlideUrl gliderUrl = new GlideUrl(pictureUrl, headers);
+        Glide.with(holder.imageViewInViewholder.getContext())
+                .load(gliderUrl)
                 .placeholder(R.drawable.place_holder)
                 .error(R.drawable.meizitu)
                 .into(holder.imageViewInViewholder);

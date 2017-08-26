@@ -9,6 +9,12 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.model.GlideUrl;
+import com.bumptech.glide.load.model.Headers;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Callback;
@@ -19,6 +25,8 @@ import com.xiaozhejun.meitu.ui.activity.PhotoViewActivity;
 import com.xiaozhejun.meitu.util.Logcat;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import uk.co.senab.photoview.PhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
@@ -42,41 +50,76 @@ public class PhotoViewPagerAdapter extends PagerAdapter {
         //从photo_view.xml加载PhotoView
         LayoutInflater layoutInflater = LayoutInflater.from(context);
         View view = layoutInflater.inflate(R.layout.photo_view, container, false);
-        PhotoView photoView = (PhotoView) view.findViewById(R.id.photoViewInXml);
+        final PhotoView photoView = (PhotoView) view.findViewById(R.id.photoViewInXml);
         final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressBarInPhotoView);
         final TextView textView = (TextView) view.findViewById(R.id.textViewInPhotoView);
-        final PhotoViewAttacher photoViewAttacher = new PhotoViewAttacher(photoView);
         container.addView(view, ViewPager.LayoutParams.MATCH_PARENT,
                 ViewPager.LayoutParams.MATCH_PARENT);
-        Picasso picasso;
-        MeituPicture meituPicture = meituPictureArrayList.get(picturePosition);
+        // 如果妹子图片中的referer字段为空值，则直接使用默认的Picasso对象
+        // 否则在Glide的HTTP请求头部中添加referer信息
+        final MeituPicture meituPicture = meituPictureArrayList.get(picturePosition);
         if (meituPicture.getReferer() == null || meituPicture.getReferer().isEmpty()) {
-            picasso = Picasso.with(context);
+            Picasso.with(context)
+                    .load(meituPicture.getPictureUrl())
+                    .into(photoView, new Callback() {
+
+                        @Override
+                        public void onSuccess() {
+                            PhotoViewActivity.mIsFinishLoadingPicture[picturePosition] = true;//在图片加载成功后，才能执行下载图片和分享图片的操作
+                            PhotoViewActivity.mCanDownloadPicture[picturePosition] = true;
+                            progressBar.setVisibility(View.GONE);
+                            PhotoViewAttacher picassoPhotoViewAttacher = new PhotoViewAttacher(photoView);
+                            picassoPhotoViewAttacher.update();
+                            Logcat.showLog("viewpagerPosition", "onSuccess()" + picturePosition);
+                        }
+
+                        @Override
+                        public void onError() {
+                            PhotoViewActivity.mIsFinishLoadingPicture[picturePosition] = true;//在图片加载操作结束后，才能执行下载图片和分享图片的操作
+                            PhotoViewActivity.mCanDownloadPicture[picturePosition] = false;
+                            progressBar.setVisibility(View.GONE);
+                            textView.setVisibility(View.VISIBLE);
+                            Logcat.showLog("viewpagerPosition", "onError()" + picturePosition);
+                        }
+                    });
         } else {
-            picasso = CustomPicasso.getCustomePicasso(context, meituPicture.getReferer());
+            Headers headers = new Headers() {
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> header = new HashMap<>();
+                    header.put("Referer", meituPicture.getReferer());
+                    return header;
+                }
+            };
+            GlideUrl gliderUrl = new GlideUrl(meituPicture.getPictureUrl(), headers);
+            Glide.with(context)
+                    .load(gliderUrl)
+                    .listener(new RequestListener<GlideUrl, GlideDrawable>() {
+                        @Override
+                        public boolean onException(Exception e, GlideUrl model, Target<GlideDrawable> target, boolean isFirstResource) {
+                            PhotoViewActivity.mIsFinishLoadingPicture[picturePosition] = true;//在图片加载操作结束后，才能执行下载图片和分享图片的操作
+                            PhotoViewActivity.mCanDownloadPicture[picturePosition] = false;
+                            progressBar.setVisibility(View.GONE);
+                            textView.setVisibility(View.VISIBLE);
+                            Logcat.showLog("viewpagerPosition", "onError()" + picturePosition);
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(GlideDrawable resource, GlideUrl model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                            PhotoViewActivity.mIsFinishLoadingPicture[picturePosition] = true;//在图片加载成功后，才能执行下载图片和分享图片的操作
+                            PhotoViewActivity.mCanDownloadPicture[picturePosition] = true;
+                            progressBar.setVisibility(View.GONE);
+                            // 在网络图片下载完成之后，再初始化PhotoViewAttacher，
+                            // 这样能解决缩放图片的时候，图片宽高突然变得很大的问题
+                            PhotoViewAttacher photoViewAttacher = new PhotoViewAttacher(photoView);
+                            photoViewAttacher.update();
+                            Logcat.showLog("viewpagerPosition", "onSuccess()" + picturePosition);
+                            return false;
+                        }
+                    })
+                    .into(photoView);
         }
-        picasso.load(meituPicture.getPictureUrl())
-                .memoryPolicy(MemoryPolicy.NO_STORE, MemoryPolicy.NO_CACHE) // 不缓存PhotoViewPager中的图片，以免出现OutOfMemoryError
-                .into(photoView, new Callback() {
-
-                    @Override
-                    public void onSuccess() {
-                        PhotoViewActivity.mIsFinishLoadingPicture[picturePosition] = true;//在图片加载成功后，才能执行下载图片和分享图片的操作
-                        PhotoViewActivity.mCanDownloadPicture[picturePosition] = true;
-                        progressBar.setVisibility(View.GONE);
-                        photoViewAttacher.update();
-                        Logcat.showLog("viewpagerPosition", "onSuccess()" + picturePosition);
-                    }
-
-                    @Override
-                    public void onError() {
-                        PhotoViewActivity.mIsFinishLoadingPicture[picturePosition] = true;//在图片加载操作结束后，才能执行下载图片和分享图片的操作
-                        PhotoViewActivity.mCanDownloadPicture[picturePosition] = false;
-                        progressBar.setVisibility(View.GONE);
-                        textView.setVisibility(View.VISIBLE);
-                        Logcat.showLog("viewpagerPosition", "onError()" + picturePosition);
-                    }
-                });
         return view; // 这里返回ViewPager中一个item所对应的View
     }
 

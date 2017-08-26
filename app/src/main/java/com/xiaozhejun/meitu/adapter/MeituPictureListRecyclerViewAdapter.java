@@ -5,14 +5,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.model.GlideUrl;
+import com.bumptech.glide.load.model.Headers;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 import com.xiaozhejun.meitu.R;
 import com.xiaozhejun.meitu.model.MeituPicture;
 import com.xiaozhejun.meitu.network.picasso.CustomPicasso;
 import com.xiaozhejun.meitu.ui.widget.MeituRecyclerView;
+import com.xiaozhejun.meitu.util.Logcat;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 
 /**
  * Created by yangzhe on 16-8-5.
@@ -58,12 +65,18 @@ public class MeituPictureListRecyclerViewAdapter extends RecyclerView.Adapter<Me
     public MeituRecyclerView.PictureViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.picture_viewholder,
                 parent, false);
-        return new MeituRecyclerView.PictureViewHolder(itemView, meituRecyclerView);
+        MeituRecyclerView.PictureViewHolder pictureViewHolder =
+                new MeituRecyclerView.PictureViewHolder(itemView, meituRecyclerView);
+        Logcat.showLog("onCreateViewHolder", "oldPosition = " + pictureViewHolder.getOldPosition()
+                + " ,position = " + pictureViewHolder.getLayoutPosition());
+        return pictureViewHolder;
     }
 
     @Override
     public void onBindViewHolder(MeituRecyclerView.PictureViewHolder holder, int position) {
-        MeituPicture meituPicture = mMeituPictureList.get(position);
+        Logcat.showLog("onBindViewHolder", "itemId = " + holder.getItemId() + ",adapterPosition = " + holder.getAdapterPosition()
+                + ",oldPosition = " + holder.getOldPosition() + " ,position = " + holder.getLayoutPosition());
+        final MeituPicture meituPicture = mMeituPictureList.get(position);
         String title = meituPicture.getTitle();
         String pictureUrl = meituPicture.getPictureUrl();
         String pictureDescription = title;
@@ -71,19 +84,31 @@ public class MeituPictureListRecyclerViewAdapter extends RecyclerView.Adapter<Me
             pictureDescription = title + " (" + (position + 1) + ")";
         }
         holder.textViewInViewholder.setText(pictureDescription);
-        Picasso picasso;
-        // 如果妹子图片中的referer字段不为空值，则在Picasso的HTTP请求头部中添加referer信息；
-        // 否则直接使用默认的Picasso对象
+
+        // 如果妹子图片中的referer字段为空值，则直接使用默认的Picasso对象
+        // 否则在Glide的HTTP请求头部中添加referer信息
         if (meituPicture.getReferer() == null || meituPicture.getReferer().isEmpty()) {
-            picasso = Picasso.with(holder.imageViewInViewholder.getContext());
+            Picasso.with(holder.imageViewInViewholder.getContext())
+                    .load(pictureUrl)
+                    .placeholder(R.drawable.place_holder)
+                    .error(R.drawable.meizitu)
+                    .into(holder.imageViewInViewholder);
         } else {
-            picasso = CustomPicasso.getCustomePicasso(holder.imageViewInViewholder.getContext(), meituPicture.getReferer());
+            Headers headers = new Headers() {
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> header = new HashMap<>();
+                    header.put("Referer", meituPicture.getReferer());
+                    return header;
+                }
+            };
+            GlideUrl gliderUrl = new GlideUrl(pictureUrl, headers);
+            Glide.with(holder.imageViewInViewholder.getContext())
+                    .load(gliderUrl)
+                    .placeholder(R.drawable.place_holder)
+                    .error(R.drawable.meizitu)
+                    .into(holder.imageViewInViewholder);
         }
-        picasso.load(pictureUrl)
-                .memoryPolicy(MemoryPolicy.NO_STORE, MemoryPolicy.NO_CACHE) // 不缓存妹子图某个相册中的图片，以免出现OutOfMemoryError
-                .placeholder(R.drawable.place_holder)
-                .error(R.drawable.meizitu)
-                .into(holder.imageViewInViewholder);
     }
 
     @Override
