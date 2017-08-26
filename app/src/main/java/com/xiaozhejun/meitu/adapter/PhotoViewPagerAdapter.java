@@ -59,29 +59,33 @@ public class PhotoViewPagerAdapter extends PagerAdapter {
         // 否则在Glide的HTTP请求头部中添加referer信息
         final MeituPicture meituPicture = meituPictureArrayList.get(picturePosition);
         if (meituPicture.getReferer() == null || meituPicture.getReferer().isEmpty()) {
-            Picasso.with(context)
+            Glide.with(context)
                     .load(meituPicture.getPictureUrl())
-                    .into(photoView, new Callback() {
-
+                    .listener(new RequestListener<String, GlideDrawable>() {
                         @Override
-                        public void onSuccess() {
-                            PhotoViewActivity.mIsFinishLoadingPicture[picturePosition] = true;//在图片加载成功后，才能执行下载图片和分享图片的操作
-                            PhotoViewActivity.mCanDownloadPicture[picturePosition] = true;
-                            progressBar.setVisibility(View.GONE);
-                            PhotoViewAttacher picassoPhotoViewAttacher = new PhotoViewAttacher(photoView);
-                            picassoPhotoViewAttacher.update();
-                            Logcat.showLog("viewpagerPosition", "onSuccess()" + picturePosition);
-                        }
-
-                        @Override
-                        public void onError() {
+                        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
                             PhotoViewActivity.mIsFinishLoadingPicture[picturePosition] = true;//在图片加载操作结束后，才能执行下载图片和分享图片的操作
                             PhotoViewActivity.mCanDownloadPicture[picturePosition] = false;
                             progressBar.setVisibility(View.GONE);
                             textView.setVisibility(View.VISIBLE);
                             Logcat.showLog("viewpagerPosition", "onError()" + picturePosition);
+                            return false;
                         }
-                    });
+
+                        @Override
+                        public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                            PhotoViewActivity.mIsFinishLoadingPicture[picturePosition] = true;//在图片加载成功后，才能执行下载图片和分享图片的操作
+                            PhotoViewActivity.mCanDownloadPicture[picturePosition] = true;
+                            progressBar.setVisibility(View.GONE);
+                            // 在网络图片下载完成之后，再初始化PhotoViewAttacher，
+                            // 这样能解决缩放图片的时候，图片宽高突然变得很大的问题
+                            PhotoViewAttacher photoViewAttacher = new PhotoViewAttacher(photoView);
+                            photoViewAttacher.update();
+                            Logcat.showLog("viewpagerPosition", "onSuccess()" + picturePosition);
+                            return false;
+                        }
+                    })
+                    .into(photoView);
         } else {
             Headers headers = new Headers() {
                 @Override

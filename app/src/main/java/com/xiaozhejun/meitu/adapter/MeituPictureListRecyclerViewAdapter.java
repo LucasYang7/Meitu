@@ -88,7 +88,7 @@ public class MeituPictureListRecyclerViewAdapter extends RecyclerView.Adapter<Me
         // 如果妹子图片中的referer字段为空值，则直接使用默认的Picasso对象
         // 否则在Glide的HTTP请求头部中添加referer信息
         if (meituPicture.getReferer() == null || meituPicture.getReferer().isEmpty()) {
-            Picasso.with(holder.imageViewInViewholder.getContext())
+            Glide.with(holder.imageViewInViewholder.getContext())
                     .load(pictureUrl)
                     .placeholder(R.drawable.place_holder)
                     .error(R.drawable.meizitu)

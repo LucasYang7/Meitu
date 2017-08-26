@@ -56,7 +56,11 @@ public class DownloadTask extends AsyncTask<String, Void, Uri> {
         Bitmap bitmap = null;
         try {
             if (url[1] == null || url[1].isEmpty()) { // url[1]是HTTP HEADER中的referer字段
-                bitmap = Picasso.with(mContext).load(url[0]).get();
+                bitmap = Glide.with(mContext)
+                        .load(url[0])
+                        .asBitmap()
+                        .into(-1, -1) //使用-1作为参数，这样可以保持图片资源的原始尺寸
+                        .get();
             } else {
                 Logcat.showLog("DownloadWithGlide", "Picture url = " + url[0] + ", referer = " + url[1]);
                 Headers headers = new Headers() {
@@ -74,8 +78,6 @@ public class DownloadTask extends AsyncTask<String, Void, Uri> {
                         .into(-1, -1) //使用-1作为参数，这样可以保持图片资源的原始尺寸
                         .get();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (OutOfMemoryError outOfMemoryError) {
             //doInBackground在工作线程中执行，而显示Toast需要在UI线程中执行
             //ShowToast.showShortToast(mContext, "图片太大，下载失败...");
