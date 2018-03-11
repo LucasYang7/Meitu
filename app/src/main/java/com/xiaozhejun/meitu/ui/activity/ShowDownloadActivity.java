@@ -3,7 +3,6 @@ package com.xiaozhejun.meitu.ui.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -18,7 +17,7 @@ import com.xiaozhejun.meitu.util.task.GetDownloadPicturesTask;
 import java.io.File;
 import java.util.ArrayList;
 
-public class ShowDownloadActivity extends AppCompatActivity {
+public class ShowDownloadActivity extends BaseActivity {
 
     private MeituRecyclerView mDownloadRecyclerView;
     private MeituPictureListRecyclerViewAdapter mDownloadRecyclerViewAdapter;
